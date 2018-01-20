@@ -4,7 +4,7 @@ CREATE TABLE movies(
 	id VARCHAR(10) NOT NULL,
     title VARCHAR(100) NOT NULL,
     year INTEGER NOT NULL,
-    directory VARCHAR(100),
+    director VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );
 
