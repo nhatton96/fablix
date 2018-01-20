@@ -28,10 +28,15 @@ public class MovieList extends HttpServlet{
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB</TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB</H1>");
+        out.println("<HTML><HEAD>"
+        		+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/MovieList.css\">"
+        		+ "<TITLE>MovieDB</TITLE></HEAD>");
+        out.println("<BODY><H1 class=\"header-center\">Movie List</H1>");
 
         try {
+        	//render css
+        	
+        			
             //Class.forName("org.gjt.mm.mysql.Driver");
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
@@ -54,18 +59,35 @@ public class MovieList extends HttpServlet{
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
-            out.println("<TABLE border>");
-
+            out.println("<TABLE border align=\"center\">");
+            
+            
+            //titles
+            out.println("<tr id=\"listTitles\"  bgcolor=\"#2DCA67\">" + 
+	            		"<td>Title</td>" + 
+	        			"<td>Year</td>" + 
+	        			"<td>Director</td>"+
+	        			"<td>Genres</td>"+
+	        			"<td>Stars</td>"+
+	        			"<td>Rating</td>"+
+	        			"</tr>");
             // Iterate through each row of rs
             while (rs.next()) {
+            	String m_movieId = rs.getString("movieId");
                 String m_title = rs.getString("title");
                 String m_year = rs.getString("year") + " " + rs.getString("name");
                 String m_director = rs.getString("director");
                 String m_list_of_genres = rs.getString("name");
                 String m_list_of_stars = rs.getString("birthYear");
                 String m_rating = rs.getString("birthYear");
-                out.println("<tr>" + "<td>" + m_id + "</td>" + "<td>" + m_name + "</td>" + "<td>" + m_dob + "</td>"
-                        + "</tr>");
+                out.println("<tr id=\"rcorners1\">" + 
+                			"<td>" + m_title + "</td>" + 
+                			"<td>" + m_year + "</td>" + 
+                			"<td>" + m_director + "</td>"+
+                			"<td>" + m_list_of_genres + "</td>"+
+                			"<td>" + m_list_of_stars + "</td>"+
+                			"<td>" + m_rating + "</td>"+
+                			"</tr>");
             }
 
             out.println("</TABLE>");
