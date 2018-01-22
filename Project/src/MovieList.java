@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,10 +29,15 @@ public class MovieList extends HttpServlet{
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB</TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB</H1>");
+        out.println("<HTML><HEAD>"
+        		+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/MovieList.css\">"
+        		+ "<TITLE>MovieDB</TITLE></HEAD>");
+        out.println("<BODY><H1 class=\"header-center\">Movie List</H1>");
 
         try {
+        	//render css
+        	
+        			
             //Class.forName("org.gjt.mm.mysql.Driver");
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
@@ -39,7 +45,7 @@ public class MovieList extends HttpServlet{
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT r.*, m.*, gim.*, g.*, sim.*, s.* FROM \r\n" + 
+            String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n" + 
 		            		"(SELECT * FROM ratings ORDER BY rating DESC LIMIT 20) AS  r\r\n" + 
 		            		"INNER JOIN movies AS m ON r.movieId = m.id\r\n" + 
 		            		"INNER JOIN genres_in_movies gim \r\n" + 
@@ -54,18 +60,67 @@ public class MovieList extends HttpServlet{
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
-            out.println("<TABLE border>");
-
+            out.println("<TABLE border align=\"center\">");
+            
+            
+            //titles
+            out.println("<tr id=\"listTitles\"  bgcolor=\"#2DCA67\">" + 
+	            		"<td>Title</td>" + 
+	        			"<td>Year</td>" + 
+	        			"<td>Director</td>"+
+	        			"<td>Genres</td>"+
+	        			"<td>Stars</td>"+
+	        			"<td>Rating</td>"+
+	        			"</tr>");
             // Iterate through each row of rs
+            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+            
             while (rs.next()) {
-                String m_title = rs.getString("title");
-                String m_year = rs.getString("year") + " " + rs.getString("name");
-                String m_director = rs.getString("director");
-                String m_list_of_genres = rs.getString("name");
-                String m_list_of_stars = rs.getString("birthYear");
-                String m_rating = rs.getString("birthYear");
-                out.println("<tr>" + "<td>" + m_id + "</td>" + "<td>" + m_name + "</td>" + "<td>" + m_dob + "</td>"
-                        + "</tr>");
+            	
+            	String check = rs.getString("movieId");
+            	boolean alreadyAdded = false;
+            	int index = 0;
+            	for(int i = 0; i < movieOutList.size(); i++) {
+                	String moId = movieOutList.get(i).getMovieId();
+                	if(moId.equals(check)) {
+                		alreadyAdded = true;
+                    	index = i;
+                	}	
+                }
+            	
+            	if(alreadyAdded) {
+            		movieOutList.get(index)
+            		.addGenre(rs.getString("genreName"));
+            		
+            		movieOutList.get(index)
+        			.addStar(rs.getString("starName"));
+            		
+            	}
+            	else {
+            		MovieOut mo = new MovieOut();
+                	mo.setMovieId(rs.getString("movieId"));
+                    mo.setTitle(rs.getString("title"));
+                    mo.setYear(rs.getString("year"));
+                    mo.setDirector(rs.getString("director"));
+                    mo.setRating(rs.getString("rating"));
+                    mo.addGenre(rs.getString("genreName"));
+                    mo.addStar(rs.getString("starName"));
+                    
+                    movieOutList.add(mo);
+            	}          	
+            }
+            
+            //print table
+            for(int i = 0; i < movieOutList.size(); i++) {
+            	MovieOut mo = movieOutList.get(i);
+            	out.println("<tr id=\"rcorners1\">" + 
+            			"<td>" + mo.getTitle() + "</td>" + 
+            			"<td>" + mo.getYear() + "</td>" + 
+            			"<td>" + mo.getDirector() + "</td>"+
+            			"<td>" + mo.getListOfGenres() + "</td>"+
+            			"<td>" + mo.getListOfStars() + "</td>"+
+            			"<td>" + mo.getRating() + "</td>"+
+            			"</tr>");
             }
 
             out.println("</TABLE>");
