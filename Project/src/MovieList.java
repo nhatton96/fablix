@@ -60,7 +60,7 @@ public class MovieList extends HttpServlet{
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
-            out.println("<TABLE border align=\"center\">");
+            out.println("<TABLE border align=\"center\"; bgcolor:\"#FFFFF\">");
             
             
             //titles
