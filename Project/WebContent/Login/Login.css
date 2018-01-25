@@ -4,6 +4,18 @@ form {
     border: 3px solid #f1f1f1;
 }
 
+h2 {
+	text-align: center;
+}
+
+
+div {
+    width: 60%;
+    border: 25px;
+    padding: 25px;
+    margin: auto;
+}
+
 input[type=text], input[type=password] {
     width: 100%;
     padding: 12px 20px;
@@ -21,6 +33,7 @@ button {
     border: none;
     cursor: pointer;
     width: 100%;
+    text-align: center;
 }
 
 button:hover {
@@ -35,7 +48,7 @@ button:hover {
 
 .imgcontainer {
     text-align: center;
-    margin: 24px 0 12px 0;
+    margin: auto;
 }
 
 img.avatar {
@@ -44,7 +57,9 @@ img.avatar {
 }
 
 .container {
+	width: 50%;
     padding: 16px;
+    margin: auto;
 }
 
 span.psw {
