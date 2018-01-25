@@ -33,15 +33,31 @@
   <servlet>
     <servlet-name>TomcatTestServlet</servlet-name>
     <servlet-class>TomcatTest</servlet-class>
-	<servlet-name>MovieListServlet</servlet-name>
-    <servlet-class>MovieList</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>TomcatTestServlet</servlet-name>
     <url-pattern>/servlet/TomcatTest</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>MovieListServlet</servlet-name>
+    <servlet-class>MovieList</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
 	<servlet-name>MovieListServlet</servlet-name>
     <url-pattern>/servlet/MovieList</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>LoginServlet</servlet-name>
+    <jsp-file>/Login/Login.html</jsp-file>
+  </servlet>
+
+  <servlet-mapping>
+	<servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/servlet/Login</url-pattern>
   </servlet-mapping>
 
 

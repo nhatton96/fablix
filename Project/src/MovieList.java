@@ -8,17 +8,18 @@ import java.sql.Statement;
 import java.util.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@WebServlet("/m")
 public class MovieList extends HttpServlet{
 	public String getServletInfo() {
         return "Servlet connects to MySQL database and displays result of a SELECT";
     }
 
     // Use http GET
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
@@ -60,7 +61,7 @@ public class MovieList extends HttpServlet{
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
-            out.println("<TABLE border align=\"center\">");
+            out.println("<TABLE border align=\"center\"; bgcolor:\"#FFFFF\">");
             
             
             //titles
