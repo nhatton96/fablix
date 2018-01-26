@@ -11,7 +11,7 @@
 </head>
 <body>
 	<h2>Login Form</h2>
-	<form action="/action_page.php">
+	<form id="LoginForm">
 	  <div class="imgcontainer">
 	    <img src="img_avatar2.png" alt="Avatar" class="avatar">
 	  </div>
@@ -19,13 +19,13 @@
 	  <div class="container">
 	    <label><b>Email</b></label>
 	    <!--<input type="text" placeholder="Enter Username" name="uname" required>-->
-	    <input type="email" class="form-control" id="emailIput" aria-describedby="emailHelp" placeholder="Enter email" name="email" required>
+	    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" name="email" required>
 	
 	    <label><b>Password</b></label>
 	    <!--<input type="password" placeholder="Enter Password" name="psw" required>-->
-	    <input type="password" class="form-control" id="passwordInput" placeholder="Password" name="password" required>
+	    <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
 	        
-	    <button type="button" class="btn btn-success">Login</button>
+	    <button type="submit" class="btn btn-success">Login</button>
 	    <label>
 	      <input type="checkbox" checked="checked"> Remember me
 	    </label>
@@ -36,5 +36,6 @@
 	    <span class="psw">Forgot <a href="#">password?</a></span>
 	  </div>
 	</form>
+	<script src="./Login.js"></script>
 </body>
 </html>
