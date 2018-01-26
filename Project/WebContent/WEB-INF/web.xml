@@ -43,6 +43,11 @@
 	<servlet-name>LoginServlet</servlet-name>
     <jsp-file>/Login/Login.html</jsp-file>
   </servlet>
+  
+  <servlet>
+	<servlet-name>LoginJSServlet</servlet-name>
+    <jsp-file>/Login/Login.js</jsp-file>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>TomcatTestServlet</servlet-name>
@@ -57,6 +62,11 @@
   <servlet-mapping>
 	<servlet-name>LoginServlet</servlet-name>
     <url-pattern>/servlet/Login</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>LoginJSServlet</servlet-name>
+    <url-pattern>/servlet/Login.js</url-pattern>
   </servlet-mapping>
 
 </web-app>

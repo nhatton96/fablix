@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
 	$('#LoginForm').submit(function() {
-		console.log("In post method");
+		//console.log("In post method");
         $.ajax({
             type: "POST",
             url: '/Project/api/login',
