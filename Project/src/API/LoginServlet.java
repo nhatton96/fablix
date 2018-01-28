@@ -1,14 +1,9 @@
 package API;
+
 import Models.Customer;
 import Controllers.CustomerService;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,17 +19,19 @@ public class LoginServlet extends HttpServlet{
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	private CustomerService customerService;
+	private CustomerService customerService = new CustomerService();
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//response.setContentType("application/json");
 		HttpSession session = request.getSession(true);
 		String username = request.getParameter("email");
 	    String password = request.getParameter("password");
 	    Customer customer = customerService.find(username, password);
 
-	    if (customer != null) {
+	    if (customer.getEmail() != "") {
 	        request.getSession().setAttribute("customer", customer);
-	        response.sendRedirect("/servlet/MovieList");
+	        response.setStatus(HttpServletResponse.SC_OK);
 	    }
 	    else {
 	        request.setAttribute("error", "Unknown user, please try again");

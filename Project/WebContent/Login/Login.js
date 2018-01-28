@@ -1,7 +1,6 @@
 
 $(document).ready(function() {
 	$('#LoginForm').submit(function() {
-		//console.log("In post method");
         $.ajax({
             type: "POST",
             url: '/Project/api/login',
@@ -9,17 +8,31 @@ $(document).ready(function() {
                 email: $("#email").val(),
                 password: $("#password").val()
             },
-            success: function(data)
+            success: function(response)
             {
-            	onsole.log("Logging in");
-            	windows.location("/servlet/MovieList");	
-            }
+            	//alert(response);
+            	console.log("Logging in");
+            	//response.preventDefault();
+            	window.location.replace("MovieList");	
+            	//return false;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("Wrong email or password");
+                console.log(textStatus);
+                console.log(errorThrown);
+                location.reload();
+             }
         });
     });
 });
-
+/*
+$("#LoginForm").on("submit",function(e) {
+	   e.preventDefault(); // cancel submission
+	   window.location.replace("/servlet/MovieList");
+	   
+	});*/
 
 function goToMainPage() {
-	console.log("Logging in");
-	windows.location("/servlet/MovieList");	
+	//e.preventDefault(); // cancel submission
+	//window.location.replace("/servlet/MovieList");	
 }

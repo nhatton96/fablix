@@ -23,10 +23,14 @@ public class CustomerService {
     String loginPasswd = "mypassword";
     String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 	
+    public CustomerService() {}
 	
 	public Customer find(String email, String password) {
 		
 		try {
+			//Class.forName("org.gjt.mm.mysql.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 	        // Declare our statement
 	        Statement statement = dbcon.createStatement();
@@ -35,6 +39,7 @@ public class CustomerService {
 
 	        // Perform the query
 	        ResultSet rs = statement.executeQuery(query);
+	        rs.next();
 	        Customer customer = new Customer(rs.getString("email"), rs.getString("password"));
 	        rs.close();
 	        
@@ -42,10 +47,7 @@ public class CustomerService {
 	        
 		}
 		catch (java.lang.Exception ex) {
-            
-        }
-				
-		return new Customer();
+			return new Customer();
+        }			
 	}
-
 }
