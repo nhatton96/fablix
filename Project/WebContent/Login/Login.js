@@ -13,7 +13,7 @@ $(document).ready(function() {
             	//alert(response);
             	console.log("Logging in");
             	//response.preventDefault();
-            	window.location.replace("MovieList");	
+            	window.location.replace("Movies");
             	//return false;
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {

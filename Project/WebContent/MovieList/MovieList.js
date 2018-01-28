@@ -11,8 +11,8 @@ function handleListResult(resultData) {
 		rowHTML += "<th>" + resultData[i]["year"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["director"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["genreName"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["starName"] + "</th>";
+		rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
+		rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
 		rowHTML += "</tr>"
 		movieTableBodyElement.append(rowHTML);
 	}
@@ -28,7 +28,11 @@ jQuery.ajax({
           Page: "1",
           PageSize: "20"
       },
-	  success: (resultData) => handleListResult(resultData),
-	  error: (XMLHttpRequest, textStatus, errorThrown) => alert(textStatus)
+	  success: function(resultData){
+          handleListResult(resultData);
+	  },
+	  error: function(XMLHttpRequest, textStatus, errorThrown){
+	  	alert(textStatus);
+      }
 });
 

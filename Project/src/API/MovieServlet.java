@@ -21,12 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 @WebServlet("/api/movie")
 public class MovieServlet extends HttpServlet{
 	String loginUser = "mytestuser";
     String loginPasswd = "mypassword";
     String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    Gson gson = new Gson();
 	
 	// Use http GET
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -44,7 +46,8 @@ public class MovieServlet extends HttpServlet{
         	if("LIST".equals(action)){
         		int page = Integer.parseInt(request.getParameter("Page"));
         		int pageSize = Integer.parseInt(request.getParameter("PageSize"));
-        		JsonArray movieList = GetMovieList(page, pageSize);
+        		String movieList = GetMovieList(page, pageSize);
+
         		if (movieList != null) {
         			out.write(movieList.toString());
         	        response.setStatus(HttpServletResponse.SC_OK);
@@ -54,6 +57,21 @@ public class MovieServlet extends HttpServlet{
         	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	    }
                 
+            }
+
+            else if("SINGLE".equals(action)){
+        	    String movieId = request.getParameter("movieId");
+                String movie = GetMovie(movieId);
+
+                if (movie != null) {
+                    out.write(movie.toString());
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }
+                else {
+                    request.setAttribute("error", "Problem in MovieServlet");
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+
             }
         	
         }
@@ -65,7 +83,7 @@ public class MovieServlet extends HttpServlet{
         out.close();
     }
     
-    private JsonArray GetMovieList(int page, int pageSize) {
+    private String GetMovieList(int page, int pageSize) {
     	try {	
 
             Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -89,9 +107,9 @@ public class MovieServlet extends HttpServlet{
             ResultSet rs = statement.executeQuery(query);
 
            
-            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
-            JsonArray jsonArray = new JsonArray();
-            
+            //List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+            //JsonArray jsonArray = new JsonArray();
+            /*
             while (rs.next()) {
             	
             	String check = rs.getString("movieId");
@@ -127,13 +145,52 @@ public class MovieServlet extends HttpServlet{
                     jsonArray.add(jsonObject);
 
             	} 
+            }*/
+
+            // Iterate through each row of rs
+            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+
+            while (rs.next()) {
+
+                String check = rs.getString("movieId");
+                boolean alreadyAdded = false;
+                int index = 0;
+                for(int i = 0; i < movieOutList.size(); i++) {
+                    String moId = movieOutList.get(i).getMovieId();
+                    if(moId.equals(check)) {
+                        alreadyAdded = true;
+                        index = i;
+                    }
+                }
+
+                if(alreadyAdded) {
+                    movieOutList.get(index)
+                            .addGenre(rs.getString("genreName"));
+
+                    movieOutList.get(index)
+                            .addStar(rs.getString("starName"));
+
+                }
+                else {
+                    MovieOut mo = new MovieOut();
+                    mo.setMovieId(rs.getString("movieId"));
+                    mo.setTitle(rs.getString("title"));
+                    mo.setYear(rs.getString("year"));
+                    mo.setDirector(rs.getString("director"));
+                    mo.setRating(rs.getString("rating"));
+                    mo.addGenre(rs.getString("genreName"));
+                    mo.addStar(rs.getString("starName"));
+
+                    movieOutList.add(mo);
+                }
             }
              
             rs.close();
             statement.close();
             dbcon.close();
-            
-            return jsonArray;
+
+
+            return gson.toJson(movieOutList);
             
         } 
     	catch (SQLException ex) {
@@ -141,8 +198,89 @@ public class MovieServlet extends HttpServlet{
                 System.out.println("SQL Exception:  " + ex.getMessage());
                 ex = ex.getNextException();
             } // end while
-            return new JsonArray();
+            return new String();
         } // end catch SQLException
     }
+
+    private String GetMovie(String movieId){
+        try {
+
+            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            // Declare our statement
+            Statement statement = dbcon.createStatement();
+
+            String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n" +
+                    "(SELECT * FROM ratings ) AS  r\r\n" +
+                    "INNER JOIN movies AS m ON r.movieId = m.id\r\n" +
+                    "INNER JOIN genres_in_movies gim \r\n" +
+                    "ON gim.movieId = r.movieId\r\n" +
+                    "INNER JOIN genres g \r\n" +
+                    "ON gim.genreId = g.id\r\n" +
+                    "INNER JOIN stars_in_movies sim\r\n" +
+                    "ON sim.movieId = r.movieId\r\n" +
+                    "INNER JOIN stars s\r\n" +
+                    "ON sim.starsId = s.id" +
+                    "WHERE m.id ="+movieId+";";
+
+            // Perform the query
+            ResultSet rs = statement.executeQuery(query);
+
+
+            // Iterate through each row of rs
+            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+
+            while (rs.next()) {
+
+                String check = rs.getString("movieId");
+                boolean alreadyAdded = false;
+                int index = 0;
+                for(int i = 0; i < movieOutList.size(); i++) {
+                    String moId = movieOutList.get(i).getMovieId();
+                    if(moId.equals(check)) {
+                        alreadyAdded = true;
+                        index = i;
+                    }
+                }
+
+                if(alreadyAdded) {
+                    movieOutList.get(index)
+                            .addGenre(rs.getString("genreName"));
+
+                    movieOutList.get(index)
+                            .addStar(rs.getString("starName"));
+
+                }
+                else {
+                    MovieOut mo = new MovieOut();
+                    mo.setMovieId(rs.getString("movieId"));
+                    mo.setTitle(rs.getString("title"));
+                    mo.setYear(rs.getString("year"));
+                    mo.setDirector(rs.getString("director"));
+                    mo.setRating(rs.getString("rating"));
+                    mo.addGenre(rs.getString("genreName"));
+                    mo.addStar(rs.getString("starName"));
+
+                    movieOutList.add(mo);
+                }
+            }
+
+            rs.close();
+            statement.close();
+            dbcon.close();
+
+            //JsonObject jsonObject = gson.toJson(movieOutList);
+            return gson.toJson(movieOutList);
+
+        }
+        catch (SQLException ex) {
+            while (ex != null) {
+                System.out.println("SQL Exception:  " + ex.getMessage());
+                ex = ex.getNextException();
+            } // end while
+            return new String();
+        } // end catch SQLException
+
+    }
+
 
 }
