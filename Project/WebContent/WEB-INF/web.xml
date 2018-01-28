@@ -27,12 +27,9 @@
     </description>
 
 
-  <!-- Define servlets that are included in the example application -->
 
-  <servlet>
-    <servlet-name>TomcatTestServlet</servlet-name>
-    <servlet-class>TomcatTest</servlet-class>
-  </servlet>
+
+  <!-- Define servlets that are included in the example application -->
   
   <servlet>
 	<servlet-name>MovieListServlet</servlet-name>
@@ -45,14 +42,21 @@
   </servlet>
   
   <servlet>
-	<servlet-name>LoginJSServlet</servlet-name>
+	<servlet-name>LoginJS</servlet-name>
     <jsp-file>/Login/Login.js</jsp-file>
   </servlet>
+  
+   <servlet>
+	<servlet-name>MovieServlet</servlet-name>
+    <jsp-file>/MovieList/MovieList.html</jsp-file>
+  </servlet>
+  
+  <servlet>
+	<servlet-name>MovieListJS</servlet-name>
+    <jsp-file>/MovieList/MovieList.js</jsp-file>
+  </servlet>
 
-  <servlet-mapping>
-    <servlet-name>TomcatTestServlet</servlet-name>
-    <url-pattern>/servlet/TomcatTest</url-pattern>
-  </servlet-mapping>
+  
   
   <servlet-mapping>
 	<servlet-name>MovieListServlet</servlet-name>
@@ -65,8 +69,18 @@
   </servlet-mapping>
   
   <servlet-mapping>
-	<servlet-name>LoginJSServlet</servlet-name>
+	<servlet-name>LoginJS</servlet-name>
     <url-pattern>/servlet/Login.js</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>MovieServlet</servlet-name>
+    <url-pattern>/servlet/Movies</url-pattern>
+  </servlet-mapping>
+  
+   <servlet-mapping>
+	<servlet-name>MovieListJS</servlet-name>
+    <url-pattern>/servlet/MovieList.js</url-pattern>
   </servlet-mapping>
 
 </web-app>

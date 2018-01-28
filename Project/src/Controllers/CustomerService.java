@@ -41,7 +41,10 @@ public class CustomerService {
 	        ResultSet rs = statement.executeQuery(query);
 	        rs.next();
 	        Customer customer = new Customer(rs.getString("email"), rs.getString("password"));
+	        
 	        rs.close();
+            statement.close();
+            dbcon.close();
 	        
 	        return customer;
 	        
