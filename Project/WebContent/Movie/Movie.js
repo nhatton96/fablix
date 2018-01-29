@@ -25,7 +25,7 @@ jQuery.ajax({
     url: "/Project/api/movie",
     data: {
         ACTION: "SINGLE",
-        MovieId: "tt0094859"
+        MovieId: getParameterByName('movieId')
     },
     success: function(resultData){
         handleListResult(resultData);
@@ -34,4 +34,15 @@ jQuery.ajax({
         alert(textStatus);
     }
 });
+
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 

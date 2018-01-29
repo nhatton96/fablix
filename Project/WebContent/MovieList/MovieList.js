@@ -6,7 +6,7 @@ function handleListResult(resultData) {
 	var movieTableBodyElement = jQuery("#movieList_table_body");
 	for (var i = 0; i < Math.min(10, resultData.length); i++) {
 		var rowHTML = "";
-		rowHTML += "<tr>";
+		rowHTML += "<tr class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
 		rowHTML += "<th>" + resultData[i]["title"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["year"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["director"] + "</th>";
@@ -36,3 +36,11 @@ jQuery.ajax({
       }
 });
 
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        var movieId = $(this).data("href");
+        //alert(movieId);
+        window.location.replace("SingleMovie?movieId="+movieId);
+        //window.location = $(this).data("href");
+    });
+});
