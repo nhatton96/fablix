@@ -60,10 +60,10 @@ public class MovieServlet extends HttpServlet{
             }
 
             else if("SINGLE".equals(action)){
-        	    String movieId = request.getParameter("movieId");
+        	    String movieId = request.getParameter("MovieId");
                 String movie = GetMovie(movieId);
 
-                if (movie != null) {
+                if (!movie.equals("")) {
                     out.write(movie.toString());
                     response.setStatus(HttpServletResponse.SC_OK);
                 }
@@ -209,18 +209,18 @@ public class MovieServlet extends HttpServlet{
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n" +
-                    "(SELECT * FROM ratings ) AS  r\r\n" +
-                    "INNER JOIN movies AS m ON r.movieId = m.id\r\n" +
-                    "INNER JOIN genres_in_movies gim \r\n" +
-                    "ON gim.movieId = r.movieId\r\n" +
-                    "INNER JOIN genres g \r\n" +
-                    "ON gim.genreId = g.id\r\n" +
-                    "INNER JOIN stars_in_movies sim\r\n" +
-                    "ON sim.movieId = r.movieId\r\n" +
-                    "INNER JOIN stars s\r\n" +
-                    "ON sim.starsId = s.id" +
-                    "WHERE m.id ="+movieId+";";
+            String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName FROM \n" +
+                    "(SELECT * FROM ratings) AS  r\n" +
+                    "INNER JOIN movies AS m ON r.movieId = m.id\n" +
+                    "INNER JOIN genres_in_movies gim \n" +
+                    "ON gim.movieId = r.movieId\n" +
+                    "INNER JOIN genres g \n" +
+                    "ON gim.genreId = g.id\n" +
+                    "INNER JOIN stars_in_movies sim\n" +
+                    "ON sim.movieId = r.movieId\n" +
+                    "INNER JOIN stars s\n" +
+                    "ON sim.starsId = s.id\n" +
+                    "WHERE m.id = \'"+movieId+"\';";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
