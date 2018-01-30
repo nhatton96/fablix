@@ -54,12 +54,16 @@ $("#Previous").click(function(e) {
         url: "/Project/api/movie",
         data: {
             ACTION: "LIST",
-            Page: "1",
+            Page: getParameterByName('page'),
             PageSize: "20"
         },
         success: function(result) {
             $("#movieList_table tr").remove();
             handleListResult(result);
+            var pageNum = parseInt(getParameterByName('page'));
+            if(pageNum > 0)
+                pageNum = pageNum - 1;
+            window.location.replace("Movies?page="+ pageNum.toString());
         },
         error: function(result) {
             alert('error');
