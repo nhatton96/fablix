@@ -28,16 +28,19 @@
 		<tbody id=movieList_table_body>
 		</tbody>
 	</table>
-
 	<!-- include jQuery and Bootstrap JS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-	<!-- include our own JS file -->
-	<script src="./MovieList.js"></script>
 </body>
+<div class="container">
+	<ul class="pager">
+		<li id="Previous" class="previous"><a href="#">Previous</a></li>
+		<li id="Next" class="next"><a href="#">Next</a></li>
+	</ul>
+</div>
 
-
-
+<!-- include our own JS file -->
+<script src="./MovieList.js"></script>
 </html>
