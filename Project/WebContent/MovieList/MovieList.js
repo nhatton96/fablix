@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         var movieId = $(this).data("href");
         //alert(movieId);
-        window.location.replace("SingleMovie?movieId="+movieId);
+        window.location.assign("SingleMovie?movieId="+movieId);
         //window.location = $(this).data("href");
     });
 });
@@ -63,7 +63,7 @@ $("#Previous").click(function(e) {
             var pageNum = parseInt(getParameterByName('page'));
             if(pageNum > 0)
                 pageNum = pageNum - 1;
-            window.location.replace("Movies?page="+ pageNum.toString());
+            window.location.assign("Movies?page="+ pageNum.toString());
         },
         error: function(result) {
             alert('error');
@@ -88,7 +88,7 @@ $("#Next").click(function(e) {
             handleListResult(result);
             var pageNum = parseInt(getParameterByName('page'));
             pageNum = pageNum + 1;
-            window.location.replace("Movies?page="+ pageNum.toString());
+            window.location.assign("Movies?page="+ pageNum.toString());
         },
         error: function(result) {
             alert('error');

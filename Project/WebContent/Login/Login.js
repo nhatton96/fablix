@@ -40,7 +40,7 @@ $('#LoginForm').submit(function(e) {
             //alert(response);
             console.log("Logging in");
             //response.preventDefault();
-            window.location.replace("Movies?page=0");
+            window.location.assign("Movies?page=0");
             //return false;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
