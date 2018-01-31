@@ -18,7 +18,6 @@ function handleListResult(resultData) {
 	}
 }
 
-// makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
 	  dataType: "json",
 	  method: "GET",
@@ -36,6 +35,51 @@ jQuery.ajax({
       }
 });
 
+// for when search page
+//function searchAdv(){
+//	jQuery.ajax({
+//		  dataType: "json",
+//		  method: "GET",
+//		  url: "/Project/api/movie",
+//		  data: {
+//	          ACTION: "SEARCHADV",
+//	          Page: 1,
+//	          PageSize: "20",
+//	          title: "Split",
+//	          director: "0",
+//	          star: "Jonny Spanish",
+//	          year: "0"
+//	      },
+//		  success: function(resultData){
+//	          handleListResult(resultData);
+//		  },
+//		  error: function(XMLHttpRequest, textStatus, errorThrown){
+//		  	alert(textStatus);
+//	      }
+//	});
+//}
+//searchAdv();
+
+// too hard do later
+//function search(){
+//	jQuery.ajax({
+//		  dataType: "json",
+//		  method: "GET",
+//		  url: "/Project/api/movie",
+//		  data: {
+//	          ACTION: "SEARCH",
+//	          Page: getParameterByName('page'),
+//	          PageSize: "20",
+//	          keyword: getParameterByName('keyword')
+//	      },
+//		  success: function(resultData){
+//	          handleListResult(resultData);
+//		  },
+//		  error: function(XMLHttpRequest, textStatus, errorThrown){
+//		  	alert(textStatus);
+//	      }
+//	});
+//}
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function(e) {
         e.preventDefault();

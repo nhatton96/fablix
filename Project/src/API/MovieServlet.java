@@ -24,263 +24,315 @@ import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 
 @WebServlet("/api/movie")
-public class MovieServlet extends HttpServlet{
+public class MovieServlet extends HttpServlet {
 	String loginUser = "mytestuser";
-    String loginPasswd = "mypassword";
-    String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-    Gson gson = new Gson();
-	
+	String loginPasswd = "mypassword";
+	String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+	Gson gson = new Gson();
+
 	// Use http GET
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        
-        //response.setContentType("text/html"); // Response mime type
-        response.setContentType("application/json"); // Response mime type
-        // Output stream to STDOUT
-        PrintWriter out = response.getWriter();
-        
-        String action = request.getParameter("ACTION");
-        
-        try {
-        	//Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        	if("LIST".equals(action)){
-        		int page = Integer.parseInt(request.getParameter("Page"));
-        		int pageSize = Integer.parseInt(request.getParameter("PageSize"));
-        		String movieList = GetMovieList(page, pageSize);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        		if (movieList != null) {
-        			out.write(movieList.toString());
-        	        response.setStatus(HttpServletResponse.SC_OK);
-        	    }
-        	    else {
-        	        request.setAttribute("error", "Problem in MovieServlet");
-        	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        	    }
-                
-            }
+		// response.setContentType("text/html"); // Response mime type
+		response.setContentType("application/json"); // Response mime type
+		// Output stream to STDOUT
+		PrintWriter out = response.getWriter();
 
-            else if("SINGLE".equals(action)){
-        	    String movieId = request.getParameter("MovieId");
-                String movie = GetMovie(movieId);
+		String action = request.getParameter("ACTION");
 
-                if (!movie.equals("")) {
-                    out.write(movie.toString());
-                    response.setStatus(HttpServletResponse.SC_OK);
-                }
-                else {
-                    request.setAttribute("error", "Problem in MovieServlet");
-                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                }
+		try {
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			if ("LIST".equals(action)) {
+				int page = Integer.parseInt(request.getParameter("Page"));
+				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
+				String movieList = GetMovieList(page - 1, pageSize);
 
-            }
-        	
-        }
-        catch (java.lang.Exception ex) {
-            out.println("<HTML>" + "<HEAD><TITLE>" + "MovieDB: Error" + "</TITLE></HEAD>\n<BODY>"
-                    + "<P>SQL error in doGet: " + ex.getMessage() + "</P></BODY></HTML>");
-            return;
-        }
-        out.close();
-    }
-    
-    private String GetMovieList(int page, int pageSize) {
-    	try {	
+				if (movieList != null) {
+					out.write(movieList.toString());
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
 
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-            // Declare our statement
-            Statement statement = dbcon.createStatement();
-            
-            String shiftAmount = Integer.toString(page * pageSize);
-            String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n" + 
-		            		"(SELECT * FROM ratings ORDER BY rating DESC LIMIT 20 OFFSET "+shiftAmount+") AS  r\r\n" + 
-		            		"INNER JOIN movies AS m ON r.movieId = m.id\r\n" + 
-		            		"INNER JOIN genres_in_movies gim \r\n" + 
-		            		"ON gim.movieId = r.movieId\r\n" + 
-		            		"INNER JOIN genres g \r\n" + 
-		            		"ON gim.genreId = g.id\r\n" + 
-		            		"INNER JOIN stars_in_movies sim\r\n" + 
-		            		"ON sim.movieId = r.movieId\r\n" + 
-		            		"INNER JOIN stars s\r\n" + 
-		            		"ON sim.starsId = s.id;";
+			} else if ("SEARCHADV".equals(action)) {
+				int page = Integer.parseInt(request.getParameter("Page"));
+				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
+				String star = request.getParameter("star");
+				if (star.equals("0"))
+					star = "%";
+				String year = request.getParameter("year");
+				if (year.equals("0"))
+					year = "%";
+				String title = request.getParameter("title");
+				if (title.equals("0"))
+					title = "%";
+				String director = request.getParameter("director");
+				if (director.equals("0"))
+					director = "%";
+				String movieList = searchAdv(page - 1, pageSize, title, year, director, star);
+				
+				if (movieList != null) {
+					out.write(movieList.toString());
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
+			} else if ("SINGLE".equals(action)) {
+				String movieId = request.getParameter("MovieId");
+				String movie = GetMovie(movieId);
 
-            // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+				if (!movie.equals("")) {
+					out.write(movie.toString());
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
 
-           
-            //List<MovieOut> movieOutList = new ArrayList<MovieOut>();
-            //JsonArray jsonArray = new JsonArray();
-            /*
-            while (rs.next()) {
-            	
-            	String check = rs.getString("movieId");
-            	boolean alreadyAdded = false;
-            	int index = 0;
-            	for(int i = 0; i < movieOutList.size(); i++) {
-                	String moId = movieOutList.get(i).getMovieId();
-                	if(moId.equals(check)) {
-                		alreadyAdded = true;
-                    	index = i;
-                	}	
-                }
-            	
-            	if(alreadyAdded) {
-            		movieOutList.get(index)
-            		.addGenre(rs.getString("genreName"));
-            		
-            		movieOutList.get(index)
-        			.addStar(rs.getString("starName"));
-            		
-            	}
-            	else {
-                    
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("movieId", rs.getString("movieId"));
-                    jsonObject.addProperty("title", rs.getString("title"));
-                    jsonObject.addProperty("year", rs.getString("year"));
-                    jsonObject.addProperty("director", rs.getString("director"));
-                    jsonObject.addProperty("rating", rs.getString("rating"));
-                    jsonObject.addProperty("genreName", rs.getString("genreName"));
-                    jsonObject.addProperty("starName", rs.getString("starName"));
-                    
-                    jsonArray.add(jsonObject);
+			}
 
-            	} 
-            }*/
+		} catch (java.lang.Exception ex) {
+			out.println("<HTML>" + "<HEAD><TITLE>" + "MovieDB: Error" + "</TITLE></HEAD>\n<BODY>"
+					+ "<P>SQL error in doGet: " + ex.getMessage() + "</P></BODY></HTML>");
+			return;
+		}
+		out.close();
+	}
 
-            // Iterate through each row of rs
-            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+	private String GetMovieList(int page, int pageSize) {
+		try {
 
-            while (rs.next()) {
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			// Declare our statement
+			Statement statement = dbcon.createStatement();
 
-                String check = rs.getString("movieId");
-                boolean alreadyAdded = false;
-                int index = 0;
-                for(int i = 0; i < movieOutList.size(); i++) {
-                    String moId = movieOutList.get(i).getMovieId();
-                    if(moId.equals(check)) {
-                        alreadyAdded = true;
-                        index = i;
-                    }
-                }
+			String shiftAmount = Integer.toString(page * pageSize);
+			String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n"
+					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT 20 OFFSET " + shiftAmount + ") AS  r\r\n"
+					+ "INNER JOIN movies AS m ON r.movieId = m.id\r\n" + "INNER JOIN genres_in_movies gim \r\n"
+					+ "ON gim.movieId = r.movieId\r\n" + "INNER JOIN genres g \r\n" + "ON gim.genreId = g.id\r\n"
+					+ "INNER JOIN stars_in_movies sim\r\n" + "ON sim.movieId = r.movieId\r\n" + "INNER JOIN stars s\r\n"
+					+ "ON sim.starsId = s.id;";
 
-                if(alreadyAdded) {
-                    movieOutList.get(index)
-                            .addGenre(rs.getString("genreName"));
+			// Perform the query
+			ResultSet rs = statement.executeQuery(query);
 
-                    movieOutList.get(index)
-                            .addStar(rs.getString("starName"));
+			// List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+			// JsonArray jsonArray = new JsonArray();
+			/*
+			 * while (rs.next()) {
+			 * 
+			 * String check = rs.getString("movieId"); boolean alreadyAdded = false; int
+			 * index = 0; for(int i = 0; i < movieOutList.size(); i++) { String moId =
+			 * movieOutList.get(i).getMovieId(); if(moId.equals(check)) { alreadyAdded =
+			 * true; index = i; } }
+			 * 
+			 * if(alreadyAdded) { movieOutList.get(index)
+			 * .addGenre(rs.getString("genreName"));
+			 * 
+			 * movieOutList.get(index) .addStar(rs.getString("starName"));
+			 * 
+			 * } else {
+			 * 
+			 * JsonObject jsonObject = new JsonObject(); jsonObject.addProperty("movieId",
+			 * rs.getString("movieId")); jsonObject.addProperty("title",
+			 * rs.getString("title")); jsonObject.addProperty("year", rs.getString("year"));
+			 * jsonObject.addProperty("director", rs.getString("director"));
+			 * jsonObject.addProperty("rating", rs.getString("rating"));
+			 * jsonObject.addProperty("genreName", rs.getString("genreName"));
+			 * jsonObject.addProperty("starName", rs.getString("starName"));
+			 * 
+			 * jsonArray.add(jsonObject);
+			 * 
+			 * } }
+			 */
 
-                }
-                else {
-                    MovieOut mo = new MovieOut();
-                    mo.setMovieId(rs.getString("movieId"));
-                    mo.setTitle(rs.getString("title"));
-                    mo.setYear(rs.getString("year"));
-                    mo.setDirector(rs.getString("director"));
-                    mo.setRating(rs.getString("rating"));
-                    mo.addGenre(rs.getString("genreName"));
-                    mo.addStar(rs.getString("starName"));
+			// Iterate through each row of rs
+			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
-                    movieOutList.add(mo);
-                }
-            }
-             
-            rs.close();
-            statement.close();
-            dbcon.close();
+			while (rs.next()) {
 
+				String check = rs.getString("movieId");
+				boolean alreadyAdded = false;
+				int index = 0;
+				for (int i = 0; i < movieOutList.size(); i++) {
+					String moId = movieOutList.get(i).getMovieId();
+					if (moId.equals(check)) {
+						alreadyAdded = true;
+						index = i;
+					}
+				}
 
-            return gson.toJson(movieOutList);
-            
-        } 
-    	catch (SQLException ex) {
-            while (ex != null) {
-                System.out.println("SQL Exception:  " + ex.getMessage());
-                ex = ex.getNextException();
-            } // end while
-            return new String();
-        } // end catch SQLException
-    }
+				if (alreadyAdded) {
+					movieOutList.get(index).addGenre(rs.getString("genreName"));
 
-    private String GetMovie(String movieId){
-        try {
+					movieOutList.get(index).addStar(rs.getString("starName"));
 
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-            // Declare our statement
-            Statement statement = dbcon.createStatement();
+				} else {
+					MovieOut mo = new MovieOut();
+					mo.setMovieId(rs.getString("movieId"));
+					mo.setTitle(rs.getString("title"));
+					mo.setYear(rs.getString("year"));
+					mo.setDirector(rs.getString("director"));
+					mo.setRating(rs.getString("rating"));
+					mo.addGenre(rs.getString("genreName"));
+					mo.addStar(rs.getString("starName"));
 
-            String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName FROM \n" +
-                    "(SELECT * FROM ratings) AS  r\n" +
-                    "INNER JOIN movies AS m ON r.movieId = m.id\n" +
-                    "INNER JOIN genres_in_movies gim \n" +
-                    "ON gim.movieId = r.movieId\n" +
-                    "INNER JOIN genres g \n" +
-                    "ON gim.genreId = g.id\n" +
-                    "INNER JOIN stars_in_movies sim\n" +
-                    "ON sim.movieId = r.movieId\n" +
-                    "INNER JOIN stars s\n" +
-                    "ON sim.starsId = s.id\n" +
-                    "WHERE m.id = \'"+movieId+"\';";
+					movieOutList.add(mo);
+				}
+			}
 
-            // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+			rs.close();
+			statement.close();
+			dbcon.close();
 
+			return gson.toJson(movieOutList);
 
-            // Iterate through each row of rs
-            List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		} // end catch SQLException
+	}
 
-            while (rs.next()) {
+	private String GetMovie(String movieId) {
+		try {
 
-                String check = rs.getString("movieId");
-                boolean alreadyAdded = false;
-                int index = 0;
-                for(int i = 0; i < movieOutList.size(); i++) {
-                    String moId = movieOutList.get(i).getMovieId();
-                    if(moId.equals(check)) {
-                        alreadyAdded = true;
-                        index = i;
-                    }
-                }
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			// Declare our statement
+			Statement statement = dbcon.createStatement();
 
-                if(alreadyAdded) {
-                    movieOutList.get(index)
-                            .addGenre(rs.getString("genreName"));
+			String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName FROM \n"
+					+ "(SELECT * FROM ratings) AS  r\n" + "INNER JOIN movies AS m ON r.movieId = m.id\n"
+					+ "INNER JOIN genres_in_movies gim \n" + "ON gim.movieId = r.movieId\n" + "INNER JOIN genres g \n"
+					+ "ON gim.genreId = g.id\n" + "INNER JOIN stars_in_movies sim\n" + "ON sim.movieId = r.movieId\n"
+					+ "INNER JOIN stars s\n" + "ON sim.starsId = s.id\n" + "WHERE m.id = \'" + movieId + "\';";
 
-                    movieOutList.get(index)
-                            .addStar(rs.getString("starName"));
+			// Perform the query
+			ResultSet rs = statement.executeQuery(query);
 
-                }
-                else {
-                    MovieOut mo = new MovieOut();
-                    mo.setMovieId(rs.getString("movieId"));
-                    mo.setTitle(rs.getString("title"));
-                    mo.setYear(rs.getString("year"));
-                    mo.setDirector(rs.getString("director"));
-                    mo.setRating(rs.getString("rating"));
-                    mo.addGenre(rs.getString("genreName"));
-                    mo.addStar(rs.getString("starName"));
+			// Iterate through each row of rs
+			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
-                    movieOutList.add(mo);
-                }
-            }
+			while (rs.next()) {
 
-            rs.close();
-            statement.close();
-            dbcon.close();
+				String check = rs.getString("movieId");
+				boolean alreadyAdded = false;
+				int index = 0;
+				for (int i = 0; i < movieOutList.size(); i++) {
+					String moId = movieOutList.get(i).getMovieId();
+					if (moId.equals(check)) {
+						alreadyAdded = true;
+						index = i;
+					}
+				}
 
-            //JsonObject jsonObject = gson.toJson(movieOutList);
-            return gson.toJson(movieOutList);
+				if (alreadyAdded) {
+					movieOutList.get(index).addGenre(rs.getString("genreName"));
 
-        }
-        catch (SQLException ex) {
-            while (ex != null) {
-                System.out.println("SQL Exception:  " + ex.getMessage());
-                ex = ex.getNextException();
-            } // end while
-            return new String();
-        } // end catch SQLException
+					movieOutList.get(index).addStar(rs.getString("starName"));
 
-    }
+				} else {
+					MovieOut mo = new MovieOut();
+					mo.setMovieId(rs.getString("movieId"));
+					mo.setTitle(rs.getString("title"));
+					mo.setYear(rs.getString("year"));
+					mo.setDirector(rs.getString("director"));
+					mo.setRating(rs.getString("rating"));
+					mo.addGenre(rs.getString("genreName"));
+					mo.addStar(rs.getString("starName"));
 
+					movieOutList.add(mo);
+				}
+			}
 
+			rs.close();
+			statement.close();
+			dbcon.close();
+
+			// JsonObject jsonObject = gson.toJson(movieOutList);
+			return gson.toJson(movieOutList);
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		} // end catch SQLException
+
+	}
+
+	private String searchAdv(int page, int pageSize, String title, String year, String director, String star) {
+		try {
+
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			// Declare our statement
+			Statement statement = dbcon.createStatement();
+
+			String shiftAmount = Integer.toString(page * pageSize);
+			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, g.name as genreName, r.rating as rating from "
+					+ "(select m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
+					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
+					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit 20 offset "
+					+ shiftAmount + ") as m, "
+					+ "genres g, genres_in_movies ge, stars s, stars_in_movies st, ratings r where m.id = ge.movieID and g.id = ge.genreId and s.id = st.starsId and st.movieId = m.id and r.movieId = m.id ;";
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery(query);
+
+			// Iterate through each row of rs
+			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+
+			while (rs.next()) {
+
+				String check = rs.getString("movieId");
+				boolean alreadyAdded = false;
+				int index = 0;
+				for (int i = 0; i < movieOutList.size(); i++) {
+					String moId = movieOutList.get(i).getMovieId();
+					if (moId.equals(check)) {
+						alreadyAdded = true;
+						index = i;
+					}
+				}
+
+				if (alreadyAdded) {
+					movieOutList.get(index).addGenre(rs.getString("genreName"));
+
+					movieOutList.get(index).addStar(rs.getString("starName"));
+
+				} else {
+					MovieOut mo = new MovieOut();
+					mo.setMovieId(rs.getString("movieId"));
+					mo.setTitle(rs.getString("title"));
+					mo.setYear(rs.getString("year"));
+					mo.setDirector(rs.getString("director"));
+					mo.setRating(rs.getString("rating"));
+					mo.addGenre(rs.getString("genreName"));
+					mo.addStar(rs.getString("starName"));
+
+					movieOutList.add(mo);
+				}
+			}
+
+			rs.close();
+			statement.close();
+			dbcon.close();
+
+			return gson.toJson(movieOutList);
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		} // end catch SQLException
+	}
 }
