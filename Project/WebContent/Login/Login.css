@@ -6,11 +6,16 @@
     margin:auto;
     height: 50%;
     background-color: #fbfbfb;
+    opacity: 0.8;
 }
 
 .Body {
-    background-color: #000000;
-    padding-top: 50px;
+    background: url("../Res/iron-man-stickers.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 15%;
 }
 
 .button-container{
@@ -44,7 +49,7 @@ button {
 }
 
 button:hover {
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
 
