@@ -33,7 +33,7 @@ public class MovieList extends HttpServlet{
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD>"
-        		+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/MovieList.css\">"
+        		+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/MovieListOld.css\">"
         		+ "<TITLE>MovieDB</TITLE></HEAD>");
         out.println("<BODY><H1 class=\"header-center\">Movie List</H1>");
 
