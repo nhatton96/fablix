@@ -31,6 +31,10 @@ form {
     border: 3px solid #f1f1f1;
 }
 
+.form-control {
+    margin-bottom:10px;
+}
+
 h2 {
     text-align: center;
 }
