@@ -46,6 +46,15 @@ jQuery(document).ready(function($) {
     });
 });
 
+/*
+jQuery(document).ready(function($) {
+    $(".clickable-row").on('click-row.bs.table', function(e, row, $element) {
+        e.preventDefault();
+        var movieId = $(this).data("href");
+        window.location.assign("SingleMovie?movieId="+movieId);
+    });
+});*/
+
 $("#Previous").click(function(e) {
     e.preventDefault();
     $.ajax({
