@@ -6,7 +6,7 @@ function handleListResult(resultData) {
     var movieTableBodyElement = jQuery("#movieList_table_body");
     for (var i = 0; i < resultData.length; i++) {
         var rowHTML = "";
-        rowHTML += "<tr class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
+        rowHTML += "<tr id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
         rowHTML += "<th>" + resultData[i]["title"] + "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";

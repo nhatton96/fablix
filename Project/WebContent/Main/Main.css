@@ -49,6 +49,8 @@ tr:hover{
 
 table{
     color:white;
+    border-collapse:unset;
+    border-spacing: 0px 20px;
 }
 
 #table_div {
