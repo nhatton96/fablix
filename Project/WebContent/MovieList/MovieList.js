@@ -44,10 +44,10 @@ jQuery.ajax({
 //		  data: {
 //	          ACTION: "SEARCHADV",
 //	          Page: 1,
-//	          PageSize: "20",
-//	          title: "Split",
+//	          PageSize: "1",
+//	          title: "0",
 //	          director: "0",
-//	          star: "Jonny Spanish",
+//	          star: "Will Smith",
 //	          year: "0"
 //	      },
 //		  success: function(resultData){

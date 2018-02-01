@@ -120,36 +120,6 @@ public class MovieServlet extends HttpServlet {
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 
-			// List<MovieOut> movieOutList = new ArrayList<MovieOut>();
-			// JsonArray jsonArray = new JsonArray();
-			/*
-			 * while (rs.next()) {
-			 * 
-			 * String check = rs.getString("movieId"); boolean alreadyAdded = false; int
-			 * index = 0; for(int i = 0; i < movieOutList.size(); i++) { String moId =
-			 * movieOutList.get(i).getMovieId(); if(moId.equals(check)) { alreadyAdded =
-			 * true; index = i; } }
-			 * 
-			 * if(alreadyAdded) { movieOutList.get(index)
-			 * .addGenre(rs.getString("genreName"));
-			 * 
-			 * movieOutList.get(index) .addStar(rs.getString("starName"));
-			 * 
-			 * } else {
-			 * 
-			 * JsonObject jsonObject = new JsonObject(); jsonObject.addProperty("movieId",
-			 * rs.getString("movieId")); jsonObject.addProperty("title",
-			 * rs.getString("title")); jsonObject.addProperty("year", rs.getString("year"));
-			 * jsonObject.addProperty("director", rs.getString("director"));
-			 * jsonObject.addProperty("rating", rs.getString("rating"));
-			 * jsonObject.addProperty("genreName", rs.getString("genreName"));
-			 * jsonObject.addProperty("starName", rs.getString("starName"));
-			 * 
-			 * jsonArray.add(jsonObject);
-			 * 
-			 * } }
-			 */
-
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -279,7 +249,7 @@ public class MovieServlet extends HttpServlet {
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, g.name as genreName, r.rating as rating from "
 					+ "(select m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
 					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
-					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit 20 offset "
+					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit " + pageSize + " offset "
 					+ shiftAmount + ") as m, "
 					+ "genres g, genres_in_movies ge, stars s, stars_in_movies st, ratings r where m.id = ge.movieID and g.id = ge.genreId and s.id = st.starsId and st.movieId = m.id and r.movieId = m.id ;";
 

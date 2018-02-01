@@ -1,38 +1,84 @@
 package API;
 
-import Controllers.CustomerService;
-import Models.Customer;
+import Models.MovieOut;
+import Models.StarOut;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 @WebServlet("/api/star")
-public class StarServlet extends HttpServlet{
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    private CustomerService customerService = new CustomerService();
+public class StarServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	Gson gson = new Gson();
 
-        //response.setContentType("application/json");
-        HttpSession session = request.getSession(true);
-        String username = request.getParameter("email");
-        String password = request.getParameter("password");
-        Customer customer = customerService.find(username, password);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			response.setContentType("application/json"); // Response mime type
+			PrintWriter out = response.getWriter();
+			String loginUser = "mytestuser";
+			String loginPasswd = "mypassword";
+			String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
-        if (customer.getEmail() != "") {
-            request.getSession().setAttribute("customer", customer);
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        else {
-            request.setAttribute("error", "Unknown user, please try again");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-        }
-    }
+			String starId = request.getParameter("starId");
+
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Statement statement = dbcon.createStatement();
+
+			List<StarOut> starOutList = new ArrayList<StarOut>();
+			StarOut so = new StarOut();
+
+			String query = "select s.name as name, s.birthYear as year from stars s where s.id = '" + starId + "';";
+			ResultSet rs = statement.executeQuery(query);
+			while(rs.next()) {
+				so.setName(rs.getString("name"));
+				so.setBirth(rs.getString("year"));
+			}
+			String query2 = "select m.id as id, m.title as title from movies m, stars_in_movies st "
+					+ "where st.movieId = m.id and st.starsId = '" + starId + "';";
+
+			ResultSet rs2 = statement.executeQuery(query2);
+			while (rs2.next()) {
+				so.addMovieId(rs2.getString("id"));
+				so.addMovieNames(rs2.getString("title"));
+			}
+			starOutList.add(so);
+			rs.close();
+			rs2.close();
+			statement.close();
+			dbcon.close();
+
+			String result = gson.toJson(starOutList);
+
+			if (result != null) {
+				out.write(result.toString());
+				response.setStatus(HttpServletResponse.SC_OK);
+			} else {
+				request.setAttribute("error", "Problem in StarServlet");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
+			out.close();
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+		}
+	}
 }
