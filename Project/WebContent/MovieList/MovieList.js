@@ -18,7 +18,6 @@ function handleListResult(resultData) {
 	}
 }
 
-// makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
 	  dataType: "json",
 	  method: "GET",
@@ -35,6 +34,31 @@ jQuery.ajax({
 	  	alert(textStatus);
       }
 });
+
+// for searching
+//function searchAdv(){
+//	jQuery.ajax({
+//		  dataType: "json",
+//		  method: "GET",
+//		  url: "/Project/api/movie",
+//		  data: {
+//	          ACTION: "SEARCHADV",
+//	          Page: 1,
+//	          PageSize: "1", // for test, actualy would be getParameterByName
+//	          title: "0",  // for test, actualy would be getParameterByName
+//	          director: "0", // for test, actualy would be getParameterByName
+//	          star: "Will Smith", // for test, actualy would be getParameterByName
+//	          year: "0" // for test, actualy would be getParameterByName
+//	      },
+//		  success: function(resultData){
+//	          handleListResult(resultData);
+//		  },
+//		  error: function(XMLHttpRequest, textStatus, errorThrown){
+//		  	alert(textStatus);
+//	      }
+//	});
+//}
+//searchAdv();
 
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function(e) {
