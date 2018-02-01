@@ -2,14 +2,23 @@ function handleListResult(resultData) {
     console.log("handleListResult: populating movie table from resultData");
     document.getElementById("name").innerHTML =  resultData[0]["name"];
     document.getElementById("by").innerHTML =  resultData[0]["birthYear"];
+    var res = "";
+    for (var i = 0; i < resultData[0]["movieNames"].length ; i++){
+    	res += createLink(resultData[0]["movieNames"][i],resultData[0]["movieId"][i])
+    }
+    document.getElementById("mv").innerHTML =  res;
 }
 
+function createLink(name,id){
+	var mvLink = "/Project/servlet/SingleMovie?" + "movieId=" + id;
+	return "<a href=" + mvLink + ">" + name + "</a>";
+}
 jQuery.ajax({
     dataType: "json",
     method: "GET",
     url: "/Project/api/star",
     data: {
-        starId: "nm0000226"
+        starId: "nm0000226" //for test, actual would be getParameterByName("id")
     },
     success: function(resultData){
         handleListResult(resultData);

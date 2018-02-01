@@ -35,7 +35,7 @@ jQuery.ajax({
       }
 });
 
-// for when search page
+// for searching
 //function searchAdv(){
 //	jQuery.ajax({
 //		  dataType: "json",
@@ -44,11 +44,11 @@ jQuery.ajax({
 //		  data: {
 //	          ACTION: "SEARCHADV",
 //	          Page: 1,
-//	          PageSize: "1",
-//	          title: "0",
-//	          director: "0",
-//	          star: "Will Smith",
-//	          year: "0"
+//	          PageSize: "1", // for test, actualy would be getParameterByName
+//	          title: "0",  // for test, actualy would be getParameterByName
+//	          director: "0", // for test, actualy would be getParameterByName
+//	          star: "Will Smith", // for test, actualy would be getParameterByName
+//	          year: "0" // for test, actualy would be getParameterByName
 //	      },
 //		  success: function(resultData){
 //	          handleListResult(resultData);
@@ -60,26 +60,6 @@ jQuery.ajax({
 //}
 //searchAdv();
 
-// too hard do later
-//function search(){
-//	jQuery.ajax({
-//		  dataType: "json",
-//		  method: "GET",
-//		  url: "/Project/api/movie",
-//		  data: {
-//	          ACTION: "SEARCH",
-//	          Page: getParameterByName('page'),
-//	          PageSize: "20",
-//	          keyword: getParameterByName('keyword')
-//	      },
-//		  success: function(resultData){
-//	          handleListResult(resultData);
-//		  },
-//		  error: function(XMLHttpRequest, textStatus, errorThrown){
-//		  	alert(textStatus);
-//	      }
-//	});
-//}
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function(e) {
         e.preventDefault();
