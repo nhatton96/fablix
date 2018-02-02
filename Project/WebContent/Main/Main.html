@@ -14,21 +14,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">BINGEFLIX</a>
+            <a class="navbar-brand" href="/Project/servlet/Main">BINGEFLIX</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1
-                    <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Page 1-1</a></li>
-                    <li><a href="#">Page 1-2</a></li>
-                    <li><a href="#">Page 1-3</a></li>
-                </ul>
-            </li>
-            <li><a href="#">Page 2</a></li>
-            <li><a href="#">Page 3</a></li>
+            <li ><a href="/Project/servlet/Main">Home</a></li>
+            <li><a href="#">Advanced Search</a></li>
+            <li><a href="/Project/servlet/Movies">Browse</a></li>
+            <li><a href="#">My Cart</a></li>
         </ul>
         <form class="navbar-form navbar-left" action="/action_page.php">
             <div class="input-group">
@@ -44,6 +36,7 @@
 </nav>
 
 <div id="table_div">
+    <h1>Featured</h1>
     <table id="movieList_table" class="table table-hover">
         <thead>
         <tr>
@@ -60,12 +53,40 @@
     </table>
 </div>
 
-<div class="container-prevnex">
-    <ul class="pager">
-        <li id="Previous" class="previous"><a href="#">Previous</a></li>
-        <li id="Next" class="next"><a href="#">Next</a></li>
+<div id="Footer" class="block center">
+    <h2>Browse Movie By Genre</h2>
+    <ul  style="list-style-type:none">
+        <li><a href="/Project/servlet/Movies?page=0&genre=Action">Action</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Adult">Adult</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Adventure">Adventure</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Animation">Animation</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Biography">Biography</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Comedy">Comedy</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Crime">Crime</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Documentory">Documentory</a></li>
+    </ul>
+    <ul  style="list-style-type:none">
+        <li><a href="/Project/servlet/Movies?genre=Drama">Drama</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Family">Family</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Fantisy">Fantisy</a></li>
+        <li><a href="/Project/servlet/Movies?genre=History">History</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Horror">Horror</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Music">Music</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Musical">Musical</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Mystery">Mystery</a></li>
+    </ul>
+    <ul style="list-style-type:none">
+        <li><a href="/Project/servlet/Movies?genre=Reality-TV">Reality-TV</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Romance">Romance</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Sci-Fi">Sci-Fi</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Sport">Sport</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Thriller">Thriller</a></li>
+        <li><a href="/Project/servlet/Movies?genre=War">War</a></li>
+        <li><a href="/Project/servlet/Movies?genre=Western">Western</a></li>
     </ul>
 </div>
+
+
 
 <script src="./Main.js"></script>
 </body>

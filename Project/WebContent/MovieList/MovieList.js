@@ -1,64 +1,40 @@
 
 function handleListResult(resultData) {
-	console.log("handleListResult: populating movie table from resultData");
+    console.log("handleListResult: populating movie table from resultData");
 
-	// populate the star table
-	var movieTableBodyElement = jQuery("#movieList_table_body");
-	for (var i = 0; i < resultData.length; i++) {
-		var rowHTML = "";
-		rowHTML += "<tr class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
-		rowHTML += "<th>" + resultData[i]["title"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["year"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["director"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
-		rowHTML += "</tr>"
-		movieTableBodyElement.append(rowHTML);
-	}
+    // populate the star table
+    var movieTableBodyElement = jQuery("#movieList_table_body");
+    for (var i = 0; i < resultData.length; i++) {
+        var rowHTML = "";
+        rowHTML += "<tr id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
+        rowHTML += "<th>" + resultData[i]["title"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["year"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["director"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
+        rowHTML += "</tr>"
+        movieTableBodyElement.append(rowHTML);
+    }
 }
 
+// makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
-	  dataType: "json",
-	  method: "GET",
-	  url: "/Project/api/movie",
-	  data: {
-          ACTION: "LIST",
-          Page: getParameterByName('page'),
-          PageSize: "20"
-      },
-	  success: function(resultData){
-          handleListResult(resultData);
-	  },
-	  error: function(XMLHttpRequest, textStatus, errorThrown){
-	  	alert(textStatus);
-      }
+    dataType: "json",
+    method: "GET",
+    url: "/Project/api/movie",
+    data: {
+        ACTION: "LIST",
+        Page: getParameterByName('page'),
+        PageSize: "20"
+    },
+    success: function(resultData){
+        handleListResult(resultData);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown){
+        alert(textStatus);
+    }
 });
-
-// for searching
-//function searchAdv(){
-//	jQuery.ajax({
-//		  dataType: "json",
-//		  method: "GET",
-//		  url: "/Project/api/movie",
-//		  data: {
-//	          ACTION: "SEARCHADV",
-//	          Page: 1,
-//	          PageSize: "1", // for test, actualy would be getParameterByName
-//	          title: "0",  // for test, actualy would be getParameterByName
-//	          director: "0", // for test, actualy would be getParameterByName
-//	          star: "Will Smith", // for test, actualy would be getParameterByName
-//	          year: "0" // for test, actualy would be getParameterByName
-//	      },
-//		  success: function(resultData){
-//	          handleListResult(resultData);
-//		  },
-//		  error: function(XMLHttpRequest, textStatus, errorThrown){
-//		  	alert(textStatus);
-//	      }
-//	});
-//}
-//searchAdv();
 
 jQuery(document).ready(function($) {
     $(".clickable-row").click(function(e) {
@@ -69,6 +45,15 @@ jQuery(document).ready(function($) {
         //window.location = $(this).data("href");
     });
 });
+
+/*
+jQuery(document).ready(function($) {
+    $(".clickable-row").on('click-row.bs.table', function(e, row, $element) {
+        e.preventDefault();
+        var movieId = $(this).data("href");
+        window.location.assign("SingleMovie?movieId="+movieId);
+    });
+});*/
 
 $("#Previous").click(function(e) {
     e.preventDefault();
@@ -125,7 +110,7 @@ function getParameterByName(name, url) {
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
-    if (!results) return '0';
-    if (!results[2]) return '0';
+    if (!results) return "0";
+    if (!results[2]) return "0";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }

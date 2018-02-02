@@ -3,13 +3,36 @@
 }
 
 body{
-    background: url("../Res/iron-man-main.jpg") no-repeat center center fixed;
+    background: url("../Res/main2.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    padding-top: 8%;
+    padding-top: 5%;
     background-color:black;
+}
+
+h1 {
+    color:white;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    color: white;
+}
+
+ul{
+    float: left
+}
+
+.block {
+    height:100px;
+    width:400px;
+    text-align:left;
+}
+.center {
+    margin:auto;
 }
 
 .Title {

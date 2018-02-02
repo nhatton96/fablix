@@ -111,7 +111,7 @@ public class MovieServlet extends HttpServlet {
 
 			String shiftAmount = Integer.toString(page * pageSize);
 			String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n"
-					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT 20 OFFSET " + shiftAmount + ") AS  r\r\n"
+					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT "+pageSize+" OFFSET " + shiftAmount + ") AS  r\r\n"
 					+ "INNER JOIN movies AS m ON r.movieId = m.id\r\n" + "INNER JOIN genres_in_movies gim \r\n"
 					+ "ON gim.movieId = r.movieId\r\n" + "INNER JOIN genres g \r\n" + "ON gim.genreId = g.id\r\n"
 					+ "INNER JOIN stars_in_movies sim\r\n" + "ON sim.movieId = r.movieId\r\n" + "INNER JOIN stars s\r\n"
