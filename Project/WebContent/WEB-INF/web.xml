@@ -76,6 +76,16 @@
         <jsp-file>/Main/Main.html</jsp-file>
     </servlet>
 
+    <servlet>
+        <servlet-name>ShoppingCartJS</servlet-name>
+        <jsp-file>/ShoppingCart/ShoppingCart.js</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ShoppingCartHTML</servlet-name>
+        <jsp-file>/ShoppingCart/ShoppingCart.html</jsp-file>
+    </servlet>
+
     <servlet-mapping>
     <servlet-name>MovieListServlet</servlet-name>
     <url-pattern>/servlet/MovieList</url-pattern>
@@ -119,6 +129,16 @@
     <servlet-mapping>
         <servlet-name>MainHTML</servlet-name>
         <url-pattern>/servlet/Main</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ShoppingCartJS</servlet-name>
+        <url-pattern>/servlet/ShoppingCart.js</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ShoppingCartHTML</servlet-name>
+        <url-pattern>/servlet/ShoppingCart</url-pattern>
     </servlet-mapping>
 
 </web-app>
