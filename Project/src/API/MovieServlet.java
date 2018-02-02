@@ -46,7 +46,7 @@ public class MovieServlet extends HttpServlet {
 			if ("LIST".equals(action)) {
 				int page = Integer.parseInt(request.getParameter("Page"));
 				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
-				String movieList = GetMovieList(page - 1, pageSize);
+				String movieList = GetMovieList(page, pageSize);
 
 				if (movieList != null) {
 					out.write(movieList.toString());

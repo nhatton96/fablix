@@ -4,7 +4,7 @@ function handleListResult(resultData) {
 
     // populate the star table
     var movieTableBodyElement = jQuery("#movieList_table_body");
-    for (var i = 0; i < Math.min(10, resultData.length); i++) {
+    for (var i = 0; i < resultData.length; i++) {
         var rowHTML = "";
         rowHTML += "<tr>";
         rowHTML += "<th>" + resultData[i]["title"] + "</th>";
