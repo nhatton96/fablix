@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,7 +47,7 @@ public class MovieServlet extends HttpServlet {
 			if ("LIST".equals(action)) {
 				int page = Integer.parseInt(request.getParameter("Page"));
 				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
-				String movieList = GetMovieList(page, pageSize);
+				String movieList = GetMovieList(page - 1, pageSize);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -110,8 +111,8 @@ public class MovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			String shiftAmount = Integer.toString(page * pageSize);
-			String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName FROM \r\n"
-					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT "+pageSize+" OFFSET " + shiftAmount + ") AS  r\r\n"
+			String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName, s.id as stid FROM \r\n"
+					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT " + pageSize + " OFFSET " + shiftAmount + ") AS  r\r\n"
 					+ "INNER JOIN movies AS m ON r.movieId = m.id\r\n" + "INNER JOIN genres_in_movies gim \r\n"
 					+ "ON gim.movieId = r.movieId\r\n" + "INNER JOIN genres g \r\n" + "ON gim.genreId = g.id\r\n"
 					+ "INNER JOIN stars_in_movies sim\r\n" + "ON sim.movieId = r.movieId\r\n" + "INNER JOIN stars s\r\n"
@@ -138,8 +139,8 @@ public class MovieServlet extends HttpServlet {
 
 				if (alreadyAdded) {
 					movieOutList.get(index).addGenre(rs.getString("genreName"));
-
 					movieOutList.get(index).addStar(rs.getString("starName"));
+					movieOutList.get(index).addStid(rs.getString("stid"));
 
 				} else {
 					MovieOut mo = new MovieOut();
@@ -150,7 +151,8 @@ public class MovieServlet extends HttpServlet {
 					mo.setRating(rs.getString("rating"));
 					mo.addGenre(rs.getString("genreName"));
 					mo.addStar(rs.getString("starName"));
-
+					mo.addStid(rs.getString("stid"));
+					
 					movieOutList.add(mo);
 				}
 			}
@@ -177,7 +179,7 @@ public class MovieServlet extends HttpServlet {
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
 
-			String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName FROM \n"
+			String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName, s.id as stid FROM \n"
 					+ "(SELECT * FROM ratings) AS  r\n" + "INNER JOIN movies AS m ON r.movieId = m.id\n"
 					+ "INNER JOIN genres_in_movies gim \n" + "ON gim.movieId = r.movieId\n" + "INNER JOIN genres g \n"
 					+ "ON gim.genreId = g.id\n" + "INNER JOIN stars_in_movies sim\n" + "ON sim.movieId = r.movieId\n"
@@ -204,8 +206,8 @@ public class MovieServlet extends HttpServlet {
 
 				if (alreadyAdded) {
 					movieOutList.get(index).addGenre(rs.getString("genreName"));
-
 					movieOutList.get(index).addStar(rs.getString("starName"));
+					movieOutList.get(index).addStid(rs.getString("stid"));
 
 				} else {
 					MovieOut mo = new MovieOut();
@@ -216,7 +218,8 @@ public class MovieServlet extends HttpServlet {
 					mo.setRating(rs.getString("rating"));
 					mo.addGenre(rs.getString("genreName"));
 					mo.addStar(rs.getString("starName"));
-
+					mo.addStid(rs.getString("stid"));
+					
 					movieOutList.add(mo);
 				}
 			}
@@ -246,7 +249,7 @@ public class MovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			String shiftAmount = Integer.toString(page * pageSize);
-			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, g.name as genreName, r.rating as rating from "
+			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
 					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
 					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit " + pageSize + " offset "
@@ -274,8 +277,8 @@ public class MovieServlet extends HttpServlet {
 
 				if (alreadyAdded) {
 					movieOutList.get(index).addGenre(rs.getString("genreName"));
-
 					movieOutList.get(index).addStar(rs.getString("starName"));
+					movieOutList.get(index).addStid(rs.getString("stid"));
 
 				} else {
 					MovieOut mo = new MovieOut();
@@ -286,6 +289,7 @@ public class MovieServlet extends HttpServlet {
 					mo.setRating(rs.getString("rating"));
 					mo.addGenre(rs.getString("genreName"));
 					mo.addStar(rs.getString("starName"));
+					mo.addStid(rs.getString("stid"));
 
 					movieOutList.add(mo);
 				}

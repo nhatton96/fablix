@@ -18,7 +18,7 @@ jQuery.ajax({
     method: "GET",
     url: "/Project/api/star",
     data: {
-        starId: "nm0000226" //for test, actual would be getParameterByName("id")
+        starId: getParameterByName("stdi")
     },
     success: function(resultData){
         handleListResult(resultData);
@@ -37,4 +37,3 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-

@@ -1,4 +1,3 @@
-
 function handleListResult(resultData) {
     console.log("handleListResult: populating movie table from resultData");
 
@@ -6,45 +5,84 @@ function handleListResult(resultData) {
     var movieTableBodyElement = jQuery("#movieList_table_body");
     for (var i = 0; i < resultData.length; i++) {
         var rowHTML = "";
-        rowHTML += "<tr id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
-        rowHTML += "<th>" + resultData[i]["title"] + "</th>";
+        rowHTML += "<tr>"; // id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
+        rowHTML += "<th>" + createMvLink(resultData[i]) + "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
-        rowHTML += "</tr>"
+        rowHTML += "<th>" + createStarLink(resultData[i]) + "</th>";
+        rowHTML += "</tr>";
         movieTableBodyElement.append(rowHTML);
     }
 }
 
 // makes the HTTP GET request and registers on success callback function handleStarResult
-jQuery.ajax({
-    dataType: "json",
-    method: "GET",
-    url: "/Project/api/movie",
-    data: {
-        ACTION: "LIST",
-        Page: getParameterByName('page'),
-        PageSize: "20"
-    },
-    success: function(resultData){
-        handleListResult(resultData);
-    },
-    error: function(XMLHttpRequest, textStatus, errorThrown){
-        alert(textStatus);
-    }
-});
+//jQuery.ajax({
+//    dataType: "json",
+//    method: "GET",
+//    url: "/Project/api/movie",
+//    data: {
+//        ACTION: "LIST",
+//        Page: getParameterByName('page'),
+//        PageSize: "20"
+//    },
+//    success: function(resultData){
+//        handleListResult(resultData);
+//    },
+//    error: function(XMLHttpRequest, textStatus, errorThrown){
+//        alert(textStatus);
+//    }
+//});
 
-jQuery(document).ready(function($) {
-    $(".clickable-row").click(function(e) {
-        e.preventDefault();
-        var movieId = $(this).data("href");
-        //alert(movieId);
-        window.location.assign("SingleMovie?movieId="+movieId);
-        //window.location = $(this).data("href");
-    });
-});
+function createMvLink(data){
+	var mvLink = "/Project/servlet/SingleMovie?" + "movieId=" + data["movieId"];
+	return "<a href=" + mvLink + ">" + data["title"] + "</a>";
+}
+
+function createStarLink(data){
+	var result = "";
+    for (var i = 0; i < data["list_of_stars"].length ; i++){
+    	var stLink = "/Project/Star/Star.html?" + "stdi=" + data["list_of_stid"][i];
+    	result += "<a href=" + stLink + ">" + data["list_of_stars"][i] + "</a>";
+    }
+    return result;
+}
+
+function searchAdv(){
+	jQuery.ajax({
+		  dataType: "json",
+		  method: "GET",
+		  url: "/Project/api/movie",
+		  data: {
+	          ACTION: "SEARCHADV",
+	          Page: getParameterByName("page"),
+	          PageSize: "20", 
+	          title: getParameterByName("title"),
+	          director: getParameterByName("director"), 
+	          star: getParameterByName("star"), 
+	          year: getParameterByName("year")
+	      },
+		  success: function(resultData){
+	          handleListResult(resultData);
+		  },
+		  error: function(XMLHttpRequest, textStatus, errorThrown){
+		  	alert(textStatus);
+	      }
+	});
+}
+searchAdv();
+
+
+//jQuery(document).ready(function($) {
+//    $(".clickable-row").click(function(e) {
+//        e.preventDefault();
+//        var movieId = $(this).data("href");
+//        //alert(movieId);
+//        window.location.assign("/Project/servlet/SingleMovie?movieId="+movieId);
+//        //window.location = $(this).data("href");
+//    });
+//});
 
 /*
 jQuery(document).ready(function($) {

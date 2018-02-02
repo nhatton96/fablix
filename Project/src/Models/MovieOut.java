@@ -8,6 +8,7 @@ public class MovieOut {
 	String year;
 	List<String> list_of_genres = new ArrayList<String>();
 	List<String> list_of_stars = new ArrayList<String>();
+	List<String> list_of_stid = new ArrayList<String>();
 	String rating;
 	
 	//set functions
@@ -33,6 +34,10 @@ public class MovieOut {
 	
 	public void setListStars(List<String> los) {
 		this.list_of_stars = los;
+	}
+	
+	public void setListStid(List<String> los) {
+		this.list_of_stid = los;
 	}
 	
 	public void setRating(String r) {
@@ -64,6 +69,10 @@ public class MovieOut {
 		return list_of_stars;
 	}
 	
+	public List<String> getListOfStid(){
+		return list_of_stid;
+	}
+	
 	public String getRating() {
 		return rating;
 	}
@@ -77,6 +86,11 @@ public class MovieOut {
 	public void addStar(String s) {
 		if(!list_of_stars.contains(s))
 			list_of_stars.add(s);
+	}
+	
+	public void addStid(String s) {
+		if(!list_of_stid.contains(s))
+			list_of_stid.add(s);
 	}
 	
 }

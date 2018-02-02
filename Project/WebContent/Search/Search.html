@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Form Example</TITLE>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</HEAD>
+
+<BODY BGCOLOR="#FDF5E6">
+<H1 ALIGN="CENTER">Search Page</H1>
+<FORM id="SearchForm" onsubmit="sendData(); return false;">
+  Title <INPUT id="searchtitle" TYPE="TEXT" NAME="title"><BR>
+  Year: <INPUT id="searchyear" TYPE="TEXT" NAME="year"><BR>
+  Director: <INPUT id="searchdirector" TYPE="TEXT" NAME="director"><BR>
+  Star: <INPUT id="searchstar" TYPE="TEXT" NAME="star"><BR>
+  <CENTER>
+    <INPUT TYPE="SUBMIT" VALUE="Find">
+  </CENTER>
+</FORM>
+<script src="./Search.js"></script>
+</BODY>
+</HTML>
