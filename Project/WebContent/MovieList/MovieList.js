@@ -1,3 +1,22 @@
+var action = getParameterByName("action");
+var page = getParameterByName("page");
+var title = "0";
+var director ="0";
+var star = "0";
+var year = "0";
+var genre = "0"
+if (action === "SEARCHADV"){
+	title = getParameterByName("title");
+    director = getParameterByName("director");
+    star = getParameterByName("star");
+    year = getParameterByName("year");
+    searchAdv(action,page,title,director,star,year);
+}
+else if (action === "SEARCHGENRE"){
+		genre = getParameterByName("genre")
+		searchGenre(action,page,genre);
+}
+
 function handleListResult(resultData) {
     console.log("handleListResult: populating movie table from resultData");
 
@@ -17,24 +36,6 @@ function handleListResult(resultData) {
     }
 }
 
-// makes the HTTP GET request and registers on success callback function handleStarResult
-//jQuery.ajax({
-//    dataType: "json",
-//    method: "GET",
-//    url: "/Project/api/movie",
-//    data: {
-//        ACTION: "LIST",
-//        Page: getParameterByName('page'),
-//        PageSize: "20"
-//    },
-//    success: function(resultData){
-//        handleListResult(resultData);
-//    },
-//    error: function(XMLHttpRequest, textStatus, errorThrown){
-//        alert(textStatus);
-//    }
-//});
-
 function createMvLink(data){
 	var mvLink = "/Project/servlet/SingleMovie?" + "movieId=" + data["movieId"];
 	return "<a href=" + mvLink + ">" + data["title"] + "</a>";
@@ -49,19 +50,19 @@ function createStarLink(data){
     return result;
 }
 
-function searchAdv(){
+function searchAdv(action,page,title,director,star,year){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
 		  url: "/Project/api/movie",
 		  data: {
-	          ACTION: "SEARCHADV",
-	          Page: getParameterByName("page"),
+	          ACTION: action,
+	          Page: page,
 	          PageSize: "20", 
-	          title: getParameterByName("title"),
-	          director: getParameterByName("director"), 
-	          star: getParameterByName("star"), 
-	          year: getParameterByName("year")
+	          title: title,
+	          director: director, 
+	          star: star, 
+	          year: year
 	      },
 		  success: function(resultData){
 	          handleListResult(resultData);
@@ -71,76 +72,95 @@ function searchAdv(){
 	      }
 	});
 }
-searchAdv();
-
-
-//jQuery(document).ready(function($) {
-//    $(".clickable-row").click(function(e) {
-//        e.preventDefault();
-//        var movieId = $(this).data("href");
-//        //alert(movieId);
-//        window.location.assign("/Project/servlet/SingleMovie?movieId="+movieId);
-//        //window.location = $(this).data("href");
-//    });
-//});
-
-/*
-jQuery(document).ready(function($) {
-    $(".clickable-row").on('click-row.bs.table', function(e, row, $element) {
-        e.preventDefault();
-        var movieId = $(this).data("href");
-        window.location.assign("SingleMovie?movieId="+movieId);
-    });
-});*/
+function searchGenre(action,page,genre){
+	jQuery.ajax({
+		  dataType: "json",
+		  method: "GET",
+		  url: "/Project/api/movie",
+		  data: {
+	          ACTION: action,
+	          Page: page,
+	          PageSize: "20", 
+	          genre: genre
+	      },
+		  success: function(resultData){
+	          handleListResult(resultData);
+		  },
+		  error: function(XMLHttpRequest, textStatus, errorThrown){
+		  	alert(textStatus);
+	      }
+	});
+}
 
 $("#Previous").click(function(e) {
     e.preventDefault();
-    $.ajax({
-        dataType: "json",
-        method: "GET",
-        url: "/Project/api/movie",
-        data: {
-            ACTION: "LIST",
-            Page: getParameterByName('page'),
-            PageSize: "20"
-        },
-        success: function(result) {
-            $("#movieList_table tr").remove();
-            handleListResult(result);
-            var pageNum = parseInt(getParameterByName('page'));
-            if(pageNum > 0)
-                pageNum = pageNum - 1;
-            window.location.assign("Movies?page="+ pageNum.toString());
-        },
-        error: function(result) {
-            alert('error');
-        }
-    });
+//    $.ajax({
+//        dataType: "json",
+//        method: "GET",
+//        url: "/Project/api/movie",
+//        data: {
+//            ACTION: "LIST",
+//            Page: getParameterByName('page'),
+//            PageSize: "20"
+//        },
+//        success: function(result) {
+//            $("#movieList_table tr").remove();
+//            handleListResult(result);
+//            var pageNum = parseInt(getParameterByName('page'));
+//            if(pageNum > 0)
+//                pageNum = pageNum - 1;
+//            window.location.assign("Movies?page="+ pageNum.toString());
+//        },
+//        error: function(result) {
+//            alert('error');
+//        }
+//    });
+    var pageNum = parseInt(page);
+    if (pageNum > 1)
+    pageNum -= 1;
+    var newpage = "/Project/MovieList/MovieList.html" + 
+	"?title=" + title +
+	"&year=" + year +
+	"&director=" + director +
+	"&star=" + star + 
+	"&genre=" + genre +
+	"&page=" + pageNum + "&action=" + action;
+	 window.location.assign(newpage);
 });
 
 $("#Next").click(function(e) {
     e.preventDefault();
-    var pageNum = parseInt(getParameterByName('page'));
-    $.ajax({
-        dataType: "json",
-        method: "GET",
-        url: "/Project/api/movie",
-        data: {
-            ACTION: "LIST",
-            Page: pageNum,
-            PageSize: "20"
-        },
-        success: function(result) {
-            $("#movieList_table tr").remove();
-            handleListResult(result);
-            var pageNum = parseInt(getParameterByName('page'));
-            pageNum = pageNum + 1;
-            window.location.assign("Movies?page="+ pageNum.toString());
-        },
-        error: function(result) {
-            alert('error');
-        }
-    });
+//    var pageNum = parseInt(getParameterByName('page'));
+//    $.ajax({
+//        dataType: "json",
+//        method: "GET",
+//        url: "/Project/api/movie",
+//        data: {
+//            ACTION: "LIST",
+//            Page: pageNum,
+//            PageSize: "20"
+//        },
+//        success: function(result) {
+//            $("#movieList_table tr").remove();
+//            handleListResult(result);
+//            var pageNum = parseInt(getParameterByName('page'));
+//            pageNum = pageNum + 1;
+//            window.location.assign("Movies?page="+ pageNum.toString());
+//        },
+//        error: function(result) {
+//            alert('error');
+//        }
+//    });
+    var pageNum = parseInt(page);
+    pageNum += 1;
+    var newpage = "/Project/MovieList/MovieList.html" + 
+	"?title=" + title +
+	"&year=" + year +
+	"&director=" + director +
+	"&star=" + star + 
+	"&genre=" + genre +
+	"&page=" + pageNum + "&action=" + action;
+	window.location.assign(newpage);
 });
 
 function getParameterByName(name, url) {

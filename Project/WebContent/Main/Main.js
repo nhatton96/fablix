@@ -37,7 +37,7 @@ jQuery.ajax({
     url: "/Project/api/movie",
     data: {
         ACTION: "LIST",
-        Page: getParameterByName('page'),
+        Page: "1", // getParameterByName('page'),
         PageSize: "3"
     },
     success: function(resultData){
