@@ -94,6 +94,19 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
+			} else if ("SEARCH".equals(action)) {
+				int page = Integer.parseInt(request.getParameter("Page"));
+				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
+				String title = request.getParameter("title");
+				String movieList = search(page - 1, pageSize, title);
+
+				if (movieList != null) {
+					out.write(movieList.toString());
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
 			} else if ("SINGLE".equals(action)) {
 				String movieId = request.getParameter("MovieId");
 				String movie = GetMovie(movieId);
@@ -262,19 +275,15 @@ public class MovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			String shiftAmount = Integer.toString(page * pageSize);
-	
+
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
 					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
 					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit " + pageSize
-					+ " offset " + shiftAmount + ") as m "
-					+"left join genres_in_movies ge on ge.movieId = m.id "
-					+"left join genres g on g.id = ge.genreId "
-					+"left join ratings r on r.movieId = m.id "
-					+"left join stars_in_movies st on st.movieId = m.id "
-					+"left join stars s on s.id = st.starsId";
-					
-			
+					+ " offset " + shiftAmount + ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
+					+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
+					+ "left join stars_in_movies st on st.movieId = m.id " + "left join stars s on s.id = st.starsId";
+
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 
@@ -341,11 +350,78 @@ public class MovieServlet extends HttpServlet {
 					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2, genres_in_movies ge2, genres g2 "
 					+ "where ge2.movieId = m2.id and ge2.genreId = g2.id and g2.name = '" + genre + "' "
 					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
-					+"left join genres_in_movies ge on ge.movieId = m.id "
-					+"left join genres g on g.id = ge.genreId "
-					+"left join ratings r on r.movieId = m.id "
-					+"left join stars_in_movies st on st.movieId = m.id "
-					+"left join stars s on s.id = st.starsId";
+					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
+					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
+					+ "left join stars s on s.id = st.starsId";
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery(query);
+
+			// Iterate through each row of rs
+			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
+
+			while (rs.next()) {
+
+				String check = rs.getString("movieId");
+				boolean alreadyAdded = false;
+				int index = 0;
+				for (int i = 0; i < movieOutList.size(); i++) {
+					String moId = movieOutList.get(i).getMovieId();
+					if (moId.equals(check)) {
+						alreadyAdded = true;
+						index = i;
+					}
+				}
+
+				if (alreadyAdded) {
+					movieOutList.get(index).addGenre(rs.getString("genreName"));
+					movieOutList.get(index).addStar(rs.getString("starName"));
+					movieOutList.get(index).addStid(rs.getString("stid"));
+
+				} else {
+					MovieOut mo = new MovieOut();
+					mo.setMovieId(rs.getString("movieId"));
+					mo.setTitle(rs.getString("title"));
+					mo.setYear(rs.getString("year"));
+					mo.setDirector(rs.getString("director"));
+					mo.setRating(rs.getString("rating"));
+					mo.addGenre(rs.getString("genreName"));
+					mo.addStar(rs.getString("starName"));
+					mo.addStid(rs.getString("stid"));
+
+					movieOutList.add(mo);
+				}
+			}
+
+			rs.close();
+			statement.close();
+			dbcon.close();
+
+			return gson.toJson(movieOutList);
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		} // end catch SQLException
+	}
+
+	private String search(int page, int pageSize, String title) {
+		try {
+
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			// Declare our statement
+			Statement statement = dbcon.createStatement();
+
+			String shiftAmount = Integer.toString(page * pageSize);
+			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
+					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '%"
+					+ title + "%' " + "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
+					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
+					+ "left join stars s on s.id = st.starsId";
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);

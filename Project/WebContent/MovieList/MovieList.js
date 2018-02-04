@@ -13,8 +13,12 @@ if (action === "SEARCHADV"){
     searchAdv(action,page,title,director,star,year);
 }
 else if (action === "SEARCHGENRE"){
-		genre = getParameterByName("genre")
+		genre = getParameterByName("genre");
 		searchGenre(action,page,genre);
+}
+else if (action === "SEARCH"){
+	title = getParameterByName("title");
+	search(action,page,title);
 }
 
 function handleListResult(resultData) {
@@ -92,29 +96,29 @@ function searchGenre(action,page,genre){
 	});
 }
 
+function search(action,page,title){
+	jQuery.ajax({
+		  dataType: "json",
+		  method: "GET",
+		  url: "/Project/api/movie",
+		  data: {
+	          ACTION: action,
+	          Page: page,
+	          PageSize: "20", 
+	          title: title
+	      },
+		  success: function(resultData){
+	          handleListResult(resultData);
+		  },
+		  error: function(XMLHttpRequest, textStatus, errorThrown){
+		  	alert(textStatus);
+	      }
+	});
+}
+
 $("#Previous").click(function(e) {
     e.preventDefault();
-//    $.ajax({
-//        dataType: "json",
-//        method: "GET",
-//        url: "/Project/api/movie",
-//        data: {
-//            ACTION: "LIST",
-//            Page: getParameterByName('page'),
-//            PageSize: "20"
-//        },
-//        success: function(result) {
-//            $("#movieList_table tr").remove();
-//            handleListResult(result);
-//            var pageNum = parseInt(getParameterByName('page'));
-//            if(pageNum > 0)
-//                pageNum = pageNum - 1;
-//            window.location.assign("Movies?page="+ pageNum.toString());
-//        },
-//        error: function(result) {
-//            alert('error');
-//        }
-//    });
+
     var pageNum = parseInt(page);
     if (pageNum > 1)
     pageNum -= 1;
@@ -130,27 +134,7 @@ $("#Previous").click(function(e) {
 
 $("#Next").click(function(e) {
     e.preventDefault();
-//    var pageNum = parseInt(getParameterByName('page'));
-//    $.ajax({
-//        dataType: "json",
-//        method: "GET",
-//        url: "/Project/api/movie",
-//        data: {
-//            ACTION: "LIST",
-//            Page: pageNum,
-//            PageSize: "20"
-//        },
-//        success: function(result) {
-//            $("#movieList_table tr").remove();
-//            handleListResult(result);
-//            var pageNum = parseInt(getParameterByName('page'));
-//            pageNum = pageNum + 1;
-//            window.location.assign("Movies?page="+ pageNum.toString());
-//        },
-//        error: function(result) {
-//            alert('error');
-//        }
-//    });
+    
     var pageNum = parseInt(page);
     pageNum += 1;
     var newpage = "/Project/MovieList/MovieList.html" + 

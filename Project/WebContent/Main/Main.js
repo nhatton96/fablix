@@ -48,24 +48,11 @@ jQuery.ajax({
     }
 });
 
-//jQuery(document).ready(function($) {
-//    $(".clickable-row").click(function(e) {
-//        e.preventDefault();
-//        var movieId = $(this).data("href");
-//        //alert(movieId);
-//        window.location.assign("SingleMovie?movieId="+movieId);
-//        //window.location = $(this).data("href");
-//    });
-//});
-
-/*
-jQuery(document).ready(function($) {
-    $(".clickable-row").on('click-row.bs.table', function(e, row, $element) {
-        e.preventDefault();
-        var movieId = $(this).data("href");
-        window.location.assign("SingleMovie?movieId="+movieId);
-    });
-});*/
+function sendData(){
+	var newpage = "/Project/MovieList/MovieList.html" + 
+	"?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH";
+	window.location.assign(newpage);
+} 
 
 $("#Previous").click(function(e) {
     e.preventDefault();
