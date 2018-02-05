@@ -94,10 +94,14 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-			} else if ("SEARCH".equals(action)) {
+			} else if ("SEARCH".equals(action) || "SEARCHTITLE".equals(action)) {
 				int page = Integer.parseInt(request.getParameter("Page"));
 				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
 				String title = request.getParameter("title");
+				if ("SEARCH".equals(action))
+					title = "%" + title + "%";
+				else
+					title = title + "%";
 				String movieList = search(page - 1, pageSize, title);
 
 				if (movieList != null) {
@@ -417,8 +421,8 @@ public class MovieServlet extends HttpServlet {
 
 			String shiftAmount = Integer.toString(page * pageSize);
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '%"
-					+ title + "%' " + "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '"
+					+ title + "' " + "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";

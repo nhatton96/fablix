@@ -16,7 +16,7 @@ else if (action === "SEARCHGENRE"){
 		genre = getParameterByName("genre");
 		searchGenre(action,page,genre);
 }
-else if (action === "SEARCH"){
+else if (action === "SEARCH" || action === "SEARCHTITLE"){
 	title = getParameterByName("title");
 	search(action,page,title);
 }
