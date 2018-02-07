@@ -8,12 +8,12 @@ body{
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    padding-top: 5%;
+    padding-top: 8%;
     background-color:black;
 }
 
 h1 {
-    color:white;
+    color:black;
     text-align: center;
 }
 
@@ -65,24 +65,21 @@ ul{
     text-align:center;
 }
 
-tr:hover{
-    color:black;
-    opacity: 0.5;
-}
-
-table{
-    color:white;
-    border-collapse:unset;
-    border-spacing: 0px 20px;
-}
-
-#table_div {
-    margin-right: auto;
-    margin-left: auto;
-    width: 80%;
-    background-color:black;
+.container{
+    padding-top: 25px;
+    width: 40%;
+    display: table;
+    margin:auto;
+    height: 50%;
+    background-color: #fbfbfb;
     opacity: 0.8;
 }
+
+
+button {
+    width: 100%;
+}
+
 
 .container-prevnex{
     margin-right: auto;

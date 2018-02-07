@@ -1,21 +1,60 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
-  <TITLE>Form Example</TITLE>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../Search/Search.css">
 </HEAD>
 
-<BODY BGCOLOR="#FDF5E6">
-<H1 ALIGN="CENTER">Search Page</H1>
-<FORM id="SearchForm" onsubmit="sendData(); return false;">
-  Title <INPUT id="searchtitle" TYPE="TEXT" NAME="title"><BR>
-  Year: <INPUT id="searchyear" TYPE="TEXT" NAME="year"><BR>
-  Director: <INPUT id="searchdirector" TYPE="TEXT" NAME="director"><BR>
-  Star: <INPUT id="searchstar" TYPE="TEXT" NAME="star"><BR>
-  <CENTER>
-    <INPUT TYPE="SUBMIT" VALUE="Find">
-  </CENTER>
-</FORM>
+<BODY >
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/Project/servlet/Main">BINGEFLIX</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li ><a href="/Project/servlet/Main">Home</a></li>
+      <li><a href="/Project/Search/Search.html">Advanced Search</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Browse
+          <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/Project/Browse/BrowseTitle.html">By Title</a></li>
+          <li><a href="/Project/Browse/BrowseGenre.html">By Genre</a></li>
+        </ul>
+      </li>
+      <li><a href="/Project/servlet/ShoppingCart">My Cart</a></li>
+    </ul>
+    <form class="navbar-form navbar-left" onsubmit="sendData(); return false;">
+      <div class="input-group">
+        <input id="searchbar" type="text" class="form-control" placeholder="Search" name="search">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit">
+            <i class="glyphicon glyphicon-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</nav>
+
+<div class="container">
+  <H1 ALIGN="CENTER">Advanced Search</H1>
+  <FORM id="SearchForm" onsubmit="sendData(); return false;">
+    <label><b>Title</b></label>
+    <INPUT id="searchtitle" TYPE="TEXT" NAME="title" class="form-control"><BR>
+    <label><b>Year</b></label>
+    <INPUT id="searchyear" TYPE="TEXT" NAME="year" class="form-control"><BR>
+    <label><b>Director</b></label>
+    <INPUT id="searchdirector" TYPE="TEXT" NAME="director" class="form-control"><BR>
+    <label><b>Star</b></label>
+    <INPUT id="searchstar" TYPE="TEXT" NAME="star" class="form-control"><BR>
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Find</button>
+  </FORM>
+</div>
 <script src="./Search.js"></script>
 </BODY>
 </HTML>
