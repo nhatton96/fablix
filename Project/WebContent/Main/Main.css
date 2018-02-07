@@ -18,19 +18,36 @@ h1 {
 }
 
 h2 {
+    color:gray;
     text-align: center;
-    color: white;
 }
+
+
 
 ul{
     float: left
 }
 
-.block {
-    height:100px;
-    width:400px;
-    text-align:left;
+
+#Footer {
+    width: 800px;
+    height: 100px;
+    margin-right: auto;
+    margin-left: 200px;
+    float: left;
+    display: inline-block
 }
+
+.BrowseGenre {
+    float: left;
+    margin-right: 5px;
+}
+.BrowseTitle {
+    float: right;
+    margin-left: 80px;
+}
+
+
 .center {
     margin:auto;
 }
@@ -56,14 +73,7 @@ ul{
     width:60%;
     padding:0 20px;
 }
-.right {
-    background-color:#e5e5e5;
-    float:left;
-    width:20%;
-    padding:15px;
-    margin-top:7px;
-    text-align:center;
-}
+
 
 tr:hover{
     color:black;
@@ -84,12 +94,8 @@ table{
     opacity: 0.8;
 }
 
-.container-prevnex{
-    margin-right: auto;
-    margin-left: auto;
-    width: 80%;
-    opacity: 0.7;
-}
+
+
 
 
 @media only screen and (max-width:620px) {
