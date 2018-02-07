@@ -12,9 +12,20 @@ function handleListResult(resultData) {
 		rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
 		rowHTML += "<th>" + create(resultData[i]) + "</th>";
+        rowHTML += "<th><button type='submit' class='btn btn-primary btn-lg btn-block' onClick='AddToCart(\""+resultData[i]["movieId"]+"\")' >ADD</button></th>";
 		rowHTML += "</tr>";
 		movieTableBodyElement.append(rowHTML);
 	}
+}
+
+function AddToCart(movieId) {
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    // add to it,
+    cart.push({movieId: movieId});
+    // then put it back.
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    alert(movieId + " was added to your cart");
 }
 
 function create(data){
