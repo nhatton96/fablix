@@ -5,5 +5,11 @@ function sendData(){
 	"&director=" + document.getElementById("searchdirector").value +
 	"&star=" + document.getElementById("searchstar").value + "&page=1" + "&action=SEARCHADV";
 	window.location.assign(newpage);
-} 
+}
+
+(function(){
+    var loggedIn = sessionStorage.getItem("LoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("Login");
+})();
 

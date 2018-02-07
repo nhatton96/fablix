@@ -40,6 +40,7 @@ $('#LoginForm').submit(function(e) {
             //alert(response);
             console.log("Logging in");
             //response.preventDefault();
+            sessionStorage.setItem("LoggedIn","true");
             window.location.assign("Main?page=0");
             //return false;
         },

@@ -18,6 +18,12 @@ function handleListResult(resultData) {
 	}
 }
 
+(function(){
+    var loggedIn = sessionStorage.getItem("LoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("Login");
+})();
+
 function AddToCart(movieId) {
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
     // add to it,

@@ -13,6 +13,13 @@ function createLink(name,id){
 	var mvLink = "/Project/servlet/SingleMovie?" + "movieId=" + id;
 	return "<a href=" + mvLink + ">" + name + "</a>";
 }
+
+(function(){
+    var loggedIn = sessionStorage.getItem("LoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("Login");
+})();
+
 jQuery.ajax({
     dataType: "json",
     method: "GET",

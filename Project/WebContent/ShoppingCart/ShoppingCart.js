@@ -18,6 +18,12 @@ function handleListResult(resultData) {
     }
 }
 
+(function(){
+    var loggedIn = sessionStorage.getItem("LoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("Login");
+})();
+
 // makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json",
