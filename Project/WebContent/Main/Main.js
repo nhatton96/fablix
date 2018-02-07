@@ -68,7 +68,7 @@ jQuery.ajax({
 
 function sendData(){
 	var newpage = "/Project/MovieList/MovieList.html" + 
-	"?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH";
+	"?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta";
 	window.location.assign(newpage);
 } 
 

@@ -4,21 +4,22 @@ var title = "0";
 var director ="0";
 var star = "0";
 var year = "0";
-var genre = "0"
+var genre = "0";
+var order = "td"
 if (action === "SEARCHADV"){
 	title = getParameterByName("title");
     director = getParameterByName("director");
     star = getParameterByName("star");
     year = getParameterByName("year");
-    searchAdv(action,page,title,director,star,year);
+    searchAdv(action,page,title,director,star,year,order);
 }
 else if (action === "SEARCHGENRE"){
 		genre = getParameterByName("genre");
-		searchGenre(action,page,genre);
+		searchGenre(action,page,genre,order);
 }
 else if (action === "SEARCH" || action === "SEARCHTITLE"){
 	title = getParameterByName("title");
-	search(action,page,title);
+	search(action,page,title,order);
 }
 
 // sample
@@ -95,7 +96,7 @@ function createStarLink(data){
     return result;
 }
 
-function searchAdv(action,page,title,director,star,year){
+function searchAdv(action,page,title,director,star,year,order){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -107,7 +108,8 @@ function searchAdv(action,page,title,director,star,year){
 	          title: title,
 	          director: director, 
 	          star: star, 
-	          year: year
+	          year: year,
+	          order: order
 	      },
 		  success: function(resultData){
 	          handleListResult(resultData);
@@ -117,7 +119,7 @@ function searchAdv(action,page,title,director,star,year){
 	      }
 	});
 }
-function searchGenre(action,page,genre){
+function searchGenre(action,page,genre,order){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -126,7 +128,8 @@ function searchGenre(action,page,genre){
 	          ACTION: action,
 	          Page: page,
 	          PageSize: "20", 
-	          genre: genre
+	          genre: genre,
+	          order: order
 	      },
 		  success: function(resultData){
 	          handleListResult(resultData);
@@ -137,7 +140,7 @@ function searchGenre(action,page,genre){
 	});
 }
 
-function search(action,page,title){
+function search(action,page,title,order){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -146,7 +149,8 @@ function search(action,page,title){
 	          ACTION: action,
 	          Page: page,
 	          PageSize: "20", 
-	          title: title
+	          title: title,
+	          order: order
 	      },
 		  success: function(resultData){
 	          handleListResult(resultData);
@@ -169,7 +173,7 @@ $("#Previous").click(function(e) {
 	"&director=" + director +
 	"&star=" + star + 
 	"&genre=" + genre +
-	"&page=" + pageNum + "&action=" + action;
+	"&page=" + pageNum + "&action=" + action + "&order=" + order;
 	 window.location.assign(newpage);
 });
 
@@ -184,7 +188,7 @@ $("#Next").click(function(e) {
 	"&director=" + director +
 	"&star=" + star + 
 	"&genre=" + genre +
-	"&page=" + pageNum + "&action=" + action;
+	"&page=" + pageNum + "&action=" + action  + "&order=" + order;
 	window.location.assign(newpage);
 });
 

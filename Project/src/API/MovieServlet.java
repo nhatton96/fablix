@@ -46,9 +46,25 @@ public class MovieServlet extends HttpServlet {
 		try {
 			// Class.forName("org.gjt.mm.mysql.Driver");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			int page = 0;
+			int pageSize = 0;
+			if (!"SINGLE".equals(action)) {
+				page = Integer.parseInt(request.getParameter("Page"));
+				pageSize = Integer.parseInt(request.getParameter("PageSize"));
+			}
+			String order = "";
+			if (!("LIST".equals(action) || "SEARCHLIST".equals(action) || "SINGLE".equals(action))) {
+				order = request.getParameter("order");
+				if (order.equals("ta"))
+					order = "m2.title asc";
+				else if (order.equals("td"))
+					order = "m2.title desc";
+				else if (order.equals("ya"))
+					order = "m2.year asc";
+				else if (order.equals("yd"))
+					order = "m2.year desc";
+			}
 			if ("LIST".equals(action)) {
-				int page = Integer.parseInt(request.getParameter("Page"));
-				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
 				String movieList = GetMovieList(page - 1, pageSize);
 
 				if (movieList != null) {
@@ -60,8 +76,6 @@ public class MovieServlet extends HttpServlet {
 				}
 
 			} else if ("SEARCHADV".equals(action)) {
-				int page = Integer.parseInt(request.getParameter("Page"));
-				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
 				String star = request.getParameter("star");
 				if (star.equals("0"))
 					star = "%";
@@ -74,7 +88,7 @@ public class MovieServlet extends HttpServlet {
 				String director = request.getParameter("director");
 				if (director.equals("0"))
 					director = "%";
-				String movieList = searchAdv(page - 1, pageSize, title, year, director, star);
+				String movieList = searchAdv(page - 1, pageSize, title, year, director, star, order);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -84,10 +98,8 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else if ("SEARCHGENRE".equals(action)) {
-				int page = Integer.parseInt(request.getParameter("Page"));
-				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
 				String genre = request.getParameter("genre");
-				String movieList = searchGenre(page - 1, pageSize, genre);
+				String movieList = searchGenre(page - 1, pageSize, genre, order);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -97,14 +109,12 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else if ("SEARCH".equals(action) || "SEARCHTITLE".equals(action)) {
-				int page = Integer.parseInt(request.getParameter("Page"));
-				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
 				String title = request.getParameter("title");
 				if ("SEARCH".equals(action))
 					title = "%" + title + "%";
 				else
 					title = title + "%";
-				String movieList = search(page - 1, pageSize, title);
+				String movieList = search(page - 1, pageSize, title, order);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -113,10 +123,7 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-			} 
-			else if ("SEARCHLIST".equals(action)) {
-				int page = Integer.parseInt(request.getParameter("Page"));
-				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
+			} else if ("SEARCHLIST".equals(action)) {
 				String cart = request.getParameter("cartList");
 				JsonParser parser = new JsonParser();
 				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
@@ -130,8 +137,7 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-			}
-			else if ("SINGLE".equals(action)) {
+			} else if ("SINGLE".equals(action)) {
 				String movieId = request.getParameter("MovieId");
 				String movie = GetMovie(movieId);
 
@@ -291,7 +297,8 @@ public class MovieServlet extends HttpServlet {
 
 	}
 
-	private String searchAdv(int page, int pageSize, String title, String year, String director, String star) {
+	private String searchAdv(int page, int pageSize, String title, String year, String director, String star,
+			String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -303,10 +310,11 @@ public class MovieServlet extends HttpServlet {
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
 					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
-					+ year + "' " + "and m2.director like '" + director + "' " + "order by m2.title limit " + pageSize
-					+ " offset " + shiftAmount + ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
-					+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
-					+ "left join stars_in_movies st on st.movieId = m.id " + "left join stars s on s.id = st.starsId";
+					+ year + "' " + "and m2.director like '" + director + "' " + "order by " + order + " limit "
+					+ pageSize + " offset " + shiftAmount + ") as m "
+					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
+					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
+					+ "left join stars s on s.id = st.starsId";
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
@@ -362,7 +370,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 
-	private String searchGenre(int page, int pageSize, String genre) {
+	private String searchGenre(int page, int pageSize, String genre, String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -372,8 +380,8 @@ public class MovieServlet extends HttpServlet {
 			String shiftAmount = Integer.toString(page * pageSize);
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
 					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2, genres_in_movies ge2, genres g2 "
-					+ "where ge2.movieId = m2.id and ge2.genreId = g2.id and g2.name = '" + genre + "' "
-					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "where ge2.movieId = m2.id and ge2.genreId = g2.id and g2.name = '" + genre + "' " + "order by "
+					+ order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
@@ -432,7 +440,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 
-	private String search(int page, int pageSize, String title) {
+	private String search(int page, int pageSize, String title, String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -442,7 +450,7 @@ public class MovieServlet extends HttpServlet {
 			String shiftAmount = Integer.toString(page * pageSize);
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
 					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '"
-					+ title + "' " + "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ title + "' " + "order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
@@ -500,7 +508,7 @@ public class MovieServlet extends HttpServlet {
 			return new String();
 		} // end catch SQLException
 	}
-	
+
 	private String searchList(int page, int pageSize, JsonArray cart) {
 		try {
 
@@ -509,8 +517,7 @@ public class MovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			String shiftAmount = Integer.toString(page * pageSize);
-			
-//			String idList = "m2.id = 'tt0395642' or m2.id = 'tt0349955'";
+
 			String idList = "";
 			int len = cart.size() - 1;
 			for (int i = 0; i <= len; ++i) {
@@ -524,7 +531,7 @@ public class MovieServlet extends HttpServlet {
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where (" + idList + ")"
-					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount +") as m "
+					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id left join genres g on g.id = ge.genreId left join ratings r on r.movieId = m.id "
 					+ "left join stars_in_movies st on st.movieId = m.id left join stars s on s.id = st.starsId;";
 
