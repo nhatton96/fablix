@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.Gson;
 
 @WebServlet("/api/movie")
@@ -115,8 +117,11 @@ public class MovieServlet extends HttpServlet {
 			else if ("SEARCHLIST".equals(action)) {
 				int page = Integer.parseInt(request.getParameter("Page"));
 				int pageSize = Integer.parseInt(request.getParameter("PageSize"));
-				String[] cart = request.getParameterValues("cart");
-				String movieList = searchList(page - 1, pageSize, cart);
+				String cart = request.getParameter("cartList");
+				JsonParser parser = new JsonParser();
+				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
+				JsonArray jscartarray = jscartob.getAsJsonArray("cart");
+				String movieList = searchList(page - 1, pageSize, jscartarray);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -496,7 +501,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 	
-	private String searchList(int page, int pageSize, String[] cart) {
+	private String searchList(int page, int pageSize, JsonArray cart) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -505,17 +510,21 @@ public class MovieServlet extends HttpServlet {
 
 			String shiftAmount = Integer.toString(page * pageSize);
 			
+//			String idList = "m2.id = 'tt0395642' or m2.id = 'tt0349955'";
 			String idList = "";
-			int cartSize = cart.length;
-			for (int i = 0; i < cartSize; ++i) {
-				idList += "m2.id = '" + cart[i] + "'";
-				if (i < cartSize - 1)
+			int len = cart.size() - 1;
+			for (int i = 0; i <= len; ++i) {
+				JsonElement ce = cart.get(i);
+				JsonObject co = ce.getAsJsonObject();
+				String movieString = co.get("movieId").getAsString();
+				idList += ("m2.id = '" + movieString + "'");
+				if (i < len)
 					idList += " or ";
 			}
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where (" + idList + ")"
-					+ "order by m2.title limit " + pageSize + " offset " + page +") as m "
+					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount +") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id left join genres g on g.id = ge.genreId left join ratings r on r.movieId = m.id "
 					+ "left join stars_in_movies st on st.movieId = m.id left join stars s on s.id = st.starsId;";
 

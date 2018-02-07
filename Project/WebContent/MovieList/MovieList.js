@@ -21,6 +21,30 @@ else if (action === "SEARCH" || action === "SEARCHTITLE"){
 	search(action,page,title);
 }
 
+// sample
+//var cartList = {
+//	    'cart': [{'movieId': "tt0424773"},
+//	    	{'movieId': "tt0349955"},
+//	    	{'movieId': "tt0395642"}]
+//	};
+//
+//jQuery.ajax({
+//		  dataType: "json",
+//		  method: "GET",
+//		  url: "/Project/api/movie",
+//		  data: {
+//	          ACTION: "SEARCHLIST",
+//	          Page: 1,
+//	          PageSize: "20", 
+//	          cartList: JSON.stringify(cartList)
+//	      },
+//		  success: function(resultData){
+//	          handleListResult(resultData);
+//		  },
+//		  error: function(XMLHttpRequest, textStatus, errorThrown){
+//		  	alert(textStatus);
+//	      }
+//	});
 function handleListResult(resultData) {
     console.log("handleListResult: populating movie table from resultData");
 
