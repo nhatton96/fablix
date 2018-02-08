@@ -34,6 +34,12 @@ function RemoveFromCart(movieId) {
     window.location.assign("ShoppingCart");
 }
 
+function sendData(){
+    var newpage = "/Project/MovieList/MovieList.html" +
+        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta";
+    window.location.assign(newpage);
+}
+
 function GoToCustomerInfo() {
     window.location.assign("CustomerInfo");
 }
