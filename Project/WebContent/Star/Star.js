@@ -7,6 +7,16 @@ function handleListResult(resultData) {
     	res += createLink(resultData[0]["movieNames"][i],resultData[0]["movieId"][i])
     }
     document.getElementById("mv").innerHTML =  res;
+    /*
+    for (var i = 0; i < resultData.length; i++) {
+        var rowHTML = "";
+        rowHTML += "<tr>"; // id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
+        rowHTML += "<th>" + resultData[0]["name"] + "</th>";
+        rowHTML += "<th>" + resultData[0]["birthYear"] + "</th>";
+
+        rowHTML += "</tr>";
+        movieTableBodyElement.append(rowHTML);
+    }*/
 }
 
 function createLink(name,id){

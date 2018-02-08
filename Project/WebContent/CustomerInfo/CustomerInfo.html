@@ -1,16 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../Star/Star.css">
-    <title>Star</title>
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="../Search/Search.css">
+</HEAD>
+
+<BODY >
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -42,36 +41,19 @@
         </form>
     </div>
 </nav>
-<div id="Star">
-<h1>Stars</h1>
-Name: <span id="name"> </span><br>
-Birth Year: <span id="by"></span><br>
-Movies: <span id="mv"></span><br>
+
+<div class="container">
+    <H1 ALIGN="CENTER">Customer Info</H1>
+    <FORM id="SearchForm" onsubmit="sendData(); return false;">
+        <label><b>Name</b></label>
+        <INPUT id="searchtitle" TYPE="TEXT" NAME="title" class="form-control"><BR>
+        <label><b>Address</b></label>
+        <INPUT id="searchyear" TYPE="TEXT" NAME="year" class="form-control"><BR>
+        <label><b>Card Number</b></label>
+        <INPUT id="searchdirector" TYPE="TEXT" NAME="director" class="form-control"><BR>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
+    </FORM>
 </div>
-<!--
-<table id=movieList_table class="table table-hover">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Birth Year</th>
-        <th>Director</th>
-        <th>Movies</th>
-    </tr>
-    </thead>
-    <tbody id=movieList_table_body>
-    </tbody>
-</table>
--->
-
-<!-- include jQuery and Bootstrap JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-<!-- include our own JS file -->
-<script src="./Star.js"></script>
-</body>
-
-
-
-</html>
+<script src="./CustomerInfo.js"></script>
+</BODY>
+</HTML>

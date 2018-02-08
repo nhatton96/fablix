@@ -35,7 +35,7 @@ function RemoveFromCart(movieId) {
 }
 
 function GoToCustomerInfo() {
-    window.location.assign("Main");
+    window.location.assign("CustomerInfo");
 }
 
 (function(){

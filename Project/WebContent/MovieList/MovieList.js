@@ -21,6 +21,10 @@ else if (action === "SEARCH" || action === "SEARCHTITLE"){
 	title = getParameterByName("title");
 	search(action,page,title,order);
 }
+else if (action === "LIST"){
+    title = getParameterByName("title");
+    getList(action,page,title,order);
+}
 
 // sample
 //var cartList = {
@@ -160,6 +164,28 @@ function search(action,page,title,order){
 	      }
 	});
 }
+
+function getList(action,page,title,order){
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "/Project/api/movie",
+        data: {
+            ACTION: action,
+            Page: page,
+            PageSize: "20",
+            title: title,
+            order: order
+        },
+        success: function(resultData){
+            handleListResult(resultData);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            alert(textStatus);
+        }
+    });
+}
+
 
 $("#Previous").click(function(e) {
     e.preventDefault();
