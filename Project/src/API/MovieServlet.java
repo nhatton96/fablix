@@ -124,7 +124,8 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else if ("SEARCHLIST".equals(action)) {
-				String cart = request.getParameter("cartList");
+				//put in json format
+				String cart = "{cart :" +request.getParameter("Cart") + "}";
 				JsonParser parser = new JsonParser();
 				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
 				JsonArray jscartarray = jscartob.getAsJsonArray("cart");

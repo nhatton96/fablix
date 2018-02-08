@@ -76,6 +76,11 @@ table{
     border-spacing: 0px 20px;
 }
 
+#checkout {
+    margin-left: 70%;
+    width: 20%;
+}
+
 #table_div {
     margin-right: auto;
     margin-left: auto;

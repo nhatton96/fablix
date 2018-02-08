@@ -13,9 +13,29 @@ function handleListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
+        rowHTML += "<th><button type='submit' class='btn btn-primary btn-lg btn-block' onClick='RemoveFromCart(\""+resultData[i]["movieId"]+"\")' >Remove</button></th>";
         rowHTML += "</tr>"
         movieTableBodyElement.append(rowHTML);
     }
+}
+
+function RemoveFromCart(movieId) {
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var newCart = [];
+    cart.forEach(function (value) {
+        if(value.movieId !== movieId)
+            newCart.push({movieId: value.movieId})
+    })
+
+    //cart.push({movieId: movieId});
+    // then put it back.
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    alert(movieId + " was removed from your cart");
+    window.location.assign("ShoppingCart");
+}
+
+function GoToCustomerInfo() {
+    window.location.assign("Main");
 }
 
 (function(){
@@ -25,21 +45,29 @@ function handleListResult(resultData) {
 })();
 
 // makes the HTTP GET request and registers on success callback function handleStarResult
-jQuery.ajax({
-    dataType: "json",
-    method: "GET",
-    url: "/Project/api/movie",
-    data: {
-        ACTION: "SINGLE",
-        MovieId: getParameterByName('movieId')
-    },
-    success: function(resultData){
-        handleListResult(resultData);
-    },
-    error: function(XMLHttpRequest, textStatus, errorThrown){
-        alert(textStatus);
+(function(){
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length > 0){
+        jQuery.ajax({
+            dataType: "json",
+            method: "GET",
+            url: "/Project/api/movie",
+            data: {
+                ACTION: "SEARCHLIST",
+                Page: 1,
+                PageSize: "20",
+                Cart: JSON.stringify(cart)
+            },
+            success: function(resultData){
+                handleListResult(resultData);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                alert(textStatus);
+            }
+        });
     }
-});
+})();
+
 
 
 function getParameterByName(name, url) {
