@@ -1,15 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
+<!doctype html>
+<html lang="en">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../CustomerInfo/CustomerInfo.css">
-</HEAD>
-
-<BODY >
+    <link rel="stylesheet" type="text/css" href="../Confirmation/Confirmation.css">
+    <title>fablix</title>
+</head>
+<body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -41,19 +41,22 @@
         </form>
     </div>
 </nav>
+<div id="Message">
+    <h1>Thank you for you purchase!</h1>
+    <div id="Continue">
+        <button type='submit' class='btn btn-primary btn-lg btn-block' onClick='GoHome()' >Continue Shopping</button>
+    </div>
 
-<div class="container">
-    <H1 ALIGN="CENTER">Customer Info</H1>
-    <FORM id="SearchForm" onsubmit="sendData(); return false;">
-        <label><b>Name</b></label>
-        <INPUT id="searchtitle" TYPE="TEXT" NAME="title" class="form-control"><BR>
-        <label><b>Address</b></label>
-        <INPUT id="searchyear" TYPE="TEXT" NAME="year" class="form-control"><BR>
-        <label><b>Card Number</b></label>
-        <INPUT id="searchdirector" TYPE="TEXT" NAME="director" class="form-control"><BR>
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
-    </FORM>
 </div>
-<script src="./CustomerInfo.js"></script>
-</BODY>
-</HTML>
+<!-- include jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- include our own JS file -->
+<script src="./Confirmation.js"></script>
+</body>
+
+
+
+</html>

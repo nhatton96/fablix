@@ -73,6 +73,14 @@
     <servlet-name>CustomerInfoHTML</servlet-name>
     <jsp-file>/CustomerInfo/CustomerInfo.html</jsp-file>
   </servlet>
+  <servlet>
+    <servlet-name>ConfirmationJS</servlet-name>
+    <jsp-file>/Confirmation/Confirmation.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>ConfirmationHTML</servlet-name>
+    <jsp-file>/Confirmation/Confirmation.html</jsp-file>
+  </servlet>
 
 
   <servlet-mapping>
@@ -126,6 +134,14 @@
   <servlet-mapping>
     <servlet-name>CustomerInfoHTML</servlet-name>
     <url-pattern>/servlet/CustomerInfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfirmationJS</servlet-name>
+    <url-pattern>/servlet/Confirmation.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfirmationHTML</servlet-name>
+    <url-pattern>/servlet/Confirmation</url-pattern>
   </servlet-mapping>
 
 </web-app>
