@@ -50,6 +50,40 @@ else if (action === "LIST"){
 //		  	alert(textStatus);
 //	      }
 //	});
+
+function sortBy(column, direction){
+    action = getParameterByName("action");
+    page = getParameterByName("page");
+    order = getParameterByName("order")
+    title = getParameterByName("title");
+    director = getParameterByName("director");
+    star = getParameterByName("star");
+    year = getParameterByName("year");
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "/Project/api/movie",
+        data: {
+            ACTION: action,
+            Page: page,
+            PageSize: "20",
+            title: title,
+            director: director,
+            star: star,
+            year: year,
+            order: order,
+            SortBy:column,
+            Direction:direction
+        },
+        success: function(resultData){
+            handleListResult(resultData);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            alert(textStatus);
+        }
+    });
+}
+
 function handleListResult(resultData) {
     console.log("handleListResult: populating movie table from resultData");
 

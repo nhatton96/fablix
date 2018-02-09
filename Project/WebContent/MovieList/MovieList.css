@@ -42,6 +42,26 @@ body{
     text-align:center;
 }
 
+i {
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    margin-left: 8px;
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    margin-left: 8px;
+}
+
 tr:hover{
     color:black;
     opacity: 0.5;
@@ -52,6 +72,11 @@ table{
     border-collapse:unset;
     border-spacing: 0px 20px;
 }
+
+.mainRow:hover{
+    color:white
+}
+
 
 #table_div {
     margin-right: auto;
