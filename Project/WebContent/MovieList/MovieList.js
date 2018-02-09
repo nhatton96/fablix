@@ -5,7 +5,7 @@ var director ="0";
 var star = "0";
 var year = "0";
 var genre = "0";
-var order = "td"
+var order = getParameterByName("order");
 if (action === "SEARCHADV"){
 	title = getParameterByName("title");
     director = getParameterByName("director");
