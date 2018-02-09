@@ -56,7 +56,8 @@ jQuery.ajax({
     data: {
         ACTION: "LIST",
         Page: "1", // getParameterByName('page'),
-        PageSize: "3"
+        PageSize: "3",
+        order: "tr"
     },
     success: function(resultData){
         handleListResult(resultData);

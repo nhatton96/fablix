@@ -53,7 +53,7 @@ public class MovieServlet extends HttpServlet {
 				pageSize = Integer.parseInt(request.getParameter("PageSize"));
 			}
 			String order = "";
-			if (!("LIST".equals(action) || "SEARCHLIST".equals(action) || "SINGLE".equals(action))) {
+			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action))) {
 				order = request.getParameter("order");
 				if (order.equals("ta"))
 					order = "m2.title asc";
@@ -65,7 +65,7 @@ public class MovieServlet extends HttpServlet {
 					order = "m2.year desc";
 			}
 			if ("LIST".equals(action)) {
-				String movieList = GetMovieList(page - 1, pageSize);
+				String movieList = GetMovieList(page - 1, pageSize,order);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -160,20 +160,23 @@ public class MovieServlet extends HttpServlet {
 		out.close();
 	}
 
-	private String GetMovieList(int page, int pageSize) {
+	private String GetMovieList(int page, int pageSize, String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
-
+			if (order.equals("tr"))
+				order = "r2.rating desc";
 			String shiftAmount = Integer.toString(page * pageSize);
-			String query = "SELECT r.*, m.*, gim.*, g.name AS genreName, sim.*, s.name AS starName, s.id as stid FROM \r\n"
-					+ "(SELECT * FROM ratings ORDER BY rating DESC LIMIT " + pageSize + " OFFSET " + shiftAmount
-					+ ") AS  r\r\n" + "INNER JOIN movies AS m ON r.movieId = m.id\r\n"
-					+ "INNER JOIN genres_in_movies gim \r\n" + "ON gim.movieId = r.movieId\r\n"
-					+ "INNER JOIN genres g \r\n" + "ON gim.genreId = g.id\r\n" + "INNER JOIN stars_in_movies sim\r\n"
-					+ "ON sim.movieId = r.movieId\r\n" + "INNER JOIN stars s\r\n" + "ON sim.starsId = s.id;";
+			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, "
+					+ "s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
+					+ "from (select * from movies m2, ratings r2 where r2.movieId = m2.id"
+					+ " order by " + order + " limit " + pageSize + " offset "+ shiftAmount + ") "
+					+ "as m left join genres_in_movies ge on ge.movieId = m.id left join genres g on g.id = ge.genreId "
+					+ "left join ratings r on r.movieId = m.id left join stars_in_movies st on st.movieId = m.id "
+					+ "left join stars s on s.id = st.starsId";
+					
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
@@ -441,7 +444,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 
-	private String search(int page, int pageSize, String title, String order) {
+	private String search(int page, int pageSize, String title,String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
