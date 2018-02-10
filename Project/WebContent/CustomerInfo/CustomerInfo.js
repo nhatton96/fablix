@@ -44,5 +44,4 @@ function sendData(){
             alert(textStatus);
         }
     });
-
 }
