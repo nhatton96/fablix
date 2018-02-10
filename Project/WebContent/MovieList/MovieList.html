@@ -22,12 +22,11 @@
 			<li><a href="/Project/servlet/Movies?page=1&action=LIST&order=tr">Browse</a></li>
 			<li><a href="/Project/servlet/ShoppingCart">My Cart</a></li>
 			<li class="dropdown">
-				<select>
-				    <option value="20" id="pagesize"></option>
-					<option value="20" onclick="resize(20)">20</option>
-					<option value="30" onclick="resize(30)">30</option>
-					<option value="40" onclick="resize(40)">40</option>
-					<option value="50" onclick="resize(50)">50</option>
+				<select id="selector" onchange="resize()">
+				    <option value="20" id="pagesize" ></option>
+					<option value="30" >30</option>
+					<option value="40" >40</option>
+					<option value="50" >50</option>
 				</select>
              </li>
 		</ul>

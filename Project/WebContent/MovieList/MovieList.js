@@ -206,7 +206,9 @@ function getList(action,page,title,order,pagesize){
         }
     });
 }
-function resize(nps){
+function resize(){
+    var selectBox = document.getElementById("selector");
+    var nps = selectBox.options[selectBox.selectedIndex].value;
 	var newpage = "/Project/MovieList/MovieList.html" + 
 	"?title=" + title +
 	"&year=" + year +
