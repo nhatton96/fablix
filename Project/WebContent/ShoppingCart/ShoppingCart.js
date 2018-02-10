@@ -25,29 +25,28 @@ function RemoveFromCart(movieId) {
     var newCart = [];
     cart.forEach(function (value) {
         if(value.movieId !== movieId)
-            newCart.push({movieId: value.movieId})
+            newCart.push({movieId: value.movieId});
     })
 
     //cart.push({movieId: movieId});
     // then put it back.
     localStorage.setItem('cart', JSON.stringify(newCart));
-    alert(movieId + " was removed from your cart");
+    //alert(movieId + " was removed from your cart");
     window.location.assign("ShoppingCart");
 }
 
 function updateMovieQuantity(amount, movieId){
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
     var newCart = [];
+
     cart.forEach(function (value) {
-        if(value.movieId === movieId){
-            for (i = 0; i < parseInt(amount); i++) {
-                newCart.push({movieId: value.movieId})
-            }
-        }
-        else{
-            newCart.push({movieId: value.movieId})
-        }
+        if(value.movieId !== movieId)
+            newCart.push({movieId: value.movieId});
     })
+    
+    for (i = 0; i < parseInt(amount); i++) {
+        newCart.push({movieId: movieId});
+    }
 
     localStorage.setItem('cart', JSON.stringify(newCart));
     //window.location.assign("ShoppingCart");
