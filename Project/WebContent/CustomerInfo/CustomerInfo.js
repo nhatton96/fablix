@@ -28,6 +28,8 @@ function sendData(){
         data: {
             ACTION: "cred",
             FirstName: firstName,
+            Page:1,
+            PageSize:20,
             LastName: lastName,
             Address: address,
             CardNumber: cardNumber,
@@ -41,6 +43,7 @@ function sendData(){
                 window.location.assign("Confirmation?isValid=false");
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
+            window.location.assign("Confirmation?isValid=true");
             alert(textStatus);
         }
     });

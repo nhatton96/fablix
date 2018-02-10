@@ -8,6 +8,7 @@
     }
     else {
         header.append("<h1>Thank you for your purchase!</h1>");
+        var emptyCart = [];
         localStorage.setItem('cart', JSON.stringify(emptyCart));
     }
 
