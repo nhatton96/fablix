@@ -39,11 +39,14 @@ function updateMovieQuantity(amount, movieId){
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
     var newCart = [];
     cart.forEach(function (value) {
-        if(value.movieId === movieId)
+        if(value.movieId === movieId){
             for (i = 0; i < parseInt(amount); i++) {
                 newCart.push({movieId: value.movieId})
             }
-        newCart.push({movieId: value.movieId})
+        }
+        else{
+            newCart.push({movieId: value.movieId})
+        }
     })
 
     localStorage.setItem('cart', JSON.stringify(newCart));
