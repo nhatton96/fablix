@@ -8,6 +8,7 @@ function handleListResult(resultData) {
         var movieQuantity = getValue(resultData[i]["movieId"])
         var rowHTML = "";
         rowHTML += "<tr>";
+        rowHTML += "<th>" + resultData[i]["movieId"] + "</th>";
         rowHTML += "<th>" + resultData[i]["title"] + "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
