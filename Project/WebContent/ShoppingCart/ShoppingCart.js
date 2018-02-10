@@ -13,6 +13,7 @@ function handleListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
+        rowHTML += "<th><input type='number' name='quantity' min='1' max='10' value='1' onChange='updateMovieQuantity(this.value, \""+resultData[i]["movieId"]+"\")'></th>";
         rowHTML += "<th><button type='submit' class='btn btn-primary btn-lg btn-block' onClick='RemoveFromCart(\""+resultData[i]["movieId"]+"\")' >Remove</button></th>";
         rowHTML += "</tr>"
         movieTableBodyElement.append(rowHTML);
@@ -32,6 +33,21 @@ function RemoveFromCart(movieId) {
     localStorage.setItem('cart', JSON.stringify(newCart));
     alert(movieId + " was removed from your cart");
     window.location.assign("ShoppingCart");
+}
+
+function updateMovieQuantity(amount, movieId){
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var newCart = [];
+    cart.forEach(function (value) {
+        if(value.movieId === movieId)
+            for (i = 0; i < parseInt(amount); i++) {
+                newCart.push({movieId: value.movieId})
+            }
+        newCart.push({movieId: value.movieId})
+    })
+
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    //window.location.assign("ShoppingCart");
 }
 
 function sendData(){

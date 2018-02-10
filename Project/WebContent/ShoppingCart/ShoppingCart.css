@@ -26,6 +26,10 @@ ul{
     float: left
 }
 
+input{
+    color:black;
+}
+
 .block {
     height:100px;
     width:400px;
