@@ -5,6 +5,7 @@ function handleListResult(resultData) {
     // populate the star table
     var movieTableBodyElement = jQuery("#movieList_table_body");
     for (var i = 0; i < Math.min(10, resultData.length); i++) {
+        var movieQuantity = getValue(resultData[i]["movieId"])
         var rowHTML = "";
         rowHTML += "<tr>";
         rowHTML += "<th>" + resultData[i]["title"] + "</th>";
@@ -13,11 +14,21 @@ function handleListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
         rowHTML += "<th>" + resultData[i]["list_of_stars"] + "</th>";
-        rowHTML += "<th><input type='number' name='quantity' min='1' max='10' value='1' onChange='updateMovieQuantity(this.value, \""+resultData[i]["movieId"]+"\")'></th>";
+        rowHTML += "<th><input type='number' name='quantity' min='1' max='10' value=\""+movieQuantity+"\" onChange='updateMovieQuantity(this.value, \""+resultData[i]["movieId"]+"\")'></th>";
         rowHTML += "<th><button type='submit' class='btn btn-primary btn-lg btn-block' onClick='RemoveFromCart(\""+resultData[i]["movieId"]+"\")' >Remove</button></th>";
         rowHTML += "</tr>"
         movieTableBodyElement.append(rowHTML);
     }
+}
+
+function getValue(movieId){
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var amount = 0;
+    cart.forEach(function (value) {
+        if(value.movieId === movieId)
+            amount += 1;
+    });
+    return amount;
 }
 
 function RemoveFromCart(movieId) {
@@ -43,7 +54,7 @@ function updateMovieQuantity(amount, movieId){
         if(value.movieId !== movieId)
             newCart.push({movieId: value.movieId});
     })
-    
+
     for (i = 0; i < parseInt(amount); i++) {
         newCart.push({movieId: movieId});
     }
