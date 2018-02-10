@@ -6,24 +6,26 @@ var star = "0";
 var year = "0";
 var genre = "0";
 var order = getParameterByName("order");
+var pagesize = getParameterByName("ps");
+document.getElementById("pagesize").innerHTML = pagesize;
 if (action === "SEARCHADV"){
 	title = getParameterByName("title");
     director = getParameterByName("director");
     star = getParameterByName("star");
     year = getParameterByName("year");
-    searchAdv(action,page,title,director,star,year,order);
+    searchAdv(action,page,title,director,star,year,order,pagesize);
 }
 else if (action === "SEARCHGENRE"){
 		genre = getParameterByName("genre");
-		searchGenre(action,page,genre,order);
+		searchGenre(action,page,genre,order,pagesize);
 }
 else if (action === "SEARCH" || action === "SEARCHTITLE"){
 	title = getParameterByName("title");
-	search(action,page,title,order);
+	search(action,page,title,order,pagesize);
 }
 else if (action === "LIST"){
     title = getParameterByName("title");
-    getList(action,page,title,order);
+    getList(action,page,title,order,pagesize);
 }
 
 // sample
@@ -58,7 +60,7 @@ function sortBy(neworder){
 	"&director=" + director +
 	"&star=" + star + 
 	"&genre=" + genre +
-	"&page=1" + "&action=" + action + "&order=" + neworder;
+	"&page=1" + "&action=" + action + "&order=" + neworder + "&ps=" + pagesize;
 	 window.location.assign(newpage);
 }
 
@@ -91,7 +93,7 @@ function handleListResult(resultData) {
 
 function sendData(){
     var newpage = "/Project/MovieList/MovieList.html" +
-        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta";
+        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta" + "&ps=20";
     window.location.assign(newpage);
 }
 
@@ -119,7 +121,7 @@ function createStarLink(data){
     return result;
 }
 
-function searchAdv(action,page,title,director,star,year,order){
+function searchAdv(action,page,title,director,star,year,order,pagesize){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -127,7 +129,7 @@ function searchAdv(action,page,title,director,star,year,order){
 		  data: {
 	          ACTION: action,
 	          Page: page,
-	          PageSize: "20", 
+	          PageSize: pagesize, 
 	          title: title,
 	          director: director, 
 	          star: star, 
@@ -142,7 +144,7 @@ function searchAdv(action,page,title,director,star,year,order){
 	      }
 	});
 }
-function searchGenre(action,page,genre,order){
+function searchGenre(action,page,genre,order,pagesize){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -150,7 +152,7 @@ function searchGenre(action,page,genre,order){
 		  data: {
 	          ACTION: action,
 	          Page: page,
-	          PageSize: "20", 
+	          PageSize: pagesize, 
 	          genre: genre,
 	          order: order
 	      },
@@ -163,7 +165,7 @@ function searchGenre(action,page,genre,order){
 	});
 }
 
-function search(action,page,title,order){
+function search(action,page,title,order,pagesize){
 	jQuery.ajax({
 		  dataType: "json",
 		  method: "GET",
@@ -171,7 +173,7 @@ function search(action,page,title,order){
 		  data: {
 	          ACTION: action,
 	          Page: page,
-	          PageSize: "20", 
+	          PageSize: pagesize, 
 	          title: title,
 	          order: order
 	      },
@@ -184,7 +186,7 @@ function search(action,page,title,order){
 	});
 }
 
-function getList(action,page,title,order){
+function getList(action,page,title,order,pagesize){
     jQuery.ajax({
         dataType: "json",
         method: "GET",
@@ -192,7 +194,7 @@ function getList(action,page,title,order){
         data: {
             ACTION: action,
             Page: page,
-            PageSize: "20",
+            PageSize: pagesize,
             title: title,
             order: order
         },
@@ -204,7 +206,16 @@ function getList(action,page,title,order){
         }
     });
 }
-
+function resize(nps){
+	var newpage = "/Project/MovieList/MovieList.html" + 
+	"?title=" + title +
+	"&year=" + year +
+	"&director=" + director +
+	"&star=" + star + 
+	"&genre=" + genre +
+	"&page=" + page + "&action=" + action + "&order=" + order + "&ps=" + nps;
+	 window.location.assign(newpage);
+}
 
 $("#Previous").click(function(e) {
     e.preventDefault();
@@ -218,7 +229,7 @@ $("#Previous").click(function(e) {
 	"&director=" + director +
 	"&star=" + star + 
 	"&genre=" + genre +
-	"&page=" + pageNum + "&action=" + action + "&order=" + order;
+	"&page=" + pageNum + "&action=" + action + "&order=" + order + "&ps=" + pagesize;
 	 window.location.assign(newpage);
 });
 
@@ -233,7 +244,7 @@ $("#Next").click(function(e) {
 	"&director=" + director +
 	"&star=" + star + 
 	"&genre=" + genre +
-	"&page=" + pageNum + "&action=" + action  + "&order=" + order;
+	"&page=" + pageNum + "&action=" + action  + "&order=" + order + "&ps=" + pagesize;
 	window.location.assign(newpage);
 });
 

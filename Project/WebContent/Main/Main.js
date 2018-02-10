@@ -56,7 +56,7 @@ jQuery.ajax({
     url: "/Project/api/movie",
     data: {
         ACTION: "LIST",
-        Page: "1", // getParameterByName('page'),
+        Page: "1",
         PageSize: "3",
         order: "tr"
     },
@@ -70,7 +70,7 @@ jQuery.ajax({
 
 function sendData(){
 	var newpage = "/Project/MovieList/MovieList.html" + 
-	"?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta";
+	"?title=" + document.getElementById("searchbar").value + "&page=1&action=SEARCH&order=ta&ps=20";
 	window.location.assign(newpage);
 } 
 

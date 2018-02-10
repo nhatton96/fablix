@@ -36,7 +36,7 @@ function RemoveFromCart(movieId) {
 
 function sendData(){
     var newpage = "/Project/MovieList/MovieList.html" +
-        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta";
+        "?title=" + document.getElementById("searchbar").value + "&page=1&action=SEARCH&order=ta&ps=20";
     window.location.assign(newpage);
 }
 
