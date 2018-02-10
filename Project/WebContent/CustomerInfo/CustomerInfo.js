@@ -6,7 +6,11 @@
         window.location.assign("Login");
 })();
 
-
+function sendData2(){
+    var newpage = "/Project/MovieList/MovieList.html" +
+        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta" + "&ps=20";
+    window.location.assign(newpage);
+}
 
 function sendData(){
     var firstName = document.getElementById("firstName").value;
