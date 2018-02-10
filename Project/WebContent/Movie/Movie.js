@@ -6,6 +6,7 @@ function handleListResult(resultData) {
 	for (var i = 0; i < resultData.length; i++) {
 		var rowHTML = "";
 		rowHTML += "<tr>";
+        rowHTML += "<th>" + resultData[i]["Id"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["title"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["year"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["director"] + "</th>";

@@ -37,12 +37,16 @@
 <div class="container">
     <H1 ALIGN="CENTER">Customer Info</H1>
     <FORM id="SearchForm" onsubmit="sendData(); return false;">
-        <label><b>Name</b></label>
-        <INPUT id="searchtitle" TYPE="TEXT" NAME="title" class="form-control"><BR>
+        <label><b>First Name</b></label>
+        <INPUT id="searchtitle" TYPE="TEXT" NAME="title" class="form-control" required><BR>
+        <label><b>Last Name</b></label>
+        <INPUT  TYPE="TEXT" NAME="title" class="form-control" required><BR>
         <label><b>Address</b></label>
-        <INPUT id="searchyear" TYPE="TEXT" NAME="year" class="form-control"><BR>
+        <INPUT id="searchyear" TYPE="TEXT" NAME="year" class="form-control" required><BR>
         <label><b>Card Number</b></label>
-        <INPUT id="searchdirector" TYPE="TEXT" NAME="director" class="form-control"><BR>
+        <INPUT  TYPE="TEXT" NAME="director" class="form-control" required><BR>
+        <label><b>Card Experation</b></label>
+        <INPUT id="searchdirector" TYPE="TEXT" NAME="director" class="form-control" required><BR>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
     </FORM>
 </div>
