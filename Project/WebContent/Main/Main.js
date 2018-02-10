@@ -6,7 +6,7 @@ function handleListResult(resultData) {
     for (var i = 0; i < resultData.length; i++) {
         var rowHTML = "";
         rowHTML += "<tr>"; // id='tableRows' class='clickable-row' data-href='"+resultData[i]["movieId"]+"'>";
-        rowHTML += "<th>" + resultData[i]["Id"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["movieId"] + "</th>";
         rowHTML += "<th>" + createMvLink(resultData[i]) + "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
