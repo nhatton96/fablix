@@ -74,7 +74,7 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			}
-			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action))) {
+			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action)) && !("cred".equals(action))) {
 				order = request.getParameter("order");
 				if (order.equals("ta"))
 					order = "m2.title asc";
