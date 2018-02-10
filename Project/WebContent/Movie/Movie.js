@@ -11,7 +11,7 @@ function handleListResult(resultData) {
 		rowHTML += "<th>" + resultData[i]["year"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["director"] + "</th>";
 		rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
-		rowHTML += "<th>" + resultData[i]["list_of_genres"] + "</th>";
+		rowHTML += "<th>" + createGenreLink(resultData[i]) + "</th>";
 		rowHTML += "<th>" + create(resultData[i]) + "</th>";
         rowHTML += "<th><button type='submit' class='btn btn-primary btn-lg btn-block' onClick='AddToCart(\""+resultData[i]["movieId"]+"\")' >ADD</button></th>";
 		rowHTML += "</tr>";
@@ -49,7 +49,14 @@ function create(data){
     }
     return result;
 }
-
+function createGenreLink(data){
+	var result = "";
+    for (var i = 0; i < data["list_of_genres"].length ; i++){
+    	var genreLink = "/Project/MovieList/MovieList.html?genre=" + data["list_of_genres"][i] + "&page=1&action=SEARCHGENRE&order=ta&ps=20";
+    	result += "<a href=" + genreLink + ">" + data["list_of_genres"][i] + "</a>";
+    }
+    return result;
+}
 // makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json",
