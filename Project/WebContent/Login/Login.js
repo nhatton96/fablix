@@ -40,6 +40,8 @@ $('#LoginForm').submit(function(e) {
             //alert(response);
             console.log("Logging in");
             //response.preventDefault();
+            var newCart = [];
+            localStorage.setItem('cart', JSON.stringify(newCart));
             sessionStorage.setItem("LoggedIn","true");
             window.location.assign("Main?page=0");
             //return false;
