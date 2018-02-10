@@ -58,7 +58,7 @@ public class MovieServlet extends HttpServlet {
 				String ln = request.getParameter("LastName");
 				String card = request.getParameter("CardNumber");
 				String add = request.getParameter("Address");
-				String exp = request.getParameter("CadExpiration");
+				String exp = request.getParameter("CardExpiration");
 				String cart = "{cart :" + request.getParameter("Cart") + "}";
 				JsonParser parser = new JsonParser();
 				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
