@@ -53,6 +53,27 @@ public class MovieServlet extends HttpServlet {
 				pageSize = Integer.parseInt(request.getParameter("PageSize"));
 			}
 			String order = "";
+			if ("cred".equals(action)) {
+				String fn = request.getParameter("FirstName");
+				String ln = request.getParameter("LastName");
+				String card = request.getParameter("CardNumber");
+				String add = request.getParameter("Address");
+				String exp = request.getParameter("CadExpiration");
+				String cart = "{cart :" + request.getParameter("Cart") + "}";
+				JsonParser parser = new JsonParser();
+				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
+				JsonArray jscartarray = jscartob.getAsJsonArray("cart");
+
+				String movieList = checkout(fn, ln, add, card, exp, jscartarray);
+
+				if (movieList != null) {
+					out.write(movieList.toString());
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
+			}
 			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action))) {
 				order = request.getParameter("order");
 				if (order.equals("ta"))
@@ -65,7 +86,7 @@ public class MovieServlet extends HttpServlet {
 					order = "m2.year desc";
 			}
 			if ("LIST".equals(action)) {
-				String movieList = GetMovieList(page - 1, pageSize,order);
+				String movieList = GetMovieList(page - 1, pageSize, order);
 
 				if (movieList != null) {
 					out.write(movieList.toString());
@@ -124,8 +145,8 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else if ("SEARCHLIST".equals(action)) {
-				//put in json format
-				String cart = "{cart :" +request.getParameter("Cart") + "}";
+				// put in json format
+				String cart = "{cart :" + request.getParameter("Cart") + "}";
 				JsonParser parser = new JsonParser();
 				JsonObject jscartob = parser.parse(cart).getAsJsonObject();
 				JsonArray jscartarray = jscartob.getAsJsonArray("cart");
@@ -171,12 +192,11 @@ public class MovieServlet extends HttpServlet {
 			String shiftAmount = Integer.toString(page * pageSize);
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, "
 					+ "s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-					+ "from (select * from movies m2, ratings r2 where r2.movieId = m2.id"
-					+ " order by " + order + " limit " + pageSize + " offset "+ shiftAmount + ") "
+					+ "from (select * from movies m2, ratings r2 where r2.movieId = m2.id" + " order by " + order
+					+ " limit " + pageSize + " offset " + shiftAmount + ") "
 					+ "as m left join genres_in_movies ge on ge.movieId = m.id left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
-					
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
@@ -444,7 +464,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 
-	private String search(int page, int pageSize, String title,String order) {
+	private String search(int page, int pageSize, String title, String order) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -592,4 +612,46 @@ public class MovieServlet extends HttpServlet {
 			return new String();
 		} // end catch SQLException
 	}
+
+	private String checkout(String fn, String ln, String add, String card, String exp, JsonArray cart) {
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Statement statement = dbcon.createStatement();
+			String query = "select ct.id as cusId from customers ct, creditcards cd where cd.id = ct.ccId and "
+					+ "cd.id = '" + card + "' and ct.firstName = '" + fn + "' and ct.lastName = '" + ln
+					+ "' and ct.address = '" + add + "' and cd.expiration = '" + exp + "';";
+			ResultSet rs = statement.executeQuery(query);
+			List<String> result = new ArrayList<String>();
+			if (rs.next()) {
+				result.add("yes");
+				String cusId = rs.getString("cusId");
+				String query2 = "insert into sales (customerId,movieId,salesDate) values";
+				int len = cart.size();
+				for (int i = 0; i < len; ++i) {
+					JsonElement ce = cart.get(i);
+					JsonObject co = ce.getAsJsonObject();
+					String movieString = co.get("movieId").getAsString();
+					String newquery = query2 + "('" + cusId + "', '" + movieString + "', CURDATE());";
+					ResultSet rs2 = statement.executeQuery(newquery);
+					rs2.close();
+				}
+			} else {
+				result.add("no");
+			}
+
+			rs.close();
+			statement.close();
+			dbcon.close();
+
+			return gson.toJson(result);
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		}
+	}
+
 }
