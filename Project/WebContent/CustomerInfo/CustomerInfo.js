@@ -1,12 +1,8 @@
-//function sendData(){
-//    /*
-//    var newpage = "/Project/MovieList/MovieList.html" +
-//        "?title=" + document.getElementById("searchtitle").value +
-//        "&year=" + document.getElementById("searchyear").value +
-//        "&director=" + document.getElementById("searchdirector").value +
-//        "&star=" + document.getElementById("searchstar").value + "&page=1" + "&action=SEARCHADV" + "&order=ta";
-//    window.location.assign(newpage);*/
-//}
+function sendData(){
+    var newpage = "/Project/MovieList/MovieList.html" +
+    "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta" + "&ps=20";
+    window.location.assign(newpage);
+}
 
 (function(){
     var loggedIn = sessionStorage.getItem("LoggedIn");
@@ -14,8 +10,6 @@
         window.location.assign("Login");
 })();
 
-function sendData(){
-    var newpage = "/Project/MovieList/MovieList.html" +
-        "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta" + "&ps=20";
-    window.location.assign(newpage);
+function sendData2(){
+	window.location.assign("Confirmation");
 }
