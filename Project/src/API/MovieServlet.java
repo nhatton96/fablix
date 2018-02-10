@@ -632,9 +632,9 @@ public class MovieServlet extends HttpServlet {
 					JsonObject co = ce.getAsJsonObject();
 					String movieString = co.get("movieId").getAsString();
 					String newquery = query2 + "('" + cusId + "', '" + movieString + "', CURDATE());";
-					ResultSet rs2 = statement.executeQuery(newquery);
-					rs2.close();
+					statement.executeUpdate(newquery);
 				}
+				statement.close();
 			} else {
 				result.add("no");
 			}

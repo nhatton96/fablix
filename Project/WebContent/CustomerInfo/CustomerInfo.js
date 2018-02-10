@@ -37,7 +37,6 @@ function sendData(){
                 window.location.assign("Confirmation?isValid=false");
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            window.location.assign("Confirmation?isValid=true");
             alert(textStatus);
         }
     });
