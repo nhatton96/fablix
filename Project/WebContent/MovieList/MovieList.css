@@ -77,6 +77,9 @@ table{
     color:white
 }
 
+.dropdown{
+    margin-top:15px;
+}
 
 #table_div {
     margin-right: auto;
