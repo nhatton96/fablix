@@ -1,8 +1,4 @@
-function sendData(){
-    var newpage = "/Project/MovieList/MovieList.html" +
-    "?title=" + document.getElementById("searchbar").value + "&page=1" + "&action=SEARCH" + "&order=ta" + "&ps=20";
-    window.location.assign(newpage);
-}
+
 
 (function(){
     var loggedIn = sessionStorage.getItem("LoggedIn");
@@ -10,10 +6,8 @@ function sendData(){
         window.location.assign("Login");
 })();
 
-<<<<<<< HEAD
-function sendData2(){
-	window.location.assign("Confirmation");
-=======
+
+
 function sendData(){
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
@@ -45,5 +39,4 @@ function sendData(){
         }
     });
 
->>>>>>> ad476d57d2a4af9b870c0464784239c049e188a4
 }
