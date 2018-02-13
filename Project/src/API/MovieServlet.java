@@ -333,8 +333,8 @@ public class MovieServlet extends HttpServlet {
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
-					+ "and s2.name like '" + star + "' " + "and m2.title like '" + title + "' " + "and m2.year like '"
-					+ year + "' " + "and m2.director like '" + director + "' " + "order by " + order + " limit "
+					+ "and s2.name like '%" + star + "%' " + "and m2.title like '%" + title + "%' " + "and m2.year like '%"
+					+ year + "%' " + "and m2.director like '%" + director + "%' " + "order by " + order + " limit "
 					+ pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "

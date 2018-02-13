@@ -47,7 +47,7 @@ $('#LoginForm').submit(function(e) {
             //return false;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //alert("Wrong email or password");
+            alert("Wrong email or password");
             console.log(textStatus);
             console.log(errorThrown);
             location.reload();
