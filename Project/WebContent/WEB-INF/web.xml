@@ -143,5 +143,15 @@
     <servlet-name>ConfirmationHTML</servlet-name>
     <url-pattern>/servlet/Confirmation</url-pattern>
   </servlet-mapping>
-
+<!--
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>HTTPSOnly</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  -->
 </web-app>
