@@ -81,6 +81,22 @@
     <servlet-name>ConfirmationHTML</servlet-name>
     <jsp-file>/Confirmation/Confirmation.html</jsp-file>
   </servlet>
+  <servlet>
+    <servlet-name>DashboardLoginJS</servlet-name>
+    <jsp-file>/DashboardLogin/DashboardLogin.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardLoginHTML</servlet-name>
+    <jsp-file>/DashboardLogin/DashboardLogin.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardJS</servlet-name>
+    <jsp-file>/Dashboard/Dashboard.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardHTML</servlet-name>
+    <jsp-file>/Dashboard/Dashboard.html</jsp-file>
+  </servlet>
 
 
   <servlet-mapping>
@@ -142,6 +158,22 @@
   <servlet-mapping>
     <servlet-name>ConfirmationHTML</servlet-name>
     <url-pattern>/servlet/Confirmation</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardLoginJS</servlet-name>
+    <url-pattern>/servlet/DashboardLogin.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardLoginHTML</servlet-name>
+    <url-pattern>/servlet/_dashboard</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardJS</servlet-name>
+    <url-pattern>/servlet/Dashboard.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardHTML</servlet-name>
+    <url-pattern>/servlet/dashboard</url-pattern>
   </servlet-mapping>
 <!--
   <security-constraint>
