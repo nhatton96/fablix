@@ -49,6 +49,55 @@
 
 </div>
 
+<div class="dbStruct">
+	<h1>DataBase Tables</h1>
+
+	<div id="table_div">
+		<table id="movieList_table" class="table table-hover">
+			<thead>
+			<tr class="mainRow">
+				<th nowrap>
+					<a href="#movies" class="btn btn-info" data-toggle="collapse">movies</a>
+					<div id="movies" class="collapse">
+						<ul>
+							<li>id VARCHAR(10)</li>
+							<li>title VARCHAR(100)</li>
+							<li>year INTEGER </li>
+							<li>director VARCHAR(100)</li>
+						</ul>
+					</div>
+				</th>
+				<th nowrap>
+					<a href="#stars" class="btn btn-info" data-toggle="collapse">stars</a>
+					<div id="stars" class="collapse">
+						<ul>
+							<li>id VARCHAR(10)</li>
+							<li>name VARCHAR(100)</li>
+							<li>year INTEGER </li>
+							<li>brithYear INTEGER</li>
+						</ul>
+					</div>
+				</th>
+				<th nowrap>
+					<a href="#stars_in_movies" class="btn btn-info" data-toggle="collapse">stars_in_movies</a>
+					<div  id="stars_in_movies" class="collapse">
+						<ul>
+							<li>starsId VARCHAR(10)</li>
+							<li>movieId VARCHAR(10)</li>
+						</ul>
+					</div>
+				</th>
+				<th nowrap>Director</th>
+
+			</tr>
+			</thead>
+			<tbody id=movieList_table_body>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
 
 <script src="./Dashboard.js"></script>
 </body>
