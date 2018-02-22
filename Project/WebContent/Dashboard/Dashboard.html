@@ -11,48 +11,9 @@
 </head>
 <body>
 
-<div id="main">
-	<div id="addStar">
-		<h1>Add Star</h1>
-		<form action="/action_page.php">
-			Name:<br>
-			<input type="text" name="name" value="">
-			<br>
-			Birth Year:<br>
-			<input type="text" name="birthYear" value="">
-			<br><br>
-			<input type="submit" value="Submit">
-		</form>
-	</div>
-
-	<div id="addMovie">
-		<h1>Add Movie</h1>
-		<form action="/action_page.php">
-			Title:<br>
-			<input type="text" name="title" value="">
-			<br>
-			Year:<br>
-			<input type="text" name="year" value="">
-			<br>
-			Director:<br>
-			<input type="text" name="director" value="">
-			<br>
-			Star:<br>
-			<input type="text" name="star" value="">
-			<br>
-			Genre:<br>
-			<input type="text" name="genre" value="">
-			<br><br>
-			<input type="submit" value="Submit">
-		</form>
-	</div>
-
-</div>
-
 <div class="dbStruct">
-	<h1>DataBase Tables</h1>
-
 	<div id="table_div">
+        <h1>DataBase Tables</h1>
 		<table id="movieList_table" class="table table-hover">
 			<thead>
 			<tr class="mainRow">
@@ -87,14 +48,119 @@
 						</ul>
 					</div>
 				</th>
-				<th nowrap>Director</th>
-
 			</tr>
+
+            <tr>
+                <th nowrap>
+                    <a href="#genres" class="btn btn-info" data-toggle="collapse">genres</a>
+                    <div  id="genres" class="collapse">
+                        <ul>
+                            <li>id INTEGER</li>
+                            <li>name VARCHAR(32)</li>
+                        </ul>
+                    </div>
+                </th>
+                <th nowrap>
+                    <a href="#genres_in_movies" class="btn btn-info" data-toggle="collapse">genres_in_movies</a>
+                    <div  id="genres_in_movies" class="collapse">
+                        <ul>
+                            <li>genreId INTEGER</li>
+                            <li>movieId VARCHAR(10)</li>
+                        </ul>
+                    </div>
+                </th>
+                <th nowrap>
+                    <a href="#creditcards" class="btn btn-info" data-toggle="collapse">creditcards</a>
+                    <div  id="creditcards" class="collapse">
+                        <ul>
+                            <li>id VARCHAR(20)</li>
+                            <li>firstName VARCHAR(50)</li>
+                            <li>lastName VARCHAR(50)</li>
+                            <li>expiration DATE</li>
+                        </ul>
+                    </div>
+                </th>
+            </tr>
+
+            <tr>
+                <th nowrap>
+                    <a href="#customers" class="btn btn-info" data-toggle="collapse">customers</a>
+                    <div  id="customers" class="collapse">
+                        <ul>
+                            <li>id INTEGER</li>
+                            <li>firstName VARCHAR(50)</li>
+                            <li>lastName VARCHAR(50)</li>
+                            <li>ccid VARCHAR(20)</li>
+                            <li>address VARCHAR(200)</li>
+                            <li>email VARCHAR(50)</li>
+                            <li>password VARCHAR(20)</li>
+                        </ul>
+                    </div>
+                </th>
+                <th nowrap>
+                    <a href="#sales" class="btn btn-info" data-toggle="collapse">sales</a>
+                    <div  id="sales" class="collapse">
+                        <ul>
+                            <li>id INTEGER</li>
+                            <li>customerId INTEGER</li>
+                            <li>movieId VARCHAR(50)</li>
+                            <li>salesDate DATE</li>
+                        </ul>
+                    </div>
+                </th>
+                <th nowrap>
+                    <a href="#ratings" class="btn btn-info" data-toggle="collapse">ratings</a>
+                    <div  id="ratings" class="collapse">
+                        <ul>
+                            <li>movieId VARCHAR(10)</li>
+                            <li>rating FLOAT</li>
+                            <li>numVotes INTEGER</li>
+                        </ul>
+                    </div>
+                </th>
+            </tr>
 			</thead>
 			<tbody id=movieList_table_body>
 			</tbody>
 		</table>
 	</div>
+</div>
+<div id="main">
+    <div id="addStar">
+        <h1>Add Star</h1>
+        <form action="/action_page.php">
+            Name:<br>
+            <input type="text" name="name" value="">
+            <br>
+            Birth Year:<br>
+            <input type="text" name="birthYear" value="">
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="addMovie">
+        <h1>Add Movie</h1>
+        <form action="/action_page.php">
+            Title:<br>
+            <input type="text" name="title" value="">
+            <br>
+            Year:<br>
+            <input type="text" name="year" value="">
+            <br>
+            Director:<br>
+            <input type="text" name="director" value="">
+            <br>
+            Star:<br>
+            <input type="text" name="star" value="">
+            <br>
+            Genre:<br>
+            <input type="text" name="genre" value="">
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
 </div>
 
 

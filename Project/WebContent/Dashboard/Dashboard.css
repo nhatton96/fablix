@@ -16,7 +16,7 @@ input{
     color:black;
 }
 li{
-    color:black;
+    color:white;
 }
 
 
@@ -70,10 +70,6 @@ i {
     margin-left: 8px;
 }
 
-tr:hover{
-    color:black;
-    opacity: 0.5;
-}
 
 table{
     color:white;
@@ -98,21 +94,26 @@ table{
 }
 
 #addMovie{
-     border-style: solid;
-     border-color: red;
-     width:40%;
-     padding:10px;
-     margin-top:10px;
-     color:white;
- }
+    border-style: solid;
+    border-color: red;
+    width:20%;
+    padding:10px;
+    margin:10px;
+    color:white;
+    float: left;
+    margin-left: 20%;
+}
 
 #addStar{
     border-style: solid;
     border-color: red;
-    width:40%;
+    width:20%;
     padding:10px;
-    margin-top:10px;
+    margin:10px;
     color:white;
+    float: right;
+    margin-right:30%;
+
 }
 
 .container-prevnex{
@@ -121,7 +122,6 @@ table{
     width: 80%;
     opacity: 0.7;
 }
-
 
 @media only screen and (max-width:620px) {
     /* For mobile phones: */
