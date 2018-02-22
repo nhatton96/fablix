@@ -19,8 +19,8 @@ public class Film {
 
         int  n = rand.nextInt(10000) + 1;
         id = "zz" + Integer.toString(n);
-        title = "New title";
-        director = "Bill Hicks";
+        title = "NULL";
+        director = "NULL";
         categories = "Thriller";
         year = 1990;
     }

@@ -29,6 +29,7 @@ $(document).ready(function() {
 $('#LoginForm').submit(function(e) {
     e.preventDefault();
     var response = grecaptcha.getResponse();
+    /*
     $.ajax({
         type: "POST",
         url: 'https://www.google.com/recaptcha/api/siteverify',
@@ -46,7 +47,7 @@ $('#LoginForm').submit(function(e) {
             console.log(errorThrown);
             location.reload();
         }
-    });
+    });*/
 
 
     if(response.length != 0){
@@ -54,6 +55,7 @@ $('#LoginForm').submit(function(e) {
             type: "POST",
             url: '/Project/api/login',
             data: {
+                type: "customer",
                 email: $("#email").val(),
                 password: $("#password").val()
             },

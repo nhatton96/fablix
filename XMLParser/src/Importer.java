@@ -172,6 +172,15 @@ public class Importer extends DefaultHandler{
                 String call = "{call add_movie_with_genre(?,?,?,?,?)}";
                 while(films.hasNext()){
                     Film film = films.next();
+
+                    if(film.getCategories().equals("NULL")){
+                        System.out.println("The following film id "+film.getId()+"has Null genre attribute");
+                    }else if(film.getDirector().equals("NULL")){
+                        System.out.println("The following film id "+film.getId()+"has Null director attribute");
+                    }else if(film.getTitle().equals("NULL")){
+                        System.out.println("The following film id "+film.getId()+"has Null title attribute");
+                    }
+
                     try (CallableStatement stmt = dbcon.prepareCall(call)) {
                         if(film.getCategories().equals(""))
                             film.setCategories("Thriller");

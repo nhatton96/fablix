@@ -7,7 +7,7 @@ var year = "0";
 var genre = "0";
 var order = getParameterByName("order");
 var pagesize = getParameterByName("ps");
-document.getElementById("pagesize").innerHTML = pagesize;
+
 if (action === "SEARCHADV"){
 	title = getParameterByName("title");
     director = getParameterByName("director");
@@ -28,30 +28,12 @@ else if (action === "LIST"){
     getList(action,page,title,order,pagesize);
 }
 
-// sample
-//var cartList = {
-//	    'cart': [{'movieId': "tt0424773"},
-//	    	{'movieId': "tt0349955"},
-//	    	{'movieId': "tt0395642"}]
-//	};
-//
-//jQuery.ajax({
-//		  dataType: "json",
-//		  method: "GET",
-//		  url: "/Project/api/movie",
-//		  data: {
-//	          ACTION: "SEARCHLIST",
-//	          Page: 1,
-//	          PageSize: "20", 
-//	          cartList: JSON.stringify(cartList)
-//	      },
-//		  success: function(resultData){
-//	          handleListResult(resultData);
-//		  },
-//		  error: function(XMLHttpRequest, textStatus, errorThrown){
-//		  	alert(textStatus);
-//	      }
-//	});
+(function(){
+    var loggedIn = sessionStorage.getItem("EmployeeLoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("_dashboard");
+})();
+
 
 function sortBy(neworder){
     var newpage = "/Project/MovieList/MovieList.html" + 

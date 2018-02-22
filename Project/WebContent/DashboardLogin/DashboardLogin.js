@@ -32,6 +32,7 @@ $('#LoginForm').submit(function(e) {
         type: "POST",
         url: '/Project/api/login',
         data: {
+            type:'employee',
             email: $("#email").val(),
             password: $("#password").val()
         },
@@ -42,8 +43,8 @@ $('#LoginForm').submit(function(e) {
             //response.preventDefault();
             var newCart = [];
             localStorage.setItem('cart', JSON.stringify(newCart));
-            sessionStorage.setItem("LoggedIn","true");
-            window.location.assign("Main?page=0");
+            sessionStorage.setItem("EmployeeLoggedIn","true");
+            window.location.assign("dashboard");
             //return false;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
