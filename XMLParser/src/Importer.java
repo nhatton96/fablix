@@ -162,14 +162,19 @@ public class Importer extends DefaultHandler{
             Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
             // Declare our statement
             Statement statement = dbcon.createStatement();
+            PreparedStatement psInsertRecord=null;
+            String sqlInsertRecord=null;
+            int[] iNoRows=null;
 
+            dbcon.setAutoCommit(false);
+            String call = "{call add_movie_with_genre(?,?,?,?,?)}";
+            psInsertRecord=dbcon.prepareStatement(call);
             //Iterator it = myEmpls.iterator();
             Iterator<Movies> it = myMovies.iterator();
             while(it.hasNext()) {
                 //System.out.println(it.next().toString());
                 Movies movie = it.next();
                 Iterator<Film> films = movie.getFilms().iterator();
-                String call = "{call add_movie_with_genre(?,?,?,?,?)}";
                 while(films.hasNext()){
                     Film film = films.next();
 
@@ -181,20 +186,20 @@ public class Importer extends DefaultHandler{
                         System.out.println("The following film id "+film.getId()+"has Null title attribute");
                     }
 
-                    try (CallableStatement stmt = dbcon.prepareCall(call)) {
-                        if(film.getCategories().equals(""))
-                            film.setCategories("Thriller");
-                        stmt.setString(1, film.getId());
-                        stmt.setString(2, film.getTitle());
-                        stmt.setInt(3, film.getYear());
-                        stmt.setString(4, film.getDirector());
-                        stmt.setString(5, film.getCategories());
-                        stmt.execute();
+                    try {
+                        psInsertRecord.setString(1, film.getId());
+                        psInsertRecord.setString(2, film.getTitle());
+                        psInsertRecord.setInt(3, film.getYear());
+                        psInsertRecord.setString(4, film.getDirector());
+                        psInsertRecord.setString(5, film.getCategories());
+                        psInsertRecord.addBatch();
                     }catch(Exception e){
                         System.out.println(e);
                     }
                 }
             }
+            iNoRows=psInsertRecord.executeBatch();
+            dbcon.commit();
             dbcon.close();
             //String query = "CALL add_movie()";
 
