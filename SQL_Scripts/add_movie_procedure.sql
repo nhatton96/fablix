@@ -75,7 +75,7 @@ BEGIN
   declare ssid varchar(2);
   declare sid varchar(10);
   
-  insert into movies(id,title,year,director) values (movie_id,title,2018,dir);
+  replace into movies(id,title,year,director) values (movie_id,title,2018,dir);
   
   if (select count(*) from stars where name = star) = 0 then
   set siid = (select ((select substring(max(id), 3, 10)  from stars) + 1));
