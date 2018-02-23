@@ -18,9 +18,9 @@ import javax.xml.parsers.ParserConfigurationException;
 class StarMovie {
 
 	public static void main(String[] args) {
-		CastHandler cast = new CastHandler();
-		cast.parseDocument();
-		cast.addToDataBase();
+		// CastHandler cast = new CastHandler();
+		// cast.parseDocument();
+		// cast.addToDataBase();
 
 		ActorHandler act = new ActorHandler();
 		act.parseDocument();
@@ -202,7 +202,7 @@ class ActorHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		tempval = "";
-		if (qName.equalsIgnoreCase("stagename")) {
+		if (qName.equalsIgnoreCase("actor")) {
 			star = new Star();
 		}
 	}
@@ -210,8 +210,9 @@ class ActorHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
-			if (qName.equalsIgnoreCase("stagename")) {
+			if (qName.equalsIgnoreCase("actor")) {
 				starList.add(star);
+			} else if (qName.equalsIgnoreCase("stagename")) {
 				star.setName(tempval);
 			} else if (qName.equalsIgnoreCase("dob")) {
 				star.setBirth(tempval);
