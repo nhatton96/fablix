@@ -25,7 +25,7 @@ public class Importer extends DefaultHandler{
     //to maintain context
     private Movies tempMovies;
     private Film tempFilm;
-    private Employee tempEmp;
+    //private Employee tempEmp;
 
 
     public Importer(){
@@ -224,6 +224,7 @@ public class Importer extends DefaultHandler{
         Importer spe = new Importer();
         spe.runExample();
         spe.addToDataBase();
+        System.out.println("Movies successfully parsed");
     }
 
 }
