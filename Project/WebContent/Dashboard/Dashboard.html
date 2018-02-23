@@ -10,154 +10,39 @@
 	<link rel="stylesheet" type="text/css" href="../Dashboard/Dashboard.css">
 </head>
 <body>
-
-<div class="dbStruct">
-	<div id="table_div">
-        <h1>DataBase Tables</h1>
-		<table id="movieList_table" class="table table-hover">
-			<thead>
-			<tr class="mainRow">
-				<th nowrap>
-					<a href="#movies" class="btn btn-info" data-toggle="collapse">movies</a>
-					<div id="movies" class="collapse">
-						<ul>
-							<li>id VARCHAR(10)</li>
-							<li>title VARCHAR(100)</li>
-							<li>year INTEGER </li>
-							<li>director VARCHAR(100)</li>
-						</ul>
-					</div>
-				</th>
-				<th nowrap>
-					<a href="#stars" class="btn btn-info" data-toggle="collapse">stars</a>
-					<div id="stars" class="collapse">
-						<ul>
-							<li>id VARCHAR(10)</li>
-							<li>name VARCHAR(100)</li>
-							<li>year INTEGER </li>
-							<li>brithYear INTEGER</li>
-						</ul>
-					</div>
-				</th>
-				<th nowrap>
-					<a href="#stars_in_movies" class="btn btn-info" data-toggle="collapse">stars_in_movies</a>
-					<div  id="stars_in_movies" class="collapse">
-						<ul>
-							<li>starsId VARCHAR(10)</li>
-							<li>movieId VARCHAR(10)</li>
-						</ul>
-					</div>
-				</th>
-			</tr>
-
-            <tr>
-                <th nowrap>
-                    <a href="#genres" class="btn btn-info" data-toggle="collapse">genres</a>
-                    <div  id="genres" class="collapse">
-                        <ul>
-                            <li>id INTEGER</li>
-                            <li>name VARCHAR(32)</li>
-                        </ul>
-                    </div>
-                </th>
-                <th nowrap>
-                    <a href="#genres_in_movies" class="btn btn-info" data-toggle="collapse">genres_in_movies</a>
-                    <div  id="genres_in_movies" class="collapse">
-                        <ul>
-                            <li>genreId INTEGER</li>
-                            <li>movieId VARCHAR(10)</li>
-                        </ul>
-                    </div>
-                </th>
-                <th nowrap>
-                    <a href="#creditcards" class="btn btn-info" data-toggle="collapse">creditcards</a>
-                    <div  id="creditcards" class="collapse">
-                        <ul>
-                            <li>id VARCHAR(20)</li>
-                            <li>firstName VARCHAR(50)</li>
-                            <li>lastName VARCHAR(50)</li>
-                            <li>expiration DATE</li>
-                        </ul>
-                    </div>
-                </th>
-            </tr>
-
-            <tr>
-                <th nowrap>
-                    <a href="#customers" class="btn btn-info" data-toggle="collapse">customers</a>
-                    <div  id="customers" class="collapse">
-                        <ul>
-                            <li>id INTEGER</li>
-                            <li>firstName VARCHAR(50)</li>
-                            <li>lastName VARCHAR(50)</li>
-                            <li>ccid VARCHAR(20)</li>
-                            <li>address VARCHAR(200)</li>
-                            <li>email VARCHAR(50)</li>
-                            <li>password VARCHAR(20)</li>
-                        </ul>
-                    </div>
-                </th>
-                <th nowrap>
-                    <a href="#sales" class="btn btn-info" data-toggle="collapse">sales</a>
-                    <div  id="sales" class="collapse">
-                        <ul>
-                            <li>id INTEGER</li>
-                            <li>customerId INTEGER</li>
-                            <li>movieId VARCHAR(50)</li>
-                            <li>salesDate DATE</li>
-                        </ul>
-                    </div>
-                </th>
-                <th nowrap>
-                    <a href="#ratings" class="btn btn-info" data-toggle="collapse">ratings</a>
-                    <div  id="ratings" class="collapse">
-                        <ul>
-                            <li>movieId VARCHAR(10)</li>
-                            <li>rating FLOAT</li>
-                            <li>numVotes INTEGER</li>
-                        </ul>
-                    </div>
-                </th>
-            </tr>
-			</thead>
-			<tbody id=movieList_table_body>
-			</tbody>
-		</table>
-	</div>
-</div>
 <div id="main">
     <div id="addStar">
         <h1>Add Star</h1>
-        <form action="/action_page.php">
+        <form onsubmit="sendStar(); return false;">
             Name:<br>
-            <input type="text" name="name" value="">
-            <br>
-            Birth Year:<br>
-            <input type="text" name="birthYear" value="">
-            <br><br>
-            <input type="submit" value="Submit">
+			<input id="starname" type="text" name="name" value="" required>
+			<br>
+			Birth Year:<br>
+			<input id="staryear" type="text" name="birthYear" value="" required>
+			<br><br>
+			<input type="submit" value="Submit">
         </form>
     </div>
 
     <div id="addMovie">
         <h1>Add Movie</h1>
-        <form action="/action_page.php">
-            Title:<br>
-            <input type="text" name="title" value="">
-            <br>
-            Year:<br>
-            <input type="text" name="year" value="">
-            <br>
-            Director:<br>
-            <input type="text" name="director" value="">
-            <br>
-            Star:<br>
-            <input type="text" name="star" value="">
-            <br>
-            Genre:<br>
-            <input type="text" name="genre" value="">
-            <br><br>
-            <input type="submit" value="Submit">
+        <form onsubmit="sendMovie(); return false;">
+           Title:<br>
+			<input id = "addtitle" type="text" name="title" value=""  class="form-control" required>
+			<br>
+			Year:<br>
+			<input id = "addyear" type="text" name="year" value="" class="form-control" required> 
+			<br>
+			Director:<br>
+			<input id = "adddirector" type="text" name="director" value="" class="form-control"  required>
+			<br>
+			Star:<br>
+			<input id = "addstar" type="text" name="star" value="" class="form-control"  required>
+			<br>
+			Genre:<br>
+			<input id = "addgenre" type="text" name="genre" value="" class="form-control"  required>
+			<br><br>
+			<input type="submit" value="Submit">
         </form>
     </div>
 
