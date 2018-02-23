@@ -93,8 +93,9 @@ class CastHandler extends DefaultHandler {
 			PreparedStatement psInsertRecord2 = null;
 			dbcon.setAutoCommit(false);
 			String call = "{call add_star_id(?,?,?,?)}";
+			String call2 = "{call add_star_id2(?,?,?,?)}";
 			psInsertRecord = dbcon.prepareStatement(call);
-			psInsertRecord2 = dbcon.prepareStatement(call);
+			psInsertRecord2 = dbcon.prepareStatement(call2);
 			int[] iNoRows = null;
 			int[] iNoRows2 = null;
 
