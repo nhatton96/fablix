@@ -19,14 +19,13 @@ class StarMovie {
 
 	public static void main(String[] args) {
 		CastHandler cast = new CastHandler();
-        cast.parseDocument();
-        cast.addToDataBase();
-		
-        ActorHandler act = new ActorHandler();
-        act.parseDocument();
-        act.addToDataBase();
-		
-		
+		cast.parseDocument();
+		cast.addToDataBase();
+
+		ActorHandler act = new ActorHandler();
+		act.parseDocument();
+		act.addToDataBase();
+
 	}
 }
 
@@ -35,7 +34,6 @@ class CastHandler extends DefaultHandler {
 	String tempval;
 	List<Movie> moli = new ArrayList<Movie>();
 	Movie tempMo;
-	
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -62,7 +60,7 @@ class CastHandler extends DefaultHandler {
 	public void characters(char ch[], int start, int length) throws SAXException {
 		tempval = new String(ch, start, length);
 	}
-	
+
 	public void parseDocument() {
 
 		// get a factory
@@ -92,26 +90,48 @@ class CastHandler extends DefaultHandler {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			PreparedStatement psInsertRecord = null;
+			PreparedStatement psInsertRecord2 = null;
 			dbcon.setAutoCommit(false);
 			String call = "{call add_star_id(?,?,?,?)}";
 			psInsertRecord = dbcon.prepareStatement(call);
+			psInsertRecord2 = dbcon.prepareStatement(call);
 			int[] iNoRows = null;
+			int[] iNoRows2 = null;
+
+			String mid = " ";
+			String tempmid = " ";
 
 			Iterator<Movie> iter = moli.iterator();
 			while (iter.hasNext()) {
 				Movie mo = iter.next();
-				try {
-					psInsertRecord.setString(1,mo.getStar());
-					psInsertRecord.setString(2, mo.getId());
-					psInsertRecord.setString(3, mo.getTITLE());
-					psInsertRecord.setString(4, mo.getDir());
-					psInsertRecord.addBatch();
-				} catch (Exception e) {
-					System.out.println(e);
+				tempmid = mo.getId();
+				
+				if (mid.equals(tempmid)) {
+					try {
+						psInsertRecord2.setString(1, mo.getStar());
+						psInsertRecord2.setString(2, mid);
+						psInsertRecord2.setString(3, mo.getTITLE());
+						psInsertRecord2.setString(4, mo.getDir());
+						psInsertRecord2.addBatch();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				} else {
+					try {
+						mid = tempmid;
+						psInsertRecord.setString(1, mo.getStar());
+						psInsertRecord.setString(2, mid);
+						psInsertRecord.setString(3, mo.getTITLE());
+						psInsertRecord.setString(4, mo.getDir());
+						psInsertRecord.addBatch();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
 				}
 
 			}
 			iNoRows = psInsertRecord.executeBatch();
+			iNoRows2 = psInsertRecord2.executeBatch();
 			dbcon.commit();
 			dbcon.close();
 
@@ -128,7 +148,8 @@ class CastHandler extends DefaultHandler {
 			e.printStackTrace();
 		}
 	}
-	class Movie{
+
+	class Movie {
 		String id;
 		String dir;
 		String star;
@@ -145,10 +166,11 @@ class CastHandler extends DefaultHandler {
 		public void setStar(String STAR) {
 			this.star = STAR;
 		}
-		
+
 		public void setTitle(String TITLE) {
 			this.title = TITLE;
 		}
+
 		public String getDir() {
 			return this.dir;
 		}
@@ -156,6 +178,7 @@ class CastHandler extends DefaultHandler {
 		public String getStar() {
 			return this.star;
 		}
+
 		public String getId() {
 			return this.id;
 		}
@@ -233,7 +256,7 @@ class ActorHandler extends DefaultHandler {
 
 			int by = 0;
 			Iterator<Star> iter = starList.iterator();
-			while(iter.hasNext()) {
+			while (iter.hasNext()) {
 				Star tempStar = iter.next();
 				try {
 					try {
@@ -266,7 +289,8 @@ class ActorHandler extends DefaultHandler {
 			e.printStackTrace();
 		}
 	}
-	class Star{
+
+	class Star {
 		String name;
 		String birthYear;
 
