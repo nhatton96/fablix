@@ -38,17 +38,19 @@ class CastHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		tempval = "";
+		if (qName.equalsIgnoreCase("f")) {
+			tempMo = new Movie();
+		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equalsIgnoreCase("f")) {
-			tempMo = new Movie();
+			moli.add(tempMo);
 			tempMo.setId(tempval);
 			tempMo.setDir(tempDir);
 		} else if (qName.equalsIgnoreCase("a")) {
 			tempMo.setStar(tempval);
-			moli.add(tempMo);
 		} else if (qName.equalsIgnoreCase("is")) {
 			tempDir = tempval;
 		} else if (qName.equalsIgnoreCase("t")) {
@@ -106,7 +108,7 @@ class CastHandler extends DefaultHandler {
 			while (iter.hasNext()) {
 				Movie mo = iter.next();
 				tempmid = mo.getId();
-				
+
 				if (mid.equals(tempmid)) {
 					try {
 						psInsertRecord2.setString(1, mo.getStar());
@@ -199,17 +201,19 @@ class ActorHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		tempval = "";
+		if (qName.equalsIgnoreCase("stagename")) {
+			star = new Star();
+		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
 			if (qName.equalsIgnoreCase("stagename")) {
-				star = new Star();
+				starList.add(star);
 				star.setName(tempval);
 			} else if (qName.equalsIgnoreCase("dob")) {
 				star.setBirth(tempval);
-				starList.add(star);
 			}
 		} catch (Exception e) {
 			e.toString();
