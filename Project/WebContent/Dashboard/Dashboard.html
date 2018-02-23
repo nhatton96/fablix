@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="main">
-    <div id="addStar">
+    <div id="addStars">
         <h1>Add Star</h1>
         <form onsubmit="sendStar(); return false;">
             Name:<br>
@@ -48,7 +48,19 @@
 
 </div>
 
-
+<div id="table_div">
+	<table id="movieList_table" class="table table-hover">
+		<thead>
+		<tr class="mainRow">
+			<th nowrap>Table</th>
+			<th nowrap>Attribute</th>
+			<th nowrap>Type</th>
+		</tr>
+		</thead>
+		<tbody id=movieList_table_body>
+		</tbody>
+	</table>
+</div>
 
 <script src="./Dashboard.js"></script>
 </body>

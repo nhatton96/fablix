@@ -1,3 +1,9 @@
+(function(){
+    var loggedIn = sessionStorage.getItem("EmployeeLoggedIn");
+    if(loggedIn !== "true")
+        window.location.assign("_dashboard");
+})();
+
 function sendMovie() {
 	jQuery.ajax({
 		dataType : "json",
@@ -66,17 +72,17 @@ function handleListResult(resultData) {
 	}
 }
 
-//jQuery.ajax({
-//	dataType : "json",
-//	method : "GET",
-//	url : "/Project/api/add",
-//	data : {
-//		action : "table"
-//	},
-//	success : function(resultData) {
-//		handleListResult(resultData);
-//	},
-//	error : function(XMLHttpRequest, textStatus, errorThrown) {
-//		alert(textStatus);
-//	}
-//});
+jQuery.ajax({
+	dataType : "json",
+	method : "GET",
+	url : "/Project/api/add",
+	data : {
+		action : "table"
+	},
+	success : function(resultData) {
+		handleListResult(resultData);
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		alert(textStatus);
+	}
+});

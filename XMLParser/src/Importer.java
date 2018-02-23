@@ -156,7 +156,7 @@ public class Importer extends DefaultHandler{
 
         try{
             //Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
 
             Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
             // Declare our statement
