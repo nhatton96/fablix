@@ -134,6 +134,7 @@ class CastHandler extends DefaultHandler {
 
 			}
 			iNoRows = psInsertRecord.executeBatch();
+			dbcon.commit();
 			iNoRows2 = psInsertRecord2.executeBatch();
 			dbcon.commit();
 			dbcon.close();
