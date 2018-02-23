@@ -99,7 +99,7 @@ class CastHandler extends DefaultHandler {
 			int[] iNoRows2 = null;
 
 			String mid = " ";
-			String tempmid = " ";
+			String tempmid = "  ";
 
 			Iterator<Movie> iter = moli.iterator();
 			while (iter.hasNext()) {
