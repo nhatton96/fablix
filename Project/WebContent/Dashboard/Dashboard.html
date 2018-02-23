@@ -13,7 +13,7 @@
 <div id="main">
     <div id="addStar">
         <h1>Add Star</h1>
-        <form onsubmit="sendStar(); return false;">
+        <form id = "starform" onsubmit="sendStar(); return false;">
             Name:<br>
 			<input id="starname" type="text" name="name" value="" required>
 			<br>
@@ -26,7 +26,7 @@
 
     <div id="addMovie">
         <h1>Add Movie</h1>
-        <form onsubmit="sendMovie(); return false;">
+        <form id="addform" onsubmit="sendMovie(); return false;">
            Title:<br>
 			<input id = "addtitle" type="text" name="title" value=""  class="form-control" required>
 			<br>
