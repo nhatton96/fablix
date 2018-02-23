@@ -18,14 +18,17 @@ import javax.xml.parsers.ParserConfigurationException;
 class StarMovie {
 
 	public static void main(String[] args) {
+
+           ActorHandler act = new ActorHandler();
+		act.parseDocument();
+		act.addToDataBase();
+           
+           System.out.println("Succeed parsing actors63.xml");
 		 CastHandler cast = new CastHandler();
 		 cast.parseDocument();
 		 cast.addToDataBase();
 
-		ActorHandler act = new ActorHandler();
-		act.parseDocument();
-		act.addToDataBase();
-
+            System.out.println("Succeed parsing casts124.xml");
 	}
 }
 
