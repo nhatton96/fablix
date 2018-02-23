@@ -79,7 +79,7 @@ BEGIN
   insert into movies(id,title,year,director) values (movie_id,title,2018,dir);
   end if;
   
-  if (select count(*) from stars where name = star limit 1) = 0 then
+  if (select count(*) from stars where name = star) = 0 then
   set siid = (select ((select substring(max(id), 3, 10)  from stars) + 1));
   set ssid = (select substring(max(id), 1, 2)  from stars);
   set maxid = (select concat(ssid,siid));
