@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import java.io.IOException;
@@ -24,16 +25,17 @@ class StarMovie {
         ActorHandler act = new ActorHandler();
         act.parseDocument();
         act.addToDataBase();
+		
+		
 	}
 }
 
 class CastHandler extends DefaultHandler {
 	String tempDir = "";
 	String tempval;
-	List<String> fidList = new ArrayList<String>();
-	List<String> starList = new ArrayList<String>();
-	List<String> dirList = new ArrayList<String>();
-	List<String> titleList = new ArrayList<String>();
+	List<Movie> moli = new ArrayList<Movie>();
+	Movie tempMo;
+	
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -43,14 +45,16 @@ class CastHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equalsIgnoreCase("f")) {
-			fidList.add(tempval);
-			dirList.add(tempDir);
+			tempMo = new Movie();
+			tempMo.setId(tempval);
+			tempMo.setDir(tempDir);
 		} else if (qName.equalsIgnoreCase("a")) {
-			starList.add(tempval);
+			tempMo.setStar(tempval);
+			moli.add(tempMo);
 		} else if (qName.equalsIgnoreCase("is")) {
 			tempDir = tempval;
 		} else if (qName.equalsIgnoreCase("t")) {
-			titleList.add(tempval);
+			tempMo.setTitle(tempval);
 		}
 	}
 
@@ -93,13 +97,14 @@ class CastHandler extends DefaultHandler {
 			psInsertRecord = dbcon.prepareStatement(call);
 			int[] iNoRows = null;
 
-			int starmovLen = fidList.size();
-			for (int i = 0; i < starmovLen - 1; ++i) {
+			Iterator<Movie> iter = moli.iterator();
+			while (iter.hasNext()) {
+				Movie mo = iter.next();
 				try {
-					psInsertRecord.setString(1, starList.get(i));
-					psInsertRecord.setString(2, fidList.get(i));
-					psInsertRecord.setString(3, titleList.get(i));
-					psInsertRecord.setString(4, dirList.get(i));
+					psInsertRecord.setString(1,mo.getStar());
+					psInsertRecord.setString(2, mo.getId());
+					psInsertRecord.setString(3, mo.getTITLE());
+					psInsertRecord.setString(4, mo.getDir());
 					psInsertRecord.addBatch();
 				} catch (Exception e) {
 					System.out.println(e);
@@ -123,19 +128,52 @@ class CastHandler extends DefaultHandler {
 			e.printStackTrace();
 		}
 	}
+	class Movie{
+		String id;
+		String dir;
+		String star;
+		String title;
+
+		public void setId(String ID) {
+			this.id = ID;
+		}
+
+		public void setDir(String DIR) {
+			this.dir = DIR;
+		}
+
+		public void setStar(String STAR) {
+			this.star = STAR;
+		}
+		
+		public void setTitle(String TITLE) {
+			this.title = TITLE;
+		}
+		public String getDir() {
+			return this.dir;
+		}
+
+		public String getStar() {
+			return this.star;
+		}
+		public String getId() {
+			return this.id;
+		}
+
+		public String getTITLE() {
+			return this.title;
+		}
+	}
 }
 
 class ActorHandler extends DefaultHandler {
 
-	boolean actor = false;
-	boolean dob = false;
 	String tempval;
-	List<String> actList = new ArrayList<String>();
-	List<String> dobList = new ArrayList<String>();
+	List<Star> starList = new ArrayList<Star>();
+	Star star;
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-
 		tempval = "";
 	}
 
@@ -143,9 +181,11 @@ class ActorHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
 			if (qName.equalsIgnoreCase("stagename")) {
-				actList.add(tempval);
+				star = new Star();
+				star.setName(tempval);
 			} else if (qName.equalsIgnoreCase("dob")) {
-				dobList.add(tempval);
+				star.setBirth(tempval);
+				starList.add(star);
 			}
 		} catch (Exception e) {
 			e.toString();
@@ -192,16 +232,17 @@ class ActorHandler extends DefaultHandler {
 			int[] iNoRows = null;
 
 			int by = 0;
-			int starLen = actList.size();
-			for (int i = 0; i < starLen - 1; ++i) {
+			Iterator<Star> iter = starList.iterator();
+			while(iter.hasNext()) {
+				Star tempStar = iter.next();
 				try {
 					try {
-						by = Integer.parseInt(dobList.get(i));
+						by = Integer.parseInt(tempStar.getBirth());
 					} catch (NumberFormatException e) {
 						by = 2018;
 					}
 					psInsertRecord.setInt(1, by);
-					psInsertRecord.setString(2, actList.get(i));
+					psInsertRecord.setString(2, tempStar.getName());
 					psInsertRecord.addBatch();
 				} catch (Exception e) {
 					System.out.println(e);
@@ -223,6 +264,26 @@ class ActorHandler extends DefaultHandler {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+	}
+	class Star{
+		String name;
+		String birthYear;
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setBirth(String by) {
+			this.birthYear = by;
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
+		public String getBirth() {
+			return this.birthYear;
 		}
 	}
 }

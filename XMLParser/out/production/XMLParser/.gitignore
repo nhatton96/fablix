@@ -5,3 +5,5 @@
 /Importer.class
 /Movies.class
 /StarMovie.class
+/ActorHandler$Star.class
+/CastHandler$Movie.class
