@@ -1,9 +1,4 @@
 /ActorHandler.class
 /CastHandler.class
-/Employee.class
-/Film.class
-/Importer.class
-/Movies.class
-/StarMovie.class
 /ActorHandler$Star.class
 /CastHandler$Movie.class
