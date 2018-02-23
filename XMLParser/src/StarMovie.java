@@ -17,20 +17,169 @@ import javax.xml.parsers.ParserConfigurationException;
 class StarMovie {
 
 	public static void main(String[] args) {
+		CastHandler cast = new CastHandler();
+        cast.parseDocument();
+        cast.addToDataBase();
+		
+        ActorHandler act = new ActorHandler();
+        act.parseDocument();
+        act.addToDataBase();
+	}
+}
 
+class CastHandler extends DefaultHandler {
+	String tempDir = "";
+	String tempval;
+	List<String> fidList = new ArrayList<String>();
+	List<String> starList = new ArrayList<String>();
+	List<String> dirList = new ArrayList<String>();
+	List<String> titleList = new ArrayList<String>();
+
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		tempval = "";
+	}
+
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		if (qName.equalsIgnoreCase("f")) {
+			fidList.add(tempval);
+			dirList.add(tempDir);
+		} else if (qName.equalsIgnoreCase("a")) {
+			starList.add(tempval);
+		} else if (qName.equalsIgnoreCase("is")) {
+			tempDir = tempval;
+		} else if (qName.equalsIgnoreCase("t")) {
+			titleList.add(tempval);
+		}
+	}
+
+	@Override
+	public void characters(char ch[], int start, int length) throws SAXException {
+		tempval = new String(ch, start, length);
+	}
+	
+	public void parseDocument() {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
 		try {
-			File inputFile = new File("../XMLParser/XML/casts124.xml");
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser saxParser = factory.newSAXParser();
-			CastHandler CastHandler = new CastHandler();
-			saxParser.parse(inputFile, CastHandler);
 
-			File inputFile2 = new File("../XMLParser/XML/actors63.xml");
-			SAXParserFactory factory2 = SAXParserFactory.newInstance();
-			SAXParser saxParser2 = factory2.newSAXParser();
-			ActorHandler ActorHandler = new ActorHandler();
-			saxParser2.parse(inputFile2, ActorHandler);
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
 
+			// parse the file and also register this class for call backs
+			sp.parse("../XMLParser/XML/casts124.xml", this);
+
+		} catch (SAXException se) {
+			se.printStackTrace();
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
+
+	public void addToDataBase() {
+		try {
+			String loginUser = "mytestuser";
+			String loginPasswd = "mypassword";
+			String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			PreparedStatement psInsertRecord = null;
+			dbcon.setAutoCommit(false);
+			String call = "{call add_star_id(?,?,?,?)}";
+			psInsertRecord = dbcon.prepareStatement(call);
+			int[] iNoRows = null;
+
+			int starmovLen = fidList.size();
+			for (int i = 0; i < starmovLen - 1; ++i) {
+				try {
+					psInsertRecord.setString(1, starList.get(i));
+					psInsertRecord.setString(2, fidList.get(i));
+					psInsertRecord.setString(3, titleList.get(i));
+					psInsertRecord.setString(4, dirList.get(i));
+					psInsertRecord.addBatch();
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+
+			}
+			iNoRows = psInsertRecord.executeBatch();
+			dbcon.commit();
+			dbcon.close();
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+class ActorHandler extends DefaultHandler {
+
+	boolean actor = false;
+	boolean dob = false;
+	String tempval;
+	List<String> actList = new ArrayList<String>();
+	List<String> dobList = new ArrayList<String>();
+
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+
+		tempval = "";
+	}
+
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		try {
+			if (qName.equalsIgnoreCase("stagename")) {
+				actList.add(tempval);
+			} else if (qName.equalsIgnoreCase("dob")) {
+				dobList.add(tempval);
+			}
+		} catch (Exception e) {
+			e.toString();
+		}
+	}
+
+	@Override
+	public void characters(char ch[], int start, int length) throws SAXException {
+		tempval = new String(ch, start, length);
+	}
+
+	public void parseDocument() {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+
+			// parse the file and also register this class for call backs
+			sp.parse("../XMLParser/XML/actors63.xml", this);
+
+		} catch (SAXException se) {
+			se.printStackTrace();
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
+
+	public void addToDataBase() {
+		try {
 			String loginUser = "mytestuser";
 			String loginPasswd = "mypassword";
 			String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -43,16 +192,16 @@ class StarMovie {
 			int[] iNoRows = null;
 
 			int by = 0;
-			int starLen = ActorHandler.actList.size();
+			int starLen = actList.size();
 			for (int i = 0; i < starLen - 1; ++i) {
 				try {
 					try {
-						by = Integer.parseInt(ActorHandler.dobList.get(i));
+						by = Integer.parseInt(dobList.get(i));
 					} catch (NumberFormatException e) {
 						by = 2018;
 					}
 					psInsertRecord.setInt(1, by);
-					psInsertRecord.setString(2, ActorHandler.actList.get(i));
+					psInsertRecord.setString(2, actList.get(i));
 					psInsertRecord.addBatch();
 				} catch (Exception e) {
 					System.out.println(e);
@@ -61,120 +210,19 @@ class StarMovie {
 			}
 			iNoRows = psInsertRecord.executeBatch();
 			dbcon.commit();
-
-			PreparedStatement psInsertRecord2 = null;
-			String call2 = "{call add_star_id(?,?,?,?)}";
-			psInsertRecord2 = dbcon.prepareStatement(call2);
-			int[] iNoRows2 = null;
-			int starmovLen = CastHandler.fidList.size();
-			for (int i = 0; i < starmovLen - 1; ++i) {
-				try {
-					psInsertRecord2.setString(1, CastHandler.starList.get(i));
-					psInsertRecord2.setString(2, CastHandler.fidList.get(i));
-					psInsertRecord2.setString(3, CastHandler.titleList.get(i));
-					psInsertRecord2.setString(4, CastHandler.dirList.get(i));
-					psInsertRecord2.addBatch();
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-			}
-			iNoRows2 = psInsertRecord2.executeBatch();
-			dbcon.commit();
 			dbcon.close();
-		} catch (Exception e) {
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			}
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
-	}
-}
-
-class CastHandler extends DefaultHandler {
-
-	boolean title = false;
-	boolean dir = false;
-	boolean fid = false;
-	boolean star = false;
-	String tempDir = "";
-	List<String> fidList = new ArrayList<String>();
-	List<String> starList = new ArrayList<String>();
-	List<String> dirList = new ArrayList<String>();
-	List<String> titleList = new ArrayList<String>();
-
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-
-		if (qName.equalsIgnoreCase("f")) {
-			fid = true;
-		} else if (qName.equalsIgnoreCase("t")) {
-			title = true;
-		} else if (qName.equalsIgnoreCase("a")) {
-			star = true;
-		} else if (qName.equalsIgnoreCase("is")) {
-			dir = true;
-		}
-	}
-
-	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-
-	}
-
-	@Override
-	public void characters(char ch[], int start, int length) throws SAXException {
-
-		if (fid) {
-			// System.out.println("FID: " + new String(ch, start, length));
-			fidList.add(new String(ch, start, length));
-			dirList.add(tempDir);
-			fid = false;
-		} else if (star) {
-			// System.out.println("Star: " + new String(ch, start, length));
-			starList.add(new String(ch, start, length));
-			star = false;
-		} else if (dir) {
-			// System.out.println("Star: " + new String(ch, start, length));
-			tempDir = new String(ch, start, length);
-			dir = false;
-		} else if (title) {
-			// System.out.println("Star: " + new String(ch, start, length));
-			titleList.add(new String(ch, start, length));
-			title = false;
-		}
-	}
-}
-
-class ActorHandler extends DefaultHandler {
-
-	boolean actor = false;
-	boolean dob = false;
-	List<String> actList = new ArrayList<String>();
-	List<String> dobList = new ArrayList<String>();
-	HashMap<String, String> map = new HashMap<String, String>();
-
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-
-		if (qName.equalsIgnoreCase("stagename")) {
-			actor = true;
-		} else if (qName.equalsIgnoreCase("dob")) {
-			dob = true;
-		}
-	}
-
-	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-
-	}
-
-	@Override
-	public void characters(char ch[], int start, int length) throws SAXException {
-
-		if (actor) {
-			// System.out.println("FID: " + new String(ch, start, length));
-			actList.add(new String(ch, start, length));
-			actor = false;
-		} else if (dob) {
-			dobList.add(new String(ch, start, length));
-			dob = false;
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 }
