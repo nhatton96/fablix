@@ -88,6 +88,7 @@ table{
 #table_div {
     margin-right: auto;
     margin-left: auto;
+    margin-top: 50%;
     width: 80%;
     background-color:black;
     opacity: 0.8;
