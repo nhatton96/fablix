@@ -15,20 +15,26 @@ import java.io.PrintWriter;
 import java.sql.*;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+
 class StarMovie {
 
 	public static void main(String[] args) {
 
-           ActorHandler act = new ActorHandler();
-		act.parseDocument();
+		ActorHandler act = new ActorHandler();
+		act.runExample();
 		act.addToDataBase();
-           
-           System.out.println("Succeed parsing actors63.xml");
-		 CastHandler cast = new CastHandler();
-		 cast.parseDocument();
-		 cast.addToDataBase();
 
-            System.out.println("Succeed parsing casts124.xml");
+		CastHandler cast = new CastHandler();
+		cast.runExample();
+		cast.addToDataBase();
 	}
 }
 
@@ -66,7 +72,23 @@ class CastHandler extends DefaultHandler {
 		tempval = new String(ch, start, length);
 	}
 
-	public void parseDocument() {
+	private void printData() {
+
+		System.out.println("No of movie '" + moli.size() + "'.");
+
+		// Iterator it = myEmpls.iterator();
+		Iterator it = moli.iterator();
+		// while(it.hasNext()) {
+		// System.out.println(it.next().toString());
+		// }
+	}
+
+	public void runExample() {
+		parseDocument();
+		printData();
+	}
+
+	private void parseDocument() {
 
 		// get a factory
 		SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -136,9 +158,13 @@ class CastHandler extends DefaultHandler {
 				}
 
 			}
+			System.out.println("Execute batch");
 			iNoRows = psInsertRecord.executeBatch();
+			System.out.println("Commit 1 batch");
 			dbcon.commit();
+			System.out.println("Execute 2 batch");
 			iNoRows2 = psInsertRecord2.executeBatch();
+			System.out.println("Commit 2 batch");
 			dbcon.commit();
 			dbcon.close();
 
@@ -199,8 +225,12 @@ class CastHandler extends DefaultHandler {
 class ActorHandler extends DefaultHandler {
 
 	String tempval;
-	List<Star> starList = new ArrayList<Star>();
+	List<Star> starList;
 	Star star;
+
+	public ActorHandler() {
+		starList = new ArrayList<Star>();
+	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -230,7 +260,7 @@ class ActorHandler extends DefaultHandler {
 		tempval = new String(ch, start, length);
 	}
 
-	public void parseDocument() {
+	private void parseDocument() {
 
 		// get a factory
 		SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -251,11 +281,27 @@ class ActorHandler extends DefaultHandler {
 		}
 	}
 
+	private void printData() {
+
+		System.out.println("No of star '" + starList.size() + "'.");
+
+		// Iterator it = myEmpls.iterator();
+		Iterator it = starList.iterator();
+		// while(it.hasNext()) {
+		// System.out.println(it.next().toString());
+		// }
+	}
+
+	public void runExample() {
+		parseDocument();
+		printData();
+	}
+
 	public void addToDataBase() {
+		String loginUser = "mytestuser";
+		String loginPasswd = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		try {
-			String loginUser = "mytestuser";
-			String loginPasswd = "mypassword";
-			String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			PreparedStatement psInsertRecord = null;
@@ -266,8 +312,15 @@ class ActorHandler extends DefaultHandler {
 
 			int by = 0;
 			Iterator<Star> iter = starList.iterator();
+
+			Statement statement = dbcon.createStatement();
+			Star tempStar = iter.next();
+			String query = "insert into stars(id, name, birthYear) " + "values(" + "'nn11111111', '"
+					+ tempStar.getName() + "', " + tempStar.getBirth() + ");";
+			statement.executeUpdate(query);
+			statement.close();
 			while (iter.hasNext()) {
-				Star tempStar = iter.next();
+				tempStar = iter.next();
 				try {
 					try {
 						by = Integer.parseInt(tempStar.getBirth());
@@ -282,8 +335,11 @@ class ActorHandler extends DefaultHandler {
 				}
 
 			}
+			System.out.println("Execute batch");
 			iNoRows = psInsertRecord.executeBatch();
+			System.out.println("Commit batch");
 			dbcon.commit();
+			System.out.println("Done");
 			dbcon.close();
 
 		} catch (SQLException ex) {

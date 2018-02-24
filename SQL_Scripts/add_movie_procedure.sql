@@ -56,7 +56,7 @@ BEGIN
   declare siid integer;
   declare ssid varchar(2);
   
-  if (select count(*) from stars where name = star and birthYear = year) = 0 then
+  if (select max(id) from stars where name = star and birthYear = year) is null then
   set siid = (select ((select substring(max(id), 3, 10)  from stars) + 1));
   set ssid = (select substring(max(id), 1, 2)  from stars);
   set maxid = (select concat(ssid,siid));
@@ -67,6 +67,9 @@ END //
 DELIMITER ;
 
 DELIMITER //
+
+
+DELIMITER //
 CREATE PROCEDURE add_star_id
 (in star VARCHAR(100), in movie_id VARCHAR(100), in title varchar(100), in dir varchar(100))
 BEGIN
@@ -74,19 +77,20 @@ BEGIN
   declare siid integer;
   declare ssid varchar(2);
   declare sid varchar(10);
-  
-  if (select count(*) from movies where id = movie_id) = 0 then
+  declare tempval varchar(10);
+  if (select id from movies where id = movie_id) is null then
   insert into movies(id,title,year,director) values (movie_id,title,2018,dir);
   end if;
   
-  if (select count(*) from stars where name = star) = 0 then
+  set tempval =  (select max(id) from stars where name = star);
+  if tempval is null then
   set siid = (select ((select substring(max(id), 3, 10)  from stars) + 1));
   set ssid = (select substring(max(id), 1, 2)  from stars);
   set maxid = (select concat(ssid,siid));
   insert into stars (id, name) values (maxid, star);
   set sid = maxid;
   else
-  set sid = (select id from stars where name = star limit 1);
+  set sid = tempval;
   end if;
   
   replace into stars_in_movies(starsId, movieId) values (sid, movie_id);
@@ -102,16 +106,19 @@ BEGIN
   declare siid integer;
   declare ssid varchar(2);
   declare sid varchar(10);
+  declare tempval varchar(10);
   
-  if (select count(*) from stars where name = star) = 0 then
+  set tempval =  (select max(id) from stars where name = star);
+  if tempval is null then
   set siid = (select ((select substring(max(id), 3, 10)  from stars) + 1));
   set ssid = (select substring(max(id), 1, 2)  from stars);
   set maxid = (select concat(ssid,siid));
   insert into stars (id, name) values (maxid, star);
   set sid = maxid;
   else
-  set sid = (select id from stars where name = star limit 1);
+  set sid = tempval;
   end if;
+  
   
   replace into stars_in_movies(starsId, movieId) values (sid, movie_id);
   
