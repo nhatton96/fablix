@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -131,12 +132,13 @@ public class MovieServlet extends HttpServlet {
 				}
 			} else if ("SEARCH".equals(action) || "SEARCHTITLE".equals(action)) {
 				String title = request.getParameter("title");
+				String movieList;
 				if ("SEARCH".equals(action))
-					title = "%" + title + "%";
-				else
+					movieList = search(page - 1, pageSize, title, order, 1);
+				else {
 					title = title + "%";
-				String movieList = search(page - 1, pageSize, title, order);
-
+					movieList = search(page - 1, pageSize, title, order, 0);
+				}
 				if (movieList != null) {
 					out.write(movieList.toString());
 					response.setStatus(HttpServletResponse.SC_OK);
@@ -333,9 +335,9 @@ public class MovieServlet extends HttpServlet {
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
-					+ "and s2.name like '%" + star + "%' " + "and m2.title like '%" + title + "%' " + "and m2.year like '%"
-					+ year + "%' " + "and m2.director like '%" + director + "%' " + "order by " + order + " limit "
-					+ pageSize + " offset " + shiftAmount + ") as m "
+					+ "and s2.name like '%" + star + "%' " + "and m2.title like '%" + title + "%' "
+					+ "and m2.year like '%" + year + "%' " + "and m2.director like '%" + director + "%' " + "order by "
+					+ order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
@@ -464,7 +466,7 @@ public class MovieServlet extends HttpServlet {
 		} // end catch SQLException
 	}
 
-	private String search(int page, int pageSize, String title, String order) {
+	private String search(int page, int pageSize, String title, String order, int truefalse) {
 		try {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
@@ -472,13 +474,32 @@ public class MovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			String shiftAmount = Integer.toString(page * pageSize);
-			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '"
-					+ title + "' " + "order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
-					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
-					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
-					+ "left join stars s on s.id = st.starsId";
-
+			String query = "";
+			if (truefalse == 0) {
+				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
+						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '"
+						+ title + "' " + "order by " + order + " limit " + pageSize + " offset " + shiftAmount
+						+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
+						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
+						+ "left join stars_in_movies st on st.movieId = m.id "
+						+ "left join stars s on s.id = st.starsId";
+			} else {
+				StringTokenizer st = new StringTokenizer(title);
+				String regex = "";
+			     while (st.hasMoreTokens()) {			         
+			         regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "[[:>:]]' ";
+			         System.out.println(regex);
+			         if (st.hasMoreTokens())
+			        	 regex += "and ";
+			     }
+			     query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
+							+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex + "order by " + order + " limit " + pageSize + " offset " + shiftAmount
+							+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
+							+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
+							+ "left join stars_in_movies st on st.movieId = m.id "
+							+ "left join stars s on s.id = st.starsId";
+				
+			}
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 
