@@ -484,11 +484,10 @@ public class MovieServlet extends HttpServlet {
 						+ "left join stars_in_movies st on st.movieId = m.id "
 						+ "left join stars s on s.id = st.starsId";
 			} else {
-				StringTokenizer st = new StringTokenizer(title);
+				StringTokenizer st = new StringTokenizer(title,".,:!?' ");
 				String regex = "";
 			     while (st.hasMoreTokens()) {			         
-			         regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "[[:>:]]' ";
-			         System.out.println(regex);
+			         regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "' ";
 			         if (st.hasMoreTokens())
 			        	 regex += "and ";
 			     }
