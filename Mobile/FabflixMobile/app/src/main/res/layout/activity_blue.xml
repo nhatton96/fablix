@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/blue"
+    android:background="@drawable/main"
     tools:context="edu.uci.ics.fabflixmobile.BlueActivity">
 
 <!--
@@ -101,7 +101,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:id="@+id/mainLayout">
 
         <EditText
             android:layout_width="match_parent"
@@ -145,6 +146,22 @@
             android:background="@color/blue"
             android:onClick="connectToTomcat"/>
         -->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Next"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:onClick="pageNext"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Previous"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:onClick="pagePrevious"/>
     </LinearLayout>
     </ScrollView>
 

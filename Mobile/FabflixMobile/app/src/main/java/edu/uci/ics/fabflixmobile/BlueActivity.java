@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ import java.util.Map;
 
 public class BlueActivity extends ActionBarActivity {
 
+    int Page = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,7 @@ public class BlueActivity extends ActionBarActivity {
         if(msg != null && !"".equals(msg)){
             ((TextView)findViewById(R.id.last_page_msg_container)).setText(msg);
         }
-        //connectToTomcat();
+        init();
 
     }
 /*
@@ -70,13 +73,117 @@ public class BlueActivity extends ActionBarActivity {
     public void search(View view){
         final Map<String, String> params = new HashMap<String, String>();
 
+        Page = 1;
 
         // no user is logged in, so we must connect to the server
         RequestQueue queue = Volley.newRequestQueue(this);
 
         final Context context = this;
         String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
-        String url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page=1&ACTION=SEARCH&order=ta&PageSize=20";
+        String url;
+        if(searchToken.length() > 0)
+            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page=1&ACTION=SEARCH&order=ta&PageSize=20";
+        else
+            url = "http://10.0.2.2:8080/Project/api/movie?Page=1&ACTION=SEARCH&order=tr&PageSize=20";
+
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response){
+
+                        Log.d("response", response);
+                        fillTable(response);
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("security.error", error.toString());
+                        //wrongEmailPassword();
+
+                    }
+                }
+        );
+
+
+        // Add the request to the RequestQueue.
+        //postRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(postRequest);
+
+
+        return ;
+    }
+
+    public void pageNext(View view){
+        final Map<String, String> params = new HashMap<String, String>();
+
+
+        Page += 1;
+        // no user is logged in, so we must connect to the server
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final Context context = this;
+        String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
+        String url;
+        if(searchToken.length() > 0)
+            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
+        else
+            url = "http://10.0.2.2:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
+
+
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response){
+
+                        Log.d("response", response);
+                        fillTable(response);
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("security.error", error.toString());
+                        //wrongEmailPassword();
+
+                    }
+                }
+        );
+
+
+        // Add the request to the RequestQueue.
+        //postRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(postRequest);
+
+
+        return ;
+    }
+
+    public void pagePrevious(View view){
+        final Map<String, String> params = new HashMap<String, String>();
+
+        if(Page > 1)
+            Page -= 1;
+        // no user is logged in, so we must connect to the server
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final Context context = this;
+        String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
+        String url;
+        if(searchToken.length() > 0)
+            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
+        else
+            url = "http://10.0.2.2:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
 
 
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
@@ -116,7 +223,8 @@ public class BlueActivity extends ActionBarActivity {
         try{
             JSONArray jsonArray = new JSONArray(resultData);
             TableLayout ll = (TableLayout) findViewById(R.id.tableLayout1);
-
+            //LinearLayout layout = (LinearLayout) findViewById(R.id.mainLayout);
+            ll.removeAllViews();
             for (int i = 0; i < resultData.length(); i++) {
 
                 TableRow row = new TableRow(this);
@@ -158,7 +266,7 @@ public class BlueActivity extends ActionBarActivity {
         }
     }
 
-    public void connectToTomcat(){
+    public void init(){
 
         //
 
