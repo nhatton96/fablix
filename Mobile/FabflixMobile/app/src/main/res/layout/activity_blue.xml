@@ -10,6 +10,7 @@
     android:background="@color/blue"
     tools:context="edu.uci.ics.fabflixmobile.BlueActivity">
 
+<!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -89,5 +90,63 @@
             android:background="#FFFFFF" />
 
 
+     </LinearLayout>
+    -->
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            android:id="@+id/searchInput"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Search"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:onClick="search"/>
+
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dip"
+            android:showDividers="middle"
+            android:isScrollContainer="true">
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TableRow>
+        </TableLayout>
+        <!--
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:onClick="connectToTomcat"/>
+        -->
     </LinearLayout>
+    </ScrollView>
+
+
 </RelativeLayout>
