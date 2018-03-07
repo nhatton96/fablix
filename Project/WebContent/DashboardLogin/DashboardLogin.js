@@ -67,3 +67,4 @@ function goToMainPage() {
 	//e.preventDefault(); // cancel submission
 	//window.location.replace("/servlet/MovieList");	
 }
+

@@ -38,18 +38,19 @@ public class MovieServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		// response.setContentType("text/html"); // Response mime type
-		response.setContentType("application/json"); // Response mime type
+
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 
 		String action = request.getParameter("ACTION");
-
-		try {
+		if (!action.equals("SUG"))
+			response.setContentType("application/json"); // Response mime type
+		try {			
 			// Class.forName("org.gjt.mm.mysql.Driver");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			int page = 0;
 			int pageSize = 0;
-			if (!"SINGLE".equals(action)) {
+			if (!"SINGLE".equals(action) && !"SUG".equals(action)) {
 				page = Integer.parseInt(request.getParameter("Page"));
 				pageSize = Integer.parseInt(request.getParameter("PageSize"));
 			}
@@ -75,7 +76,8 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			}
-			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action)) && !("cred".equals(action))) {
+			if (!("SEARCHLIST".equals(action) || "SINGLE".equals(action)) && !("cred".equals(action))
+					&& !("SUG".equals(action))) {
 				order = request.getParameter("order");
 				if (order.equals("ta"))
 					order = "m2.title asc";
@@ -161,7 +163,7 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-			} else if ("SINGLE".equals(action)) {
+			} else if ("SINGLE".equals(action)) {				
 				String movieId = request.getParameter("MovieId");
 				String movie = GetMovie(movieId);
 
@@ -172,7 +174,16 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-
+			} else {
+				 String kw = request.getParameter("keyWord");				 
+				 String suglist = findSug(kw);
+				 if (!suglist.equals("")) {
+				 out.write(suglist);
+				 response.setStatus(HttpServletResponse.SC_OK);
+				 } else {
+				 request.setAttribute("error", "Problem in MovieServlet");
+				 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				 }
 			}
 
 		} catch (java.lang.Exception ex) {
@@ -484,20 +495,21 @@ public class MovieServlet extends HttpServlet {
 						+ "left join stars_in_movies st on st.movieId = m.id "
 						+ "left join stars s on s.id = st.starsId";
 			} else {
-				StringTokenizer st = new StringTokenizer(title,".,:!?' ");
+				StringTokenizer st = new StringTokenizer(title, ".,:!?' ");
 				String regex = "";
-			     while (st.hasMoreTokens()) {			         
-			         regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "' ";
-			         if (st.hasMoreTokens())
-			        	 regex += "and ";
-			     }
-			     query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-							+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex + "order by " + order + " limit " + pageSize + " offset " + shiftAmount
-							+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
-							+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
-							+ "left join stars_in_movies st on st.movieId = m.id "
-							+ "left join stars s on s.id = st.starsId";
-				
+				while (st.hasMoreTokens()) {
+					regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "' ";
+					if (st.hasMoreTokens())
+						regex += "and ";
+				}
+				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
+						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex
+						+ "order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
+						+ "left join genres_in_movies ge on ge.movieId = m.id "
+						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
+						+ "left join stars_in_movies st on st.movieId = m.id "
+						+ "left join stars s on s.id = st.starsId";
+
 			}
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
@@ -631,6 +643,63 @@ public class MovieServlet extends HttpServlet {
 			} // end while
 			return new String();
 		} // end catch SQLException
+	}
+
+	private String findSug(String kw) {
+		try {
+
+			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			// Declare our statement
+			Statement statement = dbcon.createStatement();
+			String query = "select * from movies where title like '%" + kw + "%'";
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery(query);
+			int count = 0;
+			JsonArray jsonArray = new JsonArray();
+			while (rs.next() && count < 10 ) {
+				jsonArray.add(generateJsonObject(rs.getString("id"), rs.getString("title"), "movie"));
+				++count;
+			}
+			if (count < 10) {
+				Statement statement2 = dbcon.createStatement();
+				String query2 = "select * from stars where name like '%" + kw + "%'";
+
+				// Perform the query
+				ResultSet rs2 = statement2.executeQuery(query2);
+				while (rs2.next() && count < 10) {
+					jsonArray.add(generateJsonObject(rs2.getString("id"), rs2.getString("name"), "star"));
+					++count;
+				}
+				rs2.close();
+				statement2.close();
+			}
+			rs.close();
+			statement.close();
+
+			dbcon.close();
+
+			return jsonArray.toString();
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			} // end while
+			return new String();
+		} // end catch SQLException
+	}
+
+	private static JsonObject generateJsonObject(String id, String name, String type) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("value", name);
+
+		JsonObject additionalDataJsonObject = new JsonObject();
+		additionalDataJsonObject.addProperty("category", type);
+		additionalDataJsonObject.addProperty("id", id);
+
+		jsonObject.add("data", additionalDataJsonObject);
+		return jsonObject;
 	}
 
 	private String checkout(String fn, String ln, String add, String card, String exp, JsonArray cart) {
