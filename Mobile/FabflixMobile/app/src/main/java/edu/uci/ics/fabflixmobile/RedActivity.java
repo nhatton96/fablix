@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -86,18 +85,17 @@ public class RedActivity extends ActionBarActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         final Context context = this;
-        String url = "http://10.0.2.2:8080/Project/api/login";
+        String url = "http://128.195.52.58:8080/TomcatTest/servlet/TomcatTest";
 
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.d("response", "What");
-                        //((TextView)findViewById(R.id.http_response)).setText("HEEEEEYYYYY");
-                        goToMain();
+                        Log.d("response", response);
+                        ((TextView)findViewById(R.id.http_response)).setText(response);
 
                     }
                 },
@@ -107,48 +105,24 @@ public class RedActivity extends ActionBarActivity {
                     public void onErrorResponse(VolleyError error) {
                         // error
                         Log.d("security.error", error.toString());
-                        wrongEmailPassword();
-
                     }
                 }
         ) {
             @Override
             protected Map<String, String> getParams()
             {
-                String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
-                String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
-                params.put("type","customer");
-                params.put("email",email);
-                params.put("password",password);
-
                 return params;
             }
         };
 
 
         // Add the request to the RequestQueue.
-        //postRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(postRequest);
 
 
         return ;
     }
 
-    private void wrongEmailPassword(){
-        Toast.makeText(this, "Wong Email or Password", Toast.LENGTH_LONG).show();
-    }
-
-    public void goToMain(){
-        //String msg = ((EditText)findViewById(R.id.red_2_blue_message)).getText().toString();
-
-        Intent goToIntent = new Intent(this, BlueActivity.class);
-
-        goToIntent.putExtra("last_activity", "red");
-        //goToIntent.putExtra("message", msg);
-
-        startActivity(goToIntent);
-    }
-    /*
     public void goToBlue(View view){
         String msg = ((EditText)findViewById(R.id.red_2_blue_message)).getText().toString();
 
@@ -168,5 +142,5 @@ public class RedActivity extends ActionBarActivity {
         goToIntent.putExtra("message", msg);
 
         startActivity(goToIntent);
-    }*/
+    }
 }
