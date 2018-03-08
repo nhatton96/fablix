@@ -45,7 +45,7 @@ public class MovieServlet extends HttpServlet {
 		String action = request.getParameter("ACTION");
 		if (!action.equals("SUG"))
 			response.setContentType("application/json"); // Response mime type
-		try {			
+		try {
 			// Class.forName("org.gjt.mm.mysql.Driver");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			int page = 0;
@@ -163,7 +163,7 @@ public class MovieServlet extends HttpServlet {
 					request.setAttribute("error", "Problem in MovieServlet");
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
-			} else if ("SINGLE".equals(action)) {				
+			} else if ("SINGLE".equals(action)) {
 				String movieId = request.getParameter("MovieId");
 				String movie = GetMovie(movieId);
 
@@ -175,15 +175,15 @@ public class MovieServlet extends HttpServlet {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else {
-				 String kw = request.getParameter("keyWord");				 
-				 String suglist = findSug(kw);
-				 if (!suglist.equals("")) {
-				 out.write(suglist);
-				 response.setStatus(HttpServletResponse.SC_OK);
-				 } else {
-				 request.setAttribute("error", "Problem in MovieServlet");
-				 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				 }
+				String kw = request.getParameter("keyWord");
+				String suglist = findSug(kw);
+				if (!suglist.equals("")) {
+					out.write(suglist);
+					response.setStatus(HttpServletResponse.SC_OK);
+				} else {
+					request.setAttribute("error", "Problem in MovieServlet");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
 			}
 
 		} catch (java.lang.Exception ex) {
@@ -651,19 +651,31 @@ public class MovieServlet extends HttpServlet {
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
-			String query = "select * from movies where title like '%" + kw + "%'";
+			StringTokenizer st = new StringTokenizer(kw, ".,:!?' ");
+			String regexMovie = "";
+			String regexStar = "";
+			while (st.hasMoreTokens()) {
+				String token = st.nextToken();
+				regexMovie += "title REGEXP '[[:<:]]" + token + "' ";
+				regexStar += "name REGEXP '[[:<:]]" + token + "' ";
+				if (st.hasMoreTokens()) {
+					regexMovie += "and ";
+					regexStar += "and ";
+				}
+			}
+			String query = "select * from movies where " + regexMovie;
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 			int count = 0;
 			JsonArray jsonArray = new JsonArray();
-			while (rs.next() && count < 10 ) {
+			while (rs.next() && count < 10) {
 				jsonArray.add(generateJsonObject(rs.getString("id"), rs.getString("title"), "movie"));
 				++count;
 			}
 			if (count < 10) {
 				Statement statement2 = dbcon.createStatement();
-				String query2 = "select * from stars where name like '%" + kw + "%'";
+				String query2 = "select * from stars where " + regexStar;
 
 				// Perform the query
 				ResultSet rs2 = statement2.executeQuery(query2);
