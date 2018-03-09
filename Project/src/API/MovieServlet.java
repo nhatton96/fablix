@@ -683,7 +683,7 @@ public class MovieServlet extends HttpServlet {
 				}
 			}
 			regexMovie += ")";
-			regexMovie += ")";
+			regexStar += ")";
 			edrecMovie += ")";
 			edrecStar += ")";
 			String query = "select * from movies where " + regexMovie + " or " + edrecMovie;
