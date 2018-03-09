@@ -496,15 +496,25 @@ public class MovieServlet extends HttpServlet {
 						+ "left join stars s on s.id = st.starsId";
 			} else {
 				StringTokenizer st = new StringTokenizer(title, ".,:!?' ");
-				String regex = "";
+				String regex = "(";
+				String edrec = "(";
+				String token = "";
+				int len = 0;
 				while (st.hasMoreTokens()) {
-					regex += "m2.title REGEXP '[[:<:]]" + st.nextToken() + "' ";
-					if (st.hasMoreTokens())
-						regex += "and ";
+					token = st.nextToken().toLowerCase();
+					len = Math.max(token.length()/5, 1);
+					regex += "m2.title REGEXP '[[:<:]]" + token + "'";
+					edrec += "edrec('" + token + "',m2.title," + len + ") = 1";
+					if (st.hasMoreTokens()) {
+						regex += " and ";
+						edrec += " and ";
+					}
 				}
+				regex += ")";
+				edrec += ")";
 				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex
-						+ "order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
+						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex + " or " + edrec
+						+ " order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
 						+ "left join genres_in_movies ge on ge.movieId = m.id "
 						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
 						+ "left join stars_in_movies st on st.movieId = m.id "
@@ -652,18 +662,31 @@ public class MovieServlet extends HttpServlet {
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
 			StringTokenizer st = new StringTokenizer(kw, ".,:!?' ");
-			String regexMovie = "";
-			String regexStar = "";
+			String regexMovie = "(";
+			String regexStar = "(";
+			String token = "";
+			String edrecMovie = "(";
+			String edrecStar = "(";
+			int len = 0;
 			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				regexMovie += "title REGEXP '[[:<:]]" + token + "' ";
-				regexStar += "name REGEXP '[[:<:]]" + token + "' ";
+			    token = st.nextToken().toLowerCase();
+			    len = Math.max(token.length()/5, 1);
+				regexMovie += "title REGEXP '[[:<:]]" + token + "'";
+				regexStar += "name REGEXP '[[:<:]]" + token + "'";
+				edrecMovie += "edrec('" + token + "',title," + len + ") = 1";
+				edrecStar += "edrec('" + token + "',name," + len + ") = 1";
 				if (st.hasMoreTokens()) {
-					regexMovie += "and ";
-					regexStar += "and ";
+					regexMovie += " and ";
+					regexStar += " and ";
+					edrecMovie += " and ";
+					edrecStar += " and ";
 				}
 			}
-			String query = "select * from movies where " + regexMovie;
+			regexMovie += ")";
+			regexMovie += ")";
+			edrecMovie += ")";
+			edrecStar += ")";
+			String query = "select * from movies where " + regexMovie + " or " + edrecMovie;
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
@@ -675,7 +698,7 @@ public class MovieServlet extends HttpServlet {
 			}
 			if (count < 10) {
 				Statement statement2 = dbcon.createStatement();
-				String query2 = "select * from stars where " + regexStar;
+				String query2 = "select * from stars where " + regexStar + " or " + edrecStar;
 
 				// Perform the query
 				ResultSet rs2 = statement2.executeQuery(query2);
