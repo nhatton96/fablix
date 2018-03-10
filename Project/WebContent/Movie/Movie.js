@@ -85,38 +85,44 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-$('#searchbar').autocomplete(
-		{
-			lookup : function(query, doneCallback) {
-				console.log("Initiated");
-				if (query in localStorage) {
-					console.log("Cached")
-					doneCallback({suggestions : JSON.parse(localStorage[query])});
-					console.log(localStorage[query]);
-				} else {
-					console.log("Ajax")
-					handleLookup(query, doneCallback);
-				}
-			},
-			onSelect : function(suggestion) {
-				handleSelectSuggestion(suggestion)
-			},
-			triggerSelectOnValidInput: false,
-			groupBy : "category",
-			deferRequestBy : 300,
-			minChars: 3
+$('#searchbar').autocomplete({
+	lookup : function(query, doneCallback) {
+		console.log("Initiated");
+		if (query in localStorage) {
+			console.log("Cached")
+			var data = localStorage[query];
+			var jsonData = JSON.parse(data)
+			if (jsonData[0]) {
+				doneCallback({
+					suggestions : jsonData
+				});
+				console.log(data);
+			}
+			else {
+				console.log("result from cache is an empty list");
+			}
+		} else {
+			console.log("Ajax")
+			handleLookup(query, doneCallback);
+		}
+	},
+	onSelect : function(suggestion) {
+		handleSelectSuggestion(suggestion)
+	},
+	triggerSelectOnValidInput : false,
+	groupBy : "category",
+	deferRequestBy : 300,
+	minChars : 3
 });
 
 function handleLookup(query, doneCallback) {
-	console.log("autocomplete initiated")
-	console.log("sending AJAX request to backend Java Servlet")
-	
+
 	jQuery.ajax({
 		method : "GET",
 		url : "/Project/api/movie",
-		data: {
-			ACTION: "SUG",
-			keyWord: query
+		data : {
+			ACTION : "SUG",
+			keyWord : query
 		},
 		success : function(data) {
 			handleLookupAjaxSuccess(data, query, doneCallback)
@@ -129,13 +135,19 @@ function handleLookup(query, doneCallback) {
 }
 
 function handleLookupAjaxSuccess(data, query, doneCallback) {
-	console.log("lookup ajax successful")
-
-	// parse the string into JSON
-	var jsonData = JSON.parse(data);
-	console.log(jsonData)
+	
 	localStorage[query] = data;
-	doneCallback({suggestions : jsonData});
+	var jsonData = JSON.parse(data);
+	if (jsonData[0]) {
+		console.log("lookup ajax successful")
+		console.log(data)
+		doneCallback({			
+			suggestions : jsonData
+		});
+	}
+	else {
+		console.log("find nothing");
+	}
 }
 
 function handleSelectSuggestion(suggestion) {
@@ -143,7 +155,8 @@ function handleSelectSuggestion(suggestion) {
 	console.log("you select " + suggestion["value"])
 	var link = "";
 	if (suggestion["data"]["category"] === "movie")
-		link = "/Project/servlet/SingleMovie?" + "movieId=" + suggestion["data"]["id"];
+		link = "/Project/servlet/SingleMovie?" + "movieId="
+				+ suggestion["data"]["id"];
 	else
 		link = "/Project/Star/Star.html?" + "stdi=" + suggestion["data"]["id"];
 	window.location.assign(link);

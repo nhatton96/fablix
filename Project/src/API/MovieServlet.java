@@ -177,13 +177,10 @@ public class MovieServlet extends HttpServlet {
 			} else {
 				String kw = request.getParameter("keyWord");
 				String suglist = findSug(kw);
-				if (!suglist.equals("")) {
-					out.write(suglist);
-					response.setStatus(HttpServletResponse.SC_OK);
-				} else {
-					request.setAttribute("error", "Problem in MovieServlet");
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				}
+
+				out.write(suglist);
+				response.setStatus(HttpServletResponse.SC_OK);
+
 			}
 
 		} catch (java.lang.Exception ex) {
@@ -502,7 +499,7 @@ public class MovieServlet extends HttpServlet {
 				int len = 0;
 				while (st.hasMoreTokens()) {
 					token = st.nextToken().toLowerCase();
-					len = Math.max(token.length()/5, 1);
+					len = Math.max(token.length() / 5, 1);
 					regex += "m2.title REGEXP '[[:<:]]" + token + "'";
 					edrec += "edrec('" + token + "',m2.title," + len + ") = 1";
 					if (st.hasMoreTokens()) {
@@ -513,9 +510,9 @@ public class MovieServlet extends HttpServlet {
 				regex += ")";
 				edrec += ")";
 				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex + " or " + edrec
-						+ " order by " + order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
-						+ "left join genres_in_movies ge on ge.movieId = m.id "
+						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex
+						+ " or " + edrec + " order by " + order + " limit " + pageSize + " offset " + shiftAmount
+						+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
 						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
 						+ "left join stars_in_movies st on st.movieId = m.id "
 						+ "left join stars s on s.id = st.starsId";
@@ -669,8 +666,8 @@ public class MovieServlet extends HttpServlet {
 			String edrecStar = "(";
 			int len = 0;
 			while (st.hasMoreTokens()) {
-			    token = st.nextToken().toLowerCase();
-			    len = Math.max(token.length()/5, 1);
+				token = st.nextToken().toLowerCase();
+				len = Math.max(token.length() / 5, 1);
 				regexMovie += "title REGEXP '[[:<:]]" + token + "'";
 				regexStar += "name REGEXP '[[:<:]]" + token + "'";
 				edrecMovie += "edrec('" + token + "',title," + len + ") = 1";
