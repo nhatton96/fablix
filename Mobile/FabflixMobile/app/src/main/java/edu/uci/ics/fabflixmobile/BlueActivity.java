@@ -82,9 +82,9 @@ public class BlueActivity extends ActionBarActivity {
         String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
         String url;
         if(searchToken.length() > 0)
-            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page=1&ACTION=SEARCH&order=ta&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?title="+searchToken+"&Page=1&ACTION=SEARCH&order=ta&PageSize=20";
         else
-            url = "http://10.0.2.2:8080/Project/api/movie?Page=1&ACTION=SEARCH&order=tr&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?Page=1&ACTION=SEARCH&order=tr&PageSize=20";
 
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>()
@@ -131,9 +131,9 @@ public class BlueActivity extends ActionBarActivity {
         String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
         String url;
         if(searchToken.length() > 0)
-            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
         else
-            url = "http://10.0.2.2:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
 
 
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
@@ -181,9 +181,9 @@ public class BlueActivity extends ActionBarActivity {
         String searchToken = ((EditText)findViewById(R.id.searchInput)).getText().toString();
         String url;
         if(searchToken.length() > 0)
-            url = "http://10.0.2.2:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?title="+searchToken+"&Page="+Page+"&ACTION=SEARCH&order=ta&PageSize=20";
         else
-            url = "http://10.0.2.2:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
+            url = "http://18.218.147.79:8080/Project/api/movie?Page="+Page+"&ACTION=LIST&order=tr&PageSize=20";
 
 
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
@@ -277,7 +277,7 @@ public class BlueActivity extends ActionBarActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         final Context context = this;
-        String url = "http://10.0.2.2:8080/Project/api/movie?Page=1&ACTION=LIST&order=tr&PageSize=20";
+        String url = "http://18.218.147.79:8080/Project/api/movie?Page=1&ACTION=LIST&order=tr&PageSize=20";
 
 
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,

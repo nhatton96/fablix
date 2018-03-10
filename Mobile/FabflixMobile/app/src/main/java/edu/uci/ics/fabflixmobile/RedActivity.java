@@ -86,7 +86,7 @@ public class RedActivity extends ActionBarActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         final Context context = this;
-        String url = "http://10.0.2.2:8080/Project/api/login";
+        String url = "http://18.218.147.79:8080/Project/api/login";
 
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
