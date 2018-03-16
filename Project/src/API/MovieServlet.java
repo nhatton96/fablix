@@ -197,7 +197,7 @@ public class MovieServlet extends HttpServlet {
 		out.close();
 		long endTime = System.nanoTime();
 		ts = endTime - startTime;
-		FileWriter fw = new FileWriter("log.txt",true);
+		FileWriter fw = new FileWriter("log.txt");
 		BufferedWriter bw = new BufferedWriter(fw);
 		String time = ts + "\n";
 		bw.write(time);
