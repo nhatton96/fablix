@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -267,16 +268,19 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
-
+            
+			PreparedStatement pt = null;
+			
 			String query = "SELECT r.*, m.*, gim.*, g.name as genreName, sim.*, s.name as starName, s.id as stid FROM \n"
 					+ "(SELECT * FROM ratings) AS  r\n" + "INNER JOIN movies AS m ON r.movieId = m.id\n"
 					+ "INNER JOIN genres_in_movies gim \n" + "ON gim.movieId = r.movieId\n" + "INNER JOIN genres g \n"
 					+ "ON gim.genreId = g.id\n" + "INNER JOIN stars_in_movies sim\n" + "ON sim.movieId = r.movieId\n"
-					+ "INNER JOIN stars s\n" + "ON sim.starsId = s.id\n" + "WHERE m.id = \'" + movieId + "\';";
+					+ "INNER JOIN stars s\n" + "ON sim.starsId = s.id\n" + "WHERE m.id = ?;";
 
+			pt = dbcon.prepareStatement(query);
+			pt.setString(1, movieId);
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			ResultSet rs = pt.executeQuery();
 
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
@@ -315,7 +319,7 @@ public class MovieServlet extends HttpServlet {
 			}
 
 			rs.close();
-			statement.close();
+			pt.close();
 			dbcon.close();
 
 			// JsonObject jsonObject = gson.toJson(movieOutList);
@@ -337,21 +341,29 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 
-			String shiftAmount = Integer.toString(page * pageSize);
+			int shiftAmount = (page * pageSize);
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2, stars_in_movies st2, stars s2 where s2.id = st2.starsId and st2.movieId = m2.id "
-					+ "and s2.name like '%" + star + "%' " + "and m2.title like '%" + title + "%' "
-					+ "and m2.year like '%" + year + "%' " + "and m2.director like '%" + director + "%' " + "order by "
-					+ order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "and s2.name like ? and m2.title like ? "
+					+ "and m2.year like ? and m2.director like ? order by ?"
+					+ " limit ? offset ?) as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
 
+			statement = dbcon.prepareStatement(query);
+			statement.setString(1, "%" + star + "%");
+			statement.setString(2, "%" + title + "%");
+			statement.setString(3, "%" + year + "%");
+			statement.setString(4, "%" + director + "%");
+			statement.setString(5, order);
+			statement.setInt(6, pageSize);
+			statement.setInt(7, shiftAmount);
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			ResultSet rs = statement.executeQuery();
 
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
@@ -409,19 +421,24 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 
-			String shiftAmount = Integer.toString(page * pageSize);
+			int shiftAmount = (page * pageSize);
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
 					+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2, genres_in_movies ge2, genres g2 "
-					+ "where ge2.movieId = m2.id and ge2.genreId = g2.id and g2.name = '" + genre + "' " + "order by "
-					+ order + " limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "where ge2.movieId = m2.id and ge2.genreId = g2.id and g2.name = ? order by ? "
+					+ "limit ? offset ?) as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id " + "left join genres g on g.id = ge.genreId "
 					+ "left join ratings r on r.movieId = m.id " + "left join stars_in_movies st on st.movieId = m.id "
 					+ "left join stars s on s.id = st.starsId";
 
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			statement = dbcon.prepareStatement(query);
+			statement.setString(1, genre);
+			statement.setString(2, order);
+			statement.setInt(3, pageSize);
+			statement.setInt(4, shiftAmount);
+			ResultSet rs = statement.executeQuery();
 
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
@@ -479,18 +496,23 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 
-			String shiftAmount = Integer.toString(page * pageSize);
+			int shiftAmount = (page * pageSize);
 			String query = "";
 			if (truefalse == 0) {
 				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
-						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like '"
-						+ title + "' " + "order by " + order + " limit " + pageSize + " offset " + shiftAmount
+						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where m2.title like ?"
+						+ "order by ? limit ? offset ?"
 						+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
 						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
 						+ "left join stars_in_movies st on st.movieId = m.id "
 						+ "left join stars s on s.id = st.starsId";
+				statement = dbcon.prepareStatement(query);
+				statement.setString(1, title);
+				statement.setString(2, order);
+				statement.setInt(3, pageSize);
+				statement.setInt(4, shiftAmount);
 			} else {
 				StringTokenizer st = new StringTokenizer(title, ".,:!?' ");
 				String regex = "(";
@@ -511,15 +533,18 @@ public class MovieServlet extends HttpServlet {
 				edrec += ")";
 				query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating "
 						+ "from (select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where " + regex
-						+ " or " + edrec + " order by " + order + " limit " + pageSize + " offset " + shiftAmount
+						+ " or " + edrec + " order by ? limit ? offset ?"
 						+ ") as m " + "left join genres_in_movies ge on ge.movieId = m.id "
 						+ "left join genres g on g.id = ge.genreId " + "left join ratings r on r.movieId = m.id "
 						+ "left join stars_in_movies st on st.movieId = m.id "
 						+ "left join stars s on s.id = st.starsId";
-
+				statement = dbcon.prepareStatement(query);
+				statement.setString(1, order);
+				statement.setInt(2, pageSize);
+				statement.setInt(3, shiftAmount);
 			}
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			ResultSet rs = statement.executeQuery();
 
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
@@ -577,9 +602,9 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 
-			String shiftAmount = Integer.toString(page * pageSize);
+			int shiftAmount = (page * pageSize);
 
 			String idList = "";
 			int len = cart.size() - 1;
@@ -594,12 +619,15 @@ public class MovieServlet extends HttpServlet {
 
 			String query = "select m.id as movieId, m.title as title, m.year as year, m.director as director, s.name as starName, s.id as stid, g.name as genreName, r.rating as rating from "
 					+ "(select distinct m2.id, m2.director, m2.year, m2.title from movies m2 where (" + idList + ")"
-					+ "order by m2.title limit " + pageSize + " offset " + shiftAmount + ") as m "
+					+ "order by m2.title limit ? offset ?) as m "
 					+ "left join genres_in_movies ge on ge.movieId = m.id left join genres g on g.id = ge.genreId left join ratings r on r.movieId = m.id "
 					+ "left join stars_in_movies st on st.movieId = m.id left join stars s on s.id = st.starsId;";
 
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			statement = dbcon.prepareStatement(query);
+			statement.setInt(1, pageSize);
+			statement.setInt(2, shiftAmount);
+			ResultSet rs = statement.executeQuery();
 
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
@@ -657,7 +685,7 @@ public class MovieServlet extends HttpServlet {
 
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 			StringTokenizer st = new StringTokenizer(kw, ".,:!?' ");
 			String regexMovie = "(";
 			String regexStar = "(";
@@ -684,9 +712,9 @@ public class MovieServlet extends HttpServlet {
 			edrecMovie += ")";
 			edrecStar += ")";
 			String query = "select * from movies where " + regexMovie + " or " + edrecMovie;
-
+			statement = dbcon.prepareStatement(query);
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			ResultSet rs = statement.executeQuery();
 			int count = 0;
 			JsonArray jsonArray = new JsonArray();
 			while (rs.next() && count < 10) {
@@ -694,11 +722,12 @@ public class MovieServlet extends HttpServlet {
 				++count;
 			}
 			if (count < 10) {
-				Statement statement2 = dbcon.createStatement();
+				PreparedStatement statement2 = null;
 				String query2 = "select * from stars where " + regexStar + " or " + edrecStar;
 
 				// Perform the query
-				ResultSet rs2 = statement2.executeQuery(query2);
+				statement2 = dbcon.prepareStatement(query2);
+				ResultSet rs2 = statement2.executeQuery();
 				while (rs2.next() && count < 10) {
 					jsonArray.add(generateJsonObject(rs2.getString("id"), rs2.getString("name"), "star"));
 					++count;

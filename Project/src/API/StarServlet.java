@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +41,16 @@ public class StarServlet extends HttpServlet {
 			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-			Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 			
 			String starId = request.getParameter("starId");
 			List<StarOut> starOutList = new ArrayList<StarOut>();
 			StarOut so = new StarOut();
 
-			String query = "select s.name as name, s.birthYear as year from stars s where s.id = '" + starId + "';";
-			ResultSet rs = statement.executeQuery(query);
+			String query = "select s.name as name, s.birthYear as year from stars s where s.id = ?;";
+			statement = dbcon.prepareStatement(query);
+			statement.setString(1, starId);
+			ResultSet rs = statement.executeQuery();
 			
 			while(rs.next()) {
 				so.setName(rs.getString("name"));
@@ -55,9 +58,11 @@ public class StarServlet extends HttpServlet {
 			}
 			
 			String query2 = "select m.id as id, m.title as title from movies m, stars_in_movies st "
-					+ "where st.movieId = m.id and st.starsId = '" + starId + "' order by m.title;";
-
-			ResultSet rs2 = statement.executeQuery(query2);
+					+ "where st.movieId = m.id and st.starsId = ? order by m.title;";
+			PreparedStatement statement2 = null;
+			statement2 = dbcon.prepareStatement(query2);
+			statement2.setString(1, starId);
+			ResultSet rs2 = statement2.executeQuery();
 			while (rs2.next()) {
 				so.addMovieId(rs2.getString("id"));
 				so.addMovieNames(rs2.getString("title"));
@@ -66,6 +71,7 @@ public class StarServlet extends HttpServlet {
 			rs.close();
 			rs2.close();
 			statement.close();
+			statement2.close();
 			dbcon.close();
 
 			starOutList.add(so);
