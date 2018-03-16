@@ -85,11 +85,11 @@ function handleListResult(resultData) {
     }
 }
 
-(function(){
-    var loggedIn = sessionStorage.getItem("LoggedIn");
-    if(loggedIn !== "true")
-        window.location.assign("Login");
-})();
+//(function(){
+//    var loggedIn = sessionStorage.getItem("LoggedIn");
+//    if(loggedIn !== "true")
+//        window.location.assign("Login");
+//})();
 
 function sendData(){
     var newpage = "/Project/MovieList/MovieList.html" +

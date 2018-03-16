@@ -2,6 +2,8 @@ package API;
 
 import Models.MovieOut;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -34,10 +36,13 @@ public class MovieServlet extends HttpServlet {
 	String loginPasswd = "mypassword";
 	String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 	Gson gson = new Gson();
+	long ts = 0;
+	long tj = 0;
 
 	// Use http GET
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		long startTime = System.nanoTime();
 		// response.setContentType("text/html"); // Response mime type
 
 		// Output stream to STDOUT
@@ -190,6 +195,14 @@ public class MovieServlet extends HttpServlet {
 			return;
 		}
 		out.close();
+		long endTime = System.nanoTime();
+		ts = endTime - startTime;
+		FileWriter fw = new FileWriter("log.txt",true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		String time = ts + "\n";
+		bw.write(time);
+		bw.close();
+		fw.close();
 	}
 
 	private String GetMovieList(int page, int pageSize, String order) {

@@ -7,11 +7,11 @@ function sendData(){
 	window.location.assign(newpage);
 }
 
-(function(){
-    var loggedIn = sessionStorage.getItem("LoggedIn");
-    if(loggedIn !== "true")
-        window.location.assign("Login");
-})();
+//(function(){
+//    var loggedIn = sessionStorage.getItem("LoggedIn");
+//    if(loggedIn !== "true")
+//        window.location.assign("Login");
+//})();
 
 function sendDataSearchBar(){
     var newpage = "/Project/MovieList/MovieList.html" +
