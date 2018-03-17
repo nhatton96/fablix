@@ -1,5 +1,6 @@
 package API;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import Models.MovieOut;
 import Models.StarOut;
 import java.io.IOException;
@@ -30,7 +31,11 @@ public class StarServlet extends HttpServlet {
 	Gson gson = new Gson();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		long ts = 0;
+		long tj1 = 0;
+		long tj2 = 0;
 		
+		long startTime = System.nanoTime();
 		String loginUser = "mytestuser";
 		String loginPasswd = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -38,7 +43,7 @@ public class StarServlet extends HttpServlet {
 		response.setContentType("application/json"); // Response mime type
 		PrintWriter out = response.getWriter();
 		try {
-			
+			long tjstart = System.nanoTime();
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			PreparedStatement statement = null;
@@ -51,6 +56,8 @@ public class StarServlet extends HttpServlet {
 			statement = dbcon.prepareStatement(query);
 			statement.setString(1, starId);
 			ResultSet rs = statement.executeQuery();
+			long tjend = System.nanoTime();
+			tj1 = tjend - tjstart;
 			
 			while(rs.next()) {
 				so.setName(rs.getString("name"));
@@ -60,9 +67,12 @@ public class StarServlet extends HttpServlet {
 			String query2 = "select m.id as id, m.title as title from movies m, stars_in_movies st "
 					+ "where st.movieId = m.id and st.starsId = ? order by m.title;";
 			PreparedStatement statement2 = null;
+			tjstart = System.nanoTime();
 			statement2 = dbcon.prepareStatement(query2);
 			statement2.setString(1, starId);
 			ResultSet rs2 = statement2.executeQuery();
+			tjend = System.nanoTime();
+			tj2 = tjend - tjstart;
 			while (rs2.next()) {
 				so.addMovieId(rs2.getString("id"));
 				so.addMovieNames(rs2.getString("title"));
@@ -78,6 +88,16 @@ public class StarServlet extends HttpServlet {
 			String result = gson.toJson(starOutList);
 			out.write(result.toString());
 			out.close();
+			long endTime = System.nanoTime();
+			ts = endTime - startTime;
+			long tj = tj1 + tj2;
+			FileWriter fw = new FileWriter("log.txt",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String time = ts + " " + tj;
+			bw.write(time);
+			bw.newLine();
+			bw.close();
+			fw.close();
 		} catch (SQLException ex) {
 			while (ex != null) {
 				System.out.println("SQL Exception:  " + ex.getMessage());

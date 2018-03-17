@@ -197,17 +197,18 @@ public class MovieServlet extends HttpServlet {
 		out.close();
 		long endTime = System.nanoTime();
 		ts = endTime - startTime;
-		FileWriter fw = new FileWriter("log.txt");
+		FileWriter fw = new FileWriter("log.txt",true);
 		BufferedWriter bw = new BufferedWriter(fw);
-		String time = ts + "\n";
+		String time = ts + " " + tj;
 		bw.write(time);
+		bw.newLine();
 		bw.close();
 		fw.close();
 	}
 
 	private String GetMovieList(int page, int pageSize, String order) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
@@ -224,7 +225,8 @@ public class MovieServlet extends HttpServlet {
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -278,7 +280,7 @@ public class MovieServlet extends HttpServlet {
 
 	private String GetMovie(String movieId) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
             
@@ -294,7 +296,8 @@ public class MovieServlet extends HttpServlet {
 			pt.setString(1, movieId);
 			// Perform the query
 			ResultSet rs = pt.executeQuery();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -351,7 +354,7 @@ public class MovieServlet extends HttpServlet {
 	private String searchAdv(int page, int pageSize, String title, String year, String director, String star,
 			String order) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			PreparedStatement statement = null;
@@ -377,7 +380,8 @@ public class MovieServlet extends HttpServlet {
 			statement.setInt(7, shiftAmount);
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -431,7 +435,7 @@ public class MovieServlet extends HttpServlet {
 
 	private String searchGenre(int page, int pageSize, String genre, String order) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			PreparedStatement statement = null;
@@ -452,7 +456,8 @@ public class MovieServlet extends HttpServlet {
 			statement.setInt(3, pageSize);
 			statement.setInt(4, shiftAmount);
 			ResultSet rs = statement.executeQuery();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -506,7 +511,7 @@ public class MovieServlet extends HttpServlet {
 
 	private String search(int page, int pageSize, String title, String order, int truefalse) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			PreparedStatement statement = null;
@@ -558,7 +563,8 @@ public class MovieServlet extends HttpServlet {
 			}
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -612,7 +618,7 @@ public class MovieServlet extends HttpServlet {
 
 	private String searchList(int page, int pageSize, JsonArray cart) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			PreparedStatement statement = null;
@@ -641,7 +647,8 @@ public class MovieServlet extends HttpServlet {
 			statement.setInt(1, pageSize);
 			statement.setInt(2, shiftAmount);
 			ResultSet rs = statement.executeQuery();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			// Iterate through each row of rs
 			List<MovieOut> movieOutList = new ArrayList<MovieOut>();
 
@@ -695,7 +702,7 @@ public class MovieServlet extends HttpServlet {
 
 	private String findSug(String kw) {
 		try {
-
+			long startTime = System.nanoTime();
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			PreparedStatement statement = null;
@@ -750,7 +757,8 @@ public class MovieServlet extends HttpServlet {
 			}
 			rs.close();
 			statement.close();
-
+			long endTime = System.nanoTime();
+			tj = endTime - startTime;
 			dbcon.close();
 
 			return jsonArray.toString();
