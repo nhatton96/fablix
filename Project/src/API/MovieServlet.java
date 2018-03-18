@@ -30,6 +30,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.Gson;
 
+import java.io.*;
+import java.net.*;
+import java.sql.*;
+import java.text.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 @WebServlet("/api/movie")
 public class MovieServlet extends HttpServlet {
 	String loginUser = "mytestuser";
@@ -197,7 +209,7 @@ public class MovieServlet extends HttpServlet {
 		out.close();
 		long endTime = System.nanoTime();
 		ts = endTime - startTime;
-		FileWriter fw = new FileWriter("log.txt",true);
+		FileWriter fw = new FileWriter("C:\\Users\\nhatt\\Desktop\\log.txt",true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		String time = ts + " " + tj;
 		bw.write(time);
