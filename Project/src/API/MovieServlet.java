@@ -527,7 +527,7 @@ public class MovieServlet extends HttpServlet {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
 			// Look up our data source
-			DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
 
 			// the following commented lines are direct connections without pooling
 			// Class.forName("org.gjt.mm.mysql.Driver");

@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 $('#LoginForm').submit(function(e) {
     e.preventDefault();
-    var response = grecaptcha.getResponse();
+    //var response = grecaptcha.getResponse();
     /*
     $.ajax({
         type: "POST",
@@ -49,7 +49,7 @@ $('#LoginForm').submit(function(e) {
         }
     });*/
 
-
+/*
     if(response.length != 0){
         $.ajax({
             type: "POST",
@@ -80,7 +80,34 @@ $('#LoginForm').submit(function(e) {
     }
     else{
         alert("Please verify you are not a robot :)")
-    }
+    }*/
+
+    $.ajax({
+        type: "POST",
+        url: '/Project/api/login',
+        data: {
+            type: "customer",
+            email: $("#email").val(),
+            password: $("#password").val()
+        },
+        success: function(response)
+        {
+            //alert(response);
+            console.log("Logging in");
+            //response.preventDefault();
+            var newCart = [];
+            localStorage.setItem('cart', JSON.stringify(newCart));
+            sessionStorage.setItem("LoggedIn","true");
+            window.location.assign("Main?page=0");
+            //return false;
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("Wrong email or password");
+            console.log(textStatus);
+            console.log(errorThrown);
+            location.reload();
+        }
+    });
 
 
 });
