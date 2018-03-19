@@ -210,7 +210,7 @@ public class MovieServlet extends HttpServlet {
 		out.close();
 		long endTime = System.nanoTime();
 		ts = endTime - startTime;
-		FileWriter fw = new FileWriter("C:\\Users\\nhatt\\Desktop\\log.txt", true);
+		FileWriter fw = new FileWriter("log.txt", true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		String time = ts + " " + tj;
 		bw.write(time);
