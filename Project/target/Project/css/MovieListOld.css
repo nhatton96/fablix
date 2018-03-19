@@ -1,0 +1,78 @@
+@charset "ISO-8859-1";
+
+head {
+	height:200px;
+	background-color: black;
+}
+
+
+body {
+	background-color:white;
+	background: radial-gradient(#C7D0CA, white, #C7D0CA);
+	font-family: Sans-serif;
+}
+
+#listTitles {
+	border-radius: 50px;
+	width: 200px;
+    height: 75px; 
+}
+
+
+#rcorners1 {
+    border-radius: 50px;
+    background: #ffffff;
+    padding: 50px; 
+    width: 200px;
+    height: 75px;    
+}
+
+
+[class*="header-"] {
+	color: black;
+    text-align: center;
+    height:100px;
+	background-color: white;
+}
+
+
+header-center {
+    margin: auto;
+    width: 60%;
+    border: 30px solid #73AD21;
+    padding: 50px;
+}
+
+
+h1 {
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    padding: 2px;
+    height:0px;
+	background: linear-gradient(#2DCA67, #009838);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.07), 0 6px 20px 0 rgba(0, 0, 0, 0.07);
+}
+
+Table {
+	color: black;
+	text-align: center;
+	border:none;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	width: 80%;
+	border-spacing: 10px;
+	table-layout: fixed;
+	background-color: #C7D0CA;
+}
+
+td {
+	border:none;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+	border-radius:2px;
+	width:100px
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    font-weight: bold;
+	
+}
+

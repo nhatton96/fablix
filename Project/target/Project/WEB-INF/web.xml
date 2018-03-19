@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 2004 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE web-app
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <display-name>Test Tomcat Connection to MySQL DB</display-name>
+  <description>
+    Test Tomcat Connection to mySQL DB
+  </description>
+  <servlet>
+    <servlet-name>MovieListServlet</servlet-name>
+    <servlet-class>MovieList</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <jsp-file>/Login/Login.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>LoginJS</servlet-name>
+    <jsp-file>/Login/Login.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>MovieServlet</servlet-name>
+    <jsp-file>/MovieList/MovieList.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>MovieListJS</servlet-name>
+    <jsp-file>/MovieList/MovieList.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>SingleMovieServlet</servlet-name>
+    <jsp-file>/Movie/Movie.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>MovieJS</servlet-name>
+    <jsp-file>/Movie/Movie.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>MainJS</servlet-name>
+    <jsp-file>/Main/Main.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>MainHTML</servlet-name>
+    <jsp-file>/Main/Main.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>ShoppingCartJS</servlet-name>
+    <jsp-file>/ShoppingCart/ShoppingCart.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>ShoppingCartHTML</servlet-name>
+    <jsp-file>/ShoppingCart/ShoppingCart.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>CustomerInfoJS</servlet-name>
+    <jsp-file>/CustomerInfo/CustomerInfo.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>CustomerInfoHTML</servlet-name>
+    <jsp-file>/CustomerInfo/CustomerInfo.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>ConfirmationJS</servlet-name>
+    <jsp-file>/Confirmation/Confirmation.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>ConfirmationHTML</servlet-name>
+    <jsp-file>/Confirmation/Confirmation.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardLoginJS</servlet-name>
+    <jsp-file>/DashboardLogin/DashboardLogin.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardLoginHTML</servlet-name>
+    <jsp-file>/DashboardLogin/DashboardLogin.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardJS</servlet-name>
+    <jsp-file>/Dashboard/Dashboard.js</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>DashboardHTML</servlet-name>
+    <jsp-file>/Dashboard/Dashboard.html</jsp-file>
+  </servlet>
+
+
+  <servlet-mapping>
+    <servlet-name>MovieListServlet</servlet-name>
+    <url-pattern>/servlet/MovieList</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/servlet/Login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoginJS</servlet-name>
+    <url-pattern>/servlet/Login.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MovieServlet</servlet-name>
+    <url-pattern>/servlet/Movies</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MovieListJS</servlet-name>
+    <url-pattern>/servlet/MovieList.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SingleMovieServlet</servlet-name>
+    <url-pattern>/servlet/SingleMovie</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MovieJS</servlet-name>
+    <url-pattern>/servlet/Movie.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MainJS</servlet-name>
+    <url-pattern>/servlet/Main.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MainHTML</servlet-name>
+    <url-pattern>/servlet/Main</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShoppingCartJS</servlet-name>
+    <url-pattern>/servlet/ShoppingCart.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShoppingCartHTML</servlet-name>
+    <url-pattern>/servlet/ShoppingCart</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CustomerInfoJS</servlet-name>
+    <url-pattern>/servlet/CustomerInfo.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CustomerInfoHTML</servlet-name>
+    <url-pattern>/servlet/CustomerInfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfirmationJS</servlet-name>
+    <url-pattern>/servlet/Confirmation.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfirmationHTML</servlet-name>
+    <url-pattern>/servlet/Confirmation</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardLoginJS</servlet-name>
+    <url-pattern>/servlet/DashboardLogin.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardLoginHTML</servlet-name>
+    <url-pattern>/servlet/_dashboard</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardJS</servlet-name>
+    <url-pattern>/servlet/Dashboard.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardHTML</servlet-name>
+    <url-pattern>/servlet/dashboard</url-pattern>
+  </servlet-mapping>
+
+   <!--
+    <security-constraint>
+      <web-resource-collection>
+        <web-resource-name>HTTPSOnly</web-resource-name>
+        <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+    </security-constraint>
+   -->
+
+</web-app>

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CustomerInfo/CustomerInfo.css">
+</HEAD>
+
+<BODY >
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/Project/servlet/Main">BINGEFLIX</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li ><a href="/Project/servlet/Main">Home</a></li>
+            <li><a href="/Project/Search/Search.html">Advanced Search</a></li>
+            <li><a href="/Project/servlet/Movies?page=1&action=LIST&order=tr&ps=20">Browse</a></li>
+            <li><a href="/Project/servlet/ShoppingCart">My Cart</a></li>
+        </ul>
+        <form class="navbar-form navbar-left" onsubmit="sendData2(); return false;">
+            <div class="input-group">
+                <input id="searchbar" type="text" class="form-control" placeholder="Search" name="search">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <H1 ALIGN="CENTER">Customer Info</H1>
+    <FORM id="SearchForm" onsubmit="sendData(); return false;">
+        <label><b>First Name</b></label>
+        <INPUT id="firstName" TYPE="TEXT" NAME="title" class="form-control" required><BR>
+        <label><b>Last Name</b></label>
+        <INPUT  id="lastName" TYPE="TEXT" NAME="title" class="form-control" required><BR>
+        <label><b>Address</b></label>
+        <INPUT id="address" TYPE="TEXT" NAME="year" class="form-control" required><BR>
+        <label><b>Card Number</b></label>
+        <INPUT  id="cardNumber" TYPE="TEXT" NAME="director" class="form-control" required><BR>
+        <label><b>Card Experation</b></label>
+        <INPUT id="cardExpiration" TYPE="TEXT" NAME="director" class="form-control" required><BR>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
+    </FORM>
+</div>
+<script src="./CustomerInfo.js"></script>
+</BODY>
+</HTML>

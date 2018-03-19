@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+body{
+    background: url("../Res/main2.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 5%;
+    background-color:black;
+}
+
+h1 {
+    color:white;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    color: white;
+}
+
+ul{
+    float: left
+}
+
+.block {
+    height:100px;
+    width:400px;
+    text-align:left;
+}
+.center {
+    margin:auto;
+}
+
+.Title {
+    background-color:#000000;
+    padding:15px;
+    text-align:center;
+}
+
+.menu {
+    float:left;
+    width:20%;
+    text-align:center;
+}
+.menuitem {
+    background-color:#e5e5e5;
+    padding:8px;
+    margin-top:7px;
+}
+.main {
+    float:left;
+    width:60%;
+    padding:0 20px;
+}
+.right {
+    background-color:#e5e5e5;
+    float:left;
+    width:20%;
+    padding:15px;
+    margin-top:7px;
+    text-align:center;
+}
+
+tr:hover{
+    color:black;
+    opacity: 0.5;
+}
+
+table{
+    color:white;
+    border-collapse:unset;
+    border-spacing: 0px 20px;
+}
+
+#Star{
+    color:white;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#table_div {
+    margin-right: auto;
+    margin-left: auto;
+    width: 80%;
+    background-color:black;
+    opacity: 0.8;
+}
+
+.container-prevnex{
+    margin-right: auto;
+    margin-left: auto;
+    width: 80%;
+    opacity: 0.7;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+@media only screen and (max-width:620px) {
+    /* For mobile phones: */
+    .menu, .main, .right {
+        width:100%;
+    }
+}
