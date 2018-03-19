@@ -14,12 +14,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,7 +48,21 @@ public class StarServlet extends HttpServlet {
 		try {
 			long tjstart = System.nanoTime();
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = ds.getConnection();
 			PreparedStatement statement = null;
 			
 			String starId = request.getParameter("starId");

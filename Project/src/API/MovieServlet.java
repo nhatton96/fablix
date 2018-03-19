@@ -222,7 +222,21 @@ public class MovieServlet extends HttpServlet {
 	private String GetMovieList(int page, int pageSize, String order) {
 		try {
 			long startTime = System.nanoTime();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = dss.getConnection();
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
 			if (order.equals("tr"))
@@ -288,13 +302,31 @@ public class MovieServlet extends HttpServlet {
 				ex = ex.getNextException();
 			} // end while
 			return new String();
-		} // end catch SQLException
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new String();
+		}
 	}
 
 	private String GetMovie(String movieId) {
 		try {
 			long startTime = System.nanoTime();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = dss.getConnection();
 			// Declare our statement
 
 			PreparedStatement pt = null;
@@ -360,7 +392,11 @@ public class MovieServlet extends HttpServlet {
 				ex = ex.getNextException();
 			} // end while
 			return new String();
-		} // end catch SQLException
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new String();
+		}
 
 	}
 
@@ -368,7 +404,21 @@ public class MovieServlet extends HttpServlet {
 			String order) {
 		try {
 			long startTime = System.nanoTime();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = dss.getConnection();
 			// Declare our statement
 			PreparedStatement statement = null;
 
@@ -441,13 +491,31 @@ public class MovieServlet extends HttpServlet {
 				ex = ex.getNextException();
 			} // end while
 			return new String();
-		} // end catch SQLException
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new String();
+		}
 	}
 
 	private String searchGenre(int page, int pageSize, String genre, String order) {
 		try {
 			long startTime = System.nanoTime();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = ds.getConnection();
 			// Declare our statement
 			PreparedStatement statement = null;
 
@@ -516,7 +584,11 @@ public class MovieServlet extends HttpServlet {
 				ex = ex.getNextException();
 			} // end while
 			return new String();
-		} // end catch SQLException
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new String();
+		}
 	}
 
 	private String search(int page, int pageSize, String title, String order, int truefalse) {
@@ -528,7 +600,7 @@ public class MovieServlet extends HttpServlet {
 
 			// Look up our data source
 			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
-
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
 			// the following commented lines are direct connections without pooling
 			// Class.forName("org.gjt.mm.mysql.Driver");
 			// Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -815,7 +887,22 @@ public class MovieServlet extends HttpServlet {
 
 	private String checkout(String fn, String ln, String add, String card, String exp, JsonArray cart) {
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = ds.getConnection();
+
 			Statement statement = dbcon.createStatement();
 			String query = "select ct.id as cusId from customers ct, creditcards cd where cd.id = ct.ccId and "
 					+ "cd.id = '" + card + "' and ct.firstName = '" + fn + "' and ct.lastName = '" + ln
@@ -850,6 +937,10 @@ public class MovieServlet extends HttpServlet {
 				System.out.println("SQL Exception:  " + ex.getMessage());
 				ex = ex.getNextException();
 			} // end while
+			return new String();
+		}catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return new String();
 		}
 	}

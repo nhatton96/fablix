@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +37,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class AddMovieServlet
@@ -55,7 +58,21 @@ public class AddMovieServlet extends HttpServlet {
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/master");
+			DataSource dss = (DataSource) envCtx.lookup("jdbc/slave");
+			// the following commented lines are direct connections without pooling
+			// Class.forName("org.gjt.mm.mysql.Driver");
+			// Class.forName("com.mysql.jdbc.Driver").newInstance();
+			// Connection dbcon = DriverManager.getConnection(loginUrl, loginUser,
+			// loginPasswd);
+
+			Connection dbcon = ds.getConnection();
 			String action = request.getParameter("action");
 			if (action.equals("movie")) {
 				String title = request.getParameter("title");
